@@ -23,6 +23,7 @@ export const datasetType = {
         defineField({
             name: 'publishedAt',
             type: 'datetime',
+            validation: Rule => Rule.required()
         }),
         defineField({
             name: 'description',
