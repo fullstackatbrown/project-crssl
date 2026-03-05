@@ -1,6 +1,6 @@
 # Sanity CMS Integration
 
-This project uses [Sanity](https://www.sanity.io/) as its headless CMS, embedded directly into the Next.js app. Content editors manage data through a Studio UI served at `/studio`, and the frontend fetches content via GROQ queries.
+This project uses [Sanity](https://www.sanity.io/) as its headless CMS, embedded directly into the Next.js app using [next-sanity](https://www.sanity.io/plugins/next-sanity) ([github](https://github.com/sanity-io/next-sanity)). Content editors manage data through a Studio UI served at `/studio`, and the frontend fetches content via GROQ queries.
 
 ---
 
