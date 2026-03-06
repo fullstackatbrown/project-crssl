@@ -1,7 +1,10 @@
-import React from 'react';
-import { Circle } from 'lucide-react';
+'use client';
+
+import React, { useState } from 'react';
+import { Search } from 'lucide-react';
 
 const ElectionDataPage = () => {
+    const [searchQuery, setSearchQuery] = useState('');
     return (
         <div className="min-h-screen bg-white">
             {/* 1. Hero Section: Split Layout */}
@@ -40,11 +43,26 @@ const ElectionDataPage = () => {
             </nav>
 
             {/* 3. Data Area */}
-            <main className="p-12 space-y-24 bg-gray-50">
-                <section className="h-screen">
-                    <h1 className="mb-10 pl-50 text-5xl font-bold text-blue-600">Data</h1>
-                    <h1 className="pl-50 mb-20 text-black">search and filter will be implemented in this space</h1>
-                    <h6 className="pl-25 text-1xl font-bold text-black mb-5 text-black">n RESULTS</h6>
+            <main className="p-12 space-y-8 bg-gray-100">
+                <section className="max-w-3xl mx-auto">
+                    <h1 className="mb-8 text-5xl font-bold text-blue-600">Data</h1>
+                    
+                    <div className="flex items-center gap-3 border-b-2 border-gray-400 pb-2">
+                        <Search className="w-6 h-6 text-gray-500" />
+                        <input
+                            type="text"
+                            placeholder="Search datasets"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-transparent text-lg text-gray-700 placeholder-gray-500 outline-none"
+                        />
+                    </div>
+
+                </section>
+
+                <section>
+                    <h1 className="pl-50 mb-20 text-black">search and filter is placeholder text, data links will show below</h1>
+                    <h6 className="pl-25 text-1xl font-bold text-black mb-5 text-black">RESULTS</h6>
                     <h1 className="pl-25 text-black">data links will go here</h1>
                 </section>
             </main>
