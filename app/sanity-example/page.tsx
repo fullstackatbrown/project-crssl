@@ -2,8 +2,10 @@ import Link from "next/link";
 import { type SanityDocument } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 
+// GROQ query to fetch dataset documents from Sanity
+// ordered by published date in descending order
 const DATASETS_QUERY = `*[
-  _type == "dataset"
+  _type == "exampleDataset"
 ]|order(publishedAt desc){_id, name, slug, publishedAt}`;
 
 const options = { next: { revalidate: 30 } };
@@ -19,7 +21,7 @@ export default async function Data() {
             <ul className="flex flex-col gap-y-4">
                 {datasets.map((post) => (
                     <li className="hover:underline" key={post._id}>
-                        <Link href={`/${post.slug.current}`}>
+                        <Link href={`/sanity-example/${post.slug.current}`}>
                             <h2 className="font-semibold">{post.name}</h2>
                             <p>{new Date(post.publishedAt).toLocaleDateString()}</p>
                         </Link>

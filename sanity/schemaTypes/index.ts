@@ -1,8 +1,9 @@
 import { type SchemaTypeDefinition } from 'sanity'
 
 import { blockContentType } from './blockContentType'
-import { datasetType } from './datasetType'
+import { exampleDatasetType } from './exampleDatasetType'
+import { examplePersonType } from './examplePersonType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, datasetType],
+  types: [blockContentType, examplePersonType, exampleDatasetType],
 }

@@ -1,9 +1,9 @@
 import { defineField } from "sanity";
 import {ArchiveIcon} from '@sanity/icons'
 
-export const datasetType = {
-    name: 'dataset',
-    title: 'Dataset',
+export const exampleDatasetType = {
+    name: 'exampleDataset',
+    title: 'Example Dataset',
     type: 'document',
     icon: ArchiveIcon,
     fields: [
@@ -36,6 +36,9 @@ export const datasetType = {
                 defineField({
                     name: 'file',
                     type: 'file',
+                    options: {
+                        accept: 'text/markdown, text/csv',  // accept only md and csv files
+                    },
                 }),
             ],
         }),
@@ -58,6 +61,21 @@ export const datasetType = {
                     ],
                 }),
             ],
+        }),
+        defineField({
+            name: 'contributors',
+            title: 'Contributors',
+            type: 'array',
+            of: [
+                {
+                    type: 'reference',
+                    to: [{ type: 'examplePerson' }],
+                },
+            ],
+        }),
+        defineField({
+            name: 'content',
+            type: 'blockContent',
         }),
     ],
 }
