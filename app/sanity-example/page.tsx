@@ -10,7 +10,7 @@ const DATASETS_QUERY = `*[
 
 const options = { next: { revalidate: 30 } };
 
-export default async function Data() {
+export default async function SanityExampleDatasets() {
     const datasets = await client.fetch<SanityDocument[]>(DATASETS_QUERY, {}, options);
     console.log("Fetched datasets:", datasets);
 

@@ -10,7 +10,7 @@ const DATASET_QUERY = `*[_type == "exampleDataset" && slug.current == $slug][0]{
 
 const options = { next: { revalidate: 30 } };
 
-export default async function DatasetPage({
+export default async function SanityExampleDataset({
     params,
 }: {
     params: Promise<{ slug: string }>;
@@ -60,7 +60,7 @@ export default async function DatasetPage({
                     <ul>
                         {dataset.links.map((link) => (
                             <li key={link._key}>
-                                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                                <a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
                                     {link.title || link.url}
                                 </a>
                             </li>
