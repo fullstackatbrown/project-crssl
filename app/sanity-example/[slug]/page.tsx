@@ -10,15 +10,6 @@ const DATASET_QUERY = `*[_type == "exampleDataset" && slug.current == $slug][0]{
 
 const options = { next: { revalidate: 30 } };
 
-export async function generateStaticParams() {
-    const slugs = await client.fetch<{ slug: { current: string } }[]>(
-        `*[_type == "dataset"]{ slug }`,
-        {},
-        options
-    );
-    return slugs.map(({ slug }) => ({ slug: slug.current }));
-}
-
 export default async function DatasetPage({
     params,
 }: {
