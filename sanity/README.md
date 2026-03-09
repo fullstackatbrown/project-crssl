@@ -74,3 +74,12 @@ sanity.cli.ts               # Sanity CLI configuration
 ## Removing a Schema
 
 I strongly recommend going to the studio and deleting all documents of that type before deleting the schema file to avoid orphaned data. Otherwise, you can only delete them via Sanity API or CLI.
+
+---
+
+## Useful Sanity Links
+
+- [Displaying content in Next.js](https://www.sanity.io/docs/next-js-quickstart/diplaying-content-in-next-js)
+- [Query Cheat Sheet - GROQ](https://www.sanity.io/docs/content-lake/query-cheat-sheet)
+- [Schemas and Forms](https://www.sanity.io/docs/studio/schemas-and-forms)
+- [File](https://www.sanity.io/docs/studio/file-type)
