@@ -2,6 +2,9 @@
 
 This project uses [Sanity](https://www.sanity.io/) as its headless CMS, embedded directly into the Next.js app using [next-sanity](https://www.sanity.io/plugins/next-sanity) ([github](https://github.com/sanity-io/next-sanity)). Content editors manage data through a Studio UI served at `/studio`, and the frontend fetches content via GROQ queries.
 
+- To edit CMS content, open `http://localhost:3000/studio` to access the Sanity Studio.
+- To see examples of how to fetch and render Sanity content on the frontend, see the example dataset page at `http://localhost:3000/sanity-example`.
+
 ---
 
 ## Prerequisites
@@ -50,8 +53,7 @@ sanity/
 │   └── live.ts             # sanityFetch + SanityLive for live content
 └── schemaTypes/
     ├── index.ts            # Registers all schemas
-    ├── datasetType.ts      # `Dataset` document schema
-    └── blockContentType.ts # Reusable rich text block content from Sanity's startup code
+    ├── xxxxType.ts         # document schema
 
 sanity.config.ts            # Main Studio configuration (plugins, schemas, basePath)
 sanity.cli.ts               # Sanity CLI configuration
@@ -66,3 +68,9 @@ sanity.cli.ts               # Sanity CLI configuration
 2. **Register it** in `sanity/schemaTypes/index.ts`
 
 3. **Add it to the Studio sidebar** in `sanity/structure.ts` (optional)
+
+---
+
+## Removing a Schema
+
+I strongly recommend going to the studio and deleting all documents of that type before deleting the schema file to avoid orphaned data. Otherwise, you can only delete them via Sanity API or CLI.
