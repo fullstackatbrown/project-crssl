@@ -1,51 +1,16 @@
 const teamMembers = [
-  {
-    id: 1,
-    name: "Thomas",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 2,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 3,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 4,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 5,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 6,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 7,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
+  { id: 1, name: "Thomas", jobTitle: "Job", image: undefined },
+  { id: 2, name: "Thomas", jobTitle: "Job", image: undefined },
+  { id: 3, name: "Thomas", jobTitle: "Job", image: undefined },
+  { id: 4, name: "Thomas", jobTitle: "Job", image: undefined },
+  { id: 5, name: "Thomas", jobTitle: "Job", image: undefined },
+  { id: 6, name: "Thomas", jobTitle: "Job", image: undefined },
+  { id: 7, name: "Thomas", jobTitle: "Job", image: undefined },
 ];
 
 function TeamGrid() {
   return (
-    <div className="grid grid-col1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
+    <section id="people" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
       {teamMembers.map((person) => (
         <div
           key={person.id}
@@ -68,49 +33,79 @@ function TeamGrid() {
           </div>
         </div>
       ))}
-    </div>
+    </section>
   );
 }
 
 function NavBar() {
   return (
     <nav className="flex flex-col gap-4">
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
+      <a
+        href="#people"
+        className="text-lg text-zinc-700 transition-all duration-200 ease-in-out hover:text-orange-400"
       >
-        People
-      </button>
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
+        Leadership
+      </a>
+      <a
+        href="#mission"
+        className="text-lg text-zinc-700 transition-all duration-200 ease-in-out hover:text-orange-400"
       >
         Mission
-      </button>
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
+      </a>
+      <a
+        href="#looking-ahead"
+        className="text-lg text-zinc-700 transition-all duration-200 ease-in-out hover:text-orange-400"
       >
         Looking Ahead
-      </button>
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
+      </a>
+      <a
+        href="#timeline"
+        className="text-lg text-zinc-700 transition-all duration-200 ease-in-out hover:text-orange-400"
       >
         Timeline
-      </button>
+      </a>
     </nav>
   );
 }
+
+function AboutHero() {
+  return (
+    <section className="bg-white px-6 py-16 md:px-20 md:py-40">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
+        <div className="max-w-2xl">
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 md:text-5xl">
+            About
+          </h1>
+
+          <p className="mt-6 text-lg leading-8 text-zinc-700">
+            Our lab conducts research projects on topics of political and electoral violence and conflict, social movements and mass demonstrations, democratic backsliding, and research methodology.
+          </p>
+        </div>
+
+        <div className="min-h-full">
+          <img
+            src="/about-hero.jpg"
+            alt="Team or lab overview"
+            className="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
 export default function AboutPage() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-10 min-h-screen">
-      <div className="hidden md:block md:col-span-3 bg-white p-10 sticky top-0 h-screen overflow-y-auto">
-        <NavBar />
+    <main>
+      <AboutHero />
+      <div className="grid grid-cols-1 md:grid-cols-10 min-h-screen">
+        <div className="hidden md:block md:col-span-3 bg-white p-20 sticky top-0 h-screen overflow-y-auto">
+          <NavBar />
+        </div>
+        <div className="md:col-span-7 bg-white">
+          <TeamGrid />
+        </div>
       </div>
-      <div className="md:col-span-7 bg-white">
-        <TeamGrid />
-      </div>
-    </div>
+    </main>
+
   );
 }
