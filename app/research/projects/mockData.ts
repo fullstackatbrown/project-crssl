@@ -1,6 +1,6 @@
 const mockData = [
     {
-      slug: 'mock-1',
+      slug: 'voter-registration-list-maintenance',
       Title: 'Mock 1',
       subtitle: 'Research',
       image: '/mock-project-img.png',
@@ -50,7 +50,7 @@ const mockData = [
           ]
         },
     {
-      slug: 'mock-2',
+      slug: 'voter-registration-list-maintenance',
       Title: 'Mock 2',
       subtitle: 'Grant Opportunity',
       image: '/mock-project-img.png',
@@ -98,7 +98,7 @@ const mockData = [
         ]
     },
     {
-      slug: 'mock-3',
+      slug: 'voter-registration-list-maintenance',
       Title: 'Mock 3',
       subtitle: 'Analysis',
       image: '/mock-project-img.png',
@@ -147,7 +147,7 @@ const mockData = [
           ]
     },
     {
-      slug: 'mock-4',
+      slug: 'voter-registration-list-maintenance',
       Title: 'Mock 4',
       subtitle: 'Research',
       image: '/mock-project-img.png',
