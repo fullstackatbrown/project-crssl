@@ -1,5 +1,4 @@
 // This is a component to render each page of research
-import mockData from '../mockData';
 import { type SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/lib/client';
 
@@ -58,8 +57,17 @@ style: "h2"
 }
 
 const PROJECTS_QUERY = `*[_type == "projectType" && slug.current == $slug][0]{
-  _id, title, slug, publishedAt, description, relaventLinks, content, contributors, "coverImage": coverImage.asset->url
+  _id, 
+  title, 
+  slug, 
+  publishedAt, 
+  description, 
+  relaventLinks, 
+  content, 
+  contributors, 
+  "coverImage": coverImage.asset->url
 }`;
+
 const options = { next: { revalidate: 30 } };
 
 export default async function ProjectPage({
@@ -75,13 +83,9 @@ export default async function ProjectPage({
     options,
   );
 
-  console.log(project);
-
   if (!project) {
     return <div>Project not found</div>;
   }
-
-  console.log(project);
 
   return (
     <div>
