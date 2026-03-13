@@ -4,6 +4,10 @@ import Elipsis from './project-extra';
 import { type SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/lib/client';
 
+type Person = {
+  name: String;
+};
+
 type Project = {
   _id: string;
   title: string;
@@ -17,6 +21,7 @@ type Project = {
   contributors: Array<Object>;
   coverImage: string;
   tags: Array<string>;
+  projectLeader: Array<Person>;
 };
 /**
  *
@@ -25,7 +30,7 @@ type Project = {
  */
 function Tile({ project: project }: { project: Project }) {
   return (
-    <div className="display-flex flex-direction-col border-solid border width-100 height-100 min-w-[200px] min-h-[200px]">
+    <div className="display-flex flex-direction-col border-solid border width-100 height-100 min-w-75 min-h-75">
       <Link
         className="block relative w-full h-full overflow-hidden"
         href={`/research/projects/${project.slug.current}`}
@@ -38,7 +43,8 @@ function Tile({ project: project }: { project: Project }) {
           <div className=" inline-block border-solid border-1 border-white rounded-[60px] text-white text-center text-xs w-fit px-2 py-1">
             <div className="flex flex-row gap-2 items-center">
               <Elipsis />
-              {'fix: subtitle'}
+              {project.tags[0]}
+              {/* FIXME: allow multiple tags? */}
             </div>
           </div>
           <div className="text-white px-1 py-1 font-serif text-xl">
@@ -59,7 +65,9 @@ const PROJECTS_QUERY = `*[_type == "projectType"]{
   relaventLinks, 
   content, 
   contributors, 
-  "coverImage": coverImage.asset->url
+  "coverImage": coverImage.asset->url,
+  tags,
+  projectLeader
 }`;
 
 const options = { next: { revalidate: 30 } };
@@ -77,7 +85,7 @@ async function TileGrid() {
   }
 
   return (
-    <div className="grid grid-cols-3 max-w-300 ">
+    <div className="grid grid-cols-3">
       {projects.map((project: Project, ind: number) => {
         return <Tile key={ind} project={project} />;
       })}

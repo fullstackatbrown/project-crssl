@@ -63,12 +63,31 @@ export const projectType = defineType({
       ],
     }),
     defineField({
+      name: 'projectLeader',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'examplePerson' }],
+        },
+      ],
+    }),
+    defineField({
       name: 'contributors',
       type: 'array',
       of: [
         {
           type: 'reference',
           to: [{ type: 'examplePerson' }],
+        },
+      ],
+    }),
+    defineField({
+      name: 'tags',
+      type: 'array',
+      of: [
+        {
+          type: 'string',
         },
       ],
     }),

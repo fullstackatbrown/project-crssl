@@ -21,7 +21,7 @@ style: "h2"
   return (
     <div>
       {content.map((item: any, i: number) => {
-        return <div> {item.children[0].text}</div>;
+        return <div> {item.children ? item.children[0].text : "text"}</div>;
         // switch (item.type) {
         //   case 'paragraph':
         //     return (
