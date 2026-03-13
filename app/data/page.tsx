@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 
-const ElectionDataPage = () => {
+const DataPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     return (
         <div className="min-h-screen bg-white">
@@ -32,7 +32,7 @@ const ElectionDataPage = () => {
             </section>
 
             {/* 2. Page Switching Bar */}
-            <nav className="flex items-center justify-center min-h-screen-sticky top-0 z-10 border-b-10 border-blue-600 flex bg-white">
+            <nav className="flex items-center justify-center min-h-screen-sticky top-0 z-10 border-b-20 border-[#a51c30] flex bg-white">
                 <button className="bg-slate-600 text-white px-8 py-3 font-bold uppercase tracking-wider text-sm">
                     Our Data
                 </button>
@@ -45,8 +45,8 @@ const ElectionDataPage = () => {
             {/* 3. Data Area */}
             <main className="p-12 space-y-8 bg-gray-100">
                 <section className="max-w-3xl mx-auto">
-                    <h1 className="mb-8 text-5xl font-bold text-blue-600">Data</h1>
-                    
+                    <h1 className="mb-8 text-5xl font-bold text-[#a51c30]">Data</h1>
+
                     <div className="flex items-center gap-3 border-b-2 border-gray-400 pb-2">
                         <Search className="w-6 h-6 text-gray-500" />
                         <input
@@ -70,4 +70,4 @@ const ElectionDataPage = () => {
     );
 };
 
-export default ElectionDataPage;
+export default DataPage;
