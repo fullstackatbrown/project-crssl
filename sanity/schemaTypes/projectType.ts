@@ -1,5 +1,5 @@
-import { defineField, defineType } from "sanity";
-import { UserIcon } from "@sanity/icons";
+import { defineField, defineType } from 'sanity';
+import { UserIcon } from '@sanity/icons';
 
 export const projectType = defineType({
   title: 'projectType',
@@ -9,61 +9,72 @@ export const projectType = defineType({
     /**
      * project title
      * project slug
-     * publish date 
+     * publish date
      * relevant links
      * short description
      *
      * content : blockContentType, but allow color text
-     * references 
+     * references
      */
     defineField({
-        name: "title",
-        type: "string",
-        validation: Rule => Rule.required()
+      name: 'title',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-        name: "slug",
-        type: "string",
-        validation: Rule => Rule.required()
+      name: 'slug',
+      type: 'slug',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-        name: "publishedAt",
-        type: "datetime",
-        validation: Rule => Rule.required()
+      name: 'publishedAt',
+      type: 'datetime',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-        name: 'relaventLinks',
-        type: 'array',
-        of: [
+      name: 'coverImage',
+      type: 'image',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+        },
+      ],
+    }),
+    defineField({
+      name: 'relaventLinks',
+      type: 'array',
+      of: [
+        defineField({
+          name: 'link',
+          type: 'object',
+          fields: [
             defineField({
-                name: 'link',
-                type: 'object',
-                fields: [
-                    defineField({
-                        name: 'title',
-                        type: 'string',
-                    }),
-                    defineField({
-                        name: 'url',
-                        type: 'url',
-                    }),
-                ],
+              name: 'title',
+              type: 'string',
             }),
-        ],
+            defineField({
+              name: 'url',
+              type: 'url',
+            }),
+          ],
+        }),
+      ],
     }),
     defineField({
-        name: "contributors",
-        type: "array",
-        of: [
-                {
-                    type: 'reference',
-                    to: [{ type: 'examplePerson' }],
-                },
-            ],
+      name: 'contributors',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'examplePerson' }],
+        },
+      ],
     }),
     defineField({
-        name: "description",
-        type: "string"
+      name: 'description',
+      type: 'string',
     }),
     // definteField({
     //     name: "relatedResearch",
@@ -76,8 +87,8 @@ export const projectType = defineType({
     //     ]
     // })
     defineField({
-        name: "content",
-        type: "blockContent"
-    })
-  ]
-})
+      name: 'content',
+      type: 'blockContent',
+    }),
+  ],
+});
