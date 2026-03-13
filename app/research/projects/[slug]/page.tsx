@@ -62,7 +62,7 @@ const PROJECTS_QUERY = `*[_type == "projectType" && slug.current == $slug][0]{
   slug, 
   publishedAt, 
   description, 
-  relaventLinks, 
+  relevantLinks, 
   content, 
   contributors, 
   "coverImage": coverImage.asset->url
@@ -101,7 +101,7 @@ export default async function ProjectPage({
           {project.description}
         </p>
         <div>
-          {project.relaventLinks.map((link: string, i: number) => {
+          {project.relevantLinks?.map((link: string, i: number) => {
             return <a key={i} href={link}></a>;
           })}
         </div>

@@ -43,7 +43,7 @@ export const projectType = defineType({
       ],
     }),
     defineField({
-      name: 'relaventLinks',
+      name: 'relevantLinks',
       type: 'array',
       of: [
         defineField({

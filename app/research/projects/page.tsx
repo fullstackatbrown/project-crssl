@@ -16,7 +16,7 @@ type Project = {
   };
   publishedAt: object;
   description: string;
-  relaventLinks: Array<string>;
+  relevantLinks: Array<string>;
   content: string;
   contributors: Array<Object>;
   coverImage: string;
