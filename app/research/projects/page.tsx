@@ -38,15 +38,23 @@ function Tile({ project: project }: { project: Project }) {
         <img
           className="absolute inset-0 w-full h-full object-cover"
           src={project.coverImage}
-        ></img>
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-black to-transparent" 
+          aria-hidden="true"
+        />
         <div className="absolute inset-0 flex flex-col justify-end p-4">
-          <div className=" inline-block border-solid border-1 border-white rounded-[60px] text-white text-center text-xs w-fit px-2 py-1">
-            <div className="flex flex-row gap-2 items-center">
-              <Elipsis />
-              {project.tags[0]}
-              {/* FIXME: allow multiple tags? */}
+          {
+            project.tags ? 
+            <div className=" inline-block border-solid border-1 border-white rounded-[60px] text-white text-center text-xs w-fit px-2 py-1">
+                <div className="flex flex-row gap-2 items-center">
+                  <Elipsis />
+                  {project.tags[0]}
+                </div>
             </div>
-          </div>
+            : 
+            <div/>
+          }
           <div className="text-white px-1 py-1 font-serif text-xl">
             {project.title}
           </div>
