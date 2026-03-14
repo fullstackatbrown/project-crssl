@@ -1,6 +1,8 @@
 // This is a component to render each page of research
 import { type SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/lib/client';
+import Link from 'next/link';
+
 
 function getContent(project: any) {
   /** @type {string[]} */
@@ -89,26 +91,47 @@ export default async function ProjectPage({
 
   return (
     <div>
-      <div className="block relative w-full h-full overflow-hidden max-h-65">
+      <div className="block relative w-full h-full overflow-hidden max-h-100">
         <img
-          className="w-full h-64 object-cover"
+          className="w-full h-100 object-cover"
           src={project.coverImage}
-        ></img>
-        <h1 className="absolute bottom-15 left-55 text-white text-4xl font-bold">
-          {project.title}
-        </h1>
-        <p className="absolute bottom-10 left-8 text-white text-xs">
-          {project.description}
-        </p>
-        <div>
-          {project.relevantLinks?.map((link: string, i: number) => {
-            return <a key={i} href={link}></a>;
-          })}
+        />
+        <div 
+          className="absolute inset-0 bg-gradient-to-t from-black to-transparent"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 left-1/4 top-1/2 right-1/8">
+          <h1 className="text-white text-4xl font-bold">
+            {project.title}
+          </h1>
+          <p className="mt-2 text-white text-s">
+            {project.description}
+          </p>
+          <div>
+            {project.relevantLinks?.map((link: string, i: number) => {
+              return <a key={i} href={link}></a>;
+            })}
+          </div>
         </div>
       </div>
-
-      <div className="grid grid-cols-4">
-        <div className="col-start-2 col-span-2">{getContent(project)}</div>
+      
+      <div className="flex relative z-10">
+        {/* navigation sidebar */}
+        <aside className="-mt-24 bg-white h-100 w-80 sticky left-0 self-start top-[10vh]">
+          {/*should dynamically generate the side navbar from the headers in the content */}
+          <div className="pl-10 pt-15">
+            <Link href="/research/projects" 
+            className="text-gray-500 hover:text-gray-700"
+            > 
+              {"< Research"} 
+            </Link>
+          </div>
+        </aside>
+        
+        {/* main content */}
+        <div className="flex-1 min-w-0 pl-10 pr-25 pt-10">
+          <div className="col-start-2 col-span-2">{getContent(project)}</div>
+        </div>
       </div>
     </div>
   );
