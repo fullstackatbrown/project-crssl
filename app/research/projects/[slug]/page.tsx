@@ -32,6 +32,7 @@ function getContent(project: any) {
       link: ({ value, children }: any) => (
         <a
           href={value.href}
+          // TODO: change hover text to red/theme color
           className="text-gray-600 underline hover:text-blue-600"
           target="_blank"
           rel="noopener noreferrer"
@@ -101,41 +102,34 @@ export default async function ProjectPage({
 
   return (
     <div>
-      <div className="block relative w-full h-full overflow-hidden max-h-100">
-        <img className="w-full h-100 object-cover" src={project.coverImage} />
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-black to-transparent"
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 left-1/4 top-1/2 right-1/8">
-          <h1 className="text-white text-4xl font-serif">{project.title}</h1>
-          <p className="mt-2 text-white text-s">{project.description}</p>
-          <div>
-            {project.relevantLinks?.map((link: string, i: number) => {
-              return <a key={i} href={link}></a>;
-            })}
+      <div className="relative w-full h-[400px] overflow-hidden">
+        <img className="w-full h-full object-cover" src={project.coverImage} />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+
+        <div className="absolute inset-0 grid grid-cols-[1fr_3fr] text-white">
+          <div /> {/* empty column to align */}
+          <div className="flex flex-col justify-end w-250 p-6">
+            <h1 className="text-4xl font-serif">{project.title}</h1>
+            <p className="mt-2">{project.description}</p>
           </div>
         </div>
       </div>
 
-      <div className="flex relative z-10">
-        {/* navigation sidebar */}
-        <aside className="-mt-24 bg-white h-100 w-80 sticky left-0 self-start top-[10vh]">
-          {/*should dynamically generate the side navbar from the headers in the content */}
-          <div className="pl-10 pt-15">
-            <Link
-              href="/research/projects"
-              className="text-gray-500 hover:text-gray-700"
-            >
-              {'< Research'}
-            </Link>
-          </div>
+      <div className="grid grid-cols-[1fr_3fr] relative z-10">
+        {/* Sidebar */}
+        <aside className="bg-white sticky top-[10vh] self-start p-6 -mt-24">
+          <Link
+            href="/research/projects"
+            className="text-gray-500 hover:text-gray-700"
+          >
+            {'< Research'}
+          </Link>
+          <p className="font-bold pt-15">In this Group</p>
         </aside>
 
-        {/* main content */}
-        <div className="flex-1 min-w-0 pl-10 pr-25 pt-10">
-          <div className="col-start-2 col-span-2">{getContent(project)}</div>
-        </div>
+        {/* Main content */}
+        <div className="w-250 p-6">{getContent(project)}</div>
       </div>
     </div>
   );
