@@ -30,7 +30,7 @@ type Project = {
  */
 function Tile({ project: project }: { project: Project }) {
   return (
-    <div className="display-flex flex-direction-col border-solid border width-100 height-100 min-w-75 min-h-75">
+    <div className="display-flex flex-direction-col border-solid border width-200 height-200 min-w-90 min-h-90">
       <Link
         className="block relative w-full h-full overflow-hidden"
         href={`/research/projects/${project.slug.current}`}
@@ -40,21 +40,20 @@ function Tile({ project: project }: { project: Project }) {
           src={project.coverImage}
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-black to-transparent" 
+          className="absolute inset-0 bg-gradient-to-t from-black to-transparent"
           aria-hidden="true"
         />
         <div className="absolute inset-0 flex flex-col justify-end p-4">
-          {
-            project.tags ? 
+          {project.tags ? (
             <div className=" inline-block border-solid border-1 border-white rounded-[60px] text-white text-center text-xs w-fit px-2 py-1">
-                <div className="flex flex-row gap-2 items-center">
-                  <Elipsis />
-                  {project.tags[0]}
-                </div>
+              <div className="flex flex-row gap-2 items-center">
+                <Elipsis />
+                {project.tags[0]}
+              </div>
             </div>
-            : 
-            <div/>
-          }
+          ) : (
+            <div />
+          )}
           <div className="text-white px-1 py-1 font-serif text-xl">
             {project.title}
           </div>
@@ -114,7 +113,7 @@ export default function projects() {
   return (
     <div>
       <h1>Projects</h1>
-      <div className="flex flex-row">
+      <div className="flex flex-row justify-between">
         <SideBar />
         <TileGrid />
       </div>
