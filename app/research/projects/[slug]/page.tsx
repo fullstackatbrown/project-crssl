@@ -12,7 +12,6 @@ function urlFor(source: any) {
 }
 
 function getContent(project: any) {
-  console.log(project.content);
   const components = {
     block: {
       h2: ({ children }: any) => (
@@ -99,6 +98,7 @@ export default async function ProjectPage({
   if (!project) {
     return <div>Project not found</div>;
   }
+  console.log(project);
 
   return (
     <div>
@@ -112,6 +112,22 @@ export default async function ProjectPage({
           <div className="flex flex-col justify-end w-250 p-6">
             <h1 className="text-4xl font-serif">{project.title}</h1>
             <p className="mt-2">{project.description}</p>
+            <div className="mt-2">
+              {project.relevantLinks?.map(
+                (item: {
+                  _key: string;
+                  _type: string;
+                  title: string;
+                  url: string;
+                }) => {
+                  return (
+                    <a className="text-white p-2 underline hover:text-blue-500" key={item._key} href={item.url}>
+                      {item.title}
+                    </a>
+                  );
+                },
+              )}
+            </div>
           </div>
         </div>
       </div>
