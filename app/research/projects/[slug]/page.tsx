@@ -2,11 +2,9 @@
 import { type SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/lib/client';
 import Link from 'next/link';
-
+import { PortableText } from '@portabletext/react';
 
 function getContent(project: any) {
-  /** @type {string[]} */
-  const content = project.content;
   const margin = 'my-2';
 
   /**
@@ -20,40 +18,38 @@ length: 1
 markDefs: Array []
 style: "h2"
    */
+  const components = {
+    block: {
+      h2: ({ children }: any) => (
+        <h2 className="text-3xl font-bold mt-8 mb-4">{children}</h2>
+      ),
+      h3: ({ children }: any) => (
+        <h3 className="text-2xl font-bold mt-7 mb-3">{children}</h3>
+      ),
+      h4: ({ children }: any) => (
+        <h4 className="text-xl font-semibold mt-6 mb-2">{children}</h4>
+      ),
+      normal: ({ children }: any) => (
+        <p className="my-2 text-gray-800">{children}</p>
+      ),
+    },
+    marks: {
+      link: ({ value, children }: any) => (
+        <a
+          href={value.href}
+          className="text-gray-600 underline hover:text-blue-600"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {children}
+        </a>
+      ),
+    },
+  };
+
   return (
-    <div>
-      {content.map((item: any, i: number) => {
-        return <div> {item.children ? item.children[0].text : "text"}</div>;
-        // switch (item.type) {
-        //   case 'paragraph':
-        //     return (
-        //       <p key={i} className={margin}>
-        //         {item.text}
-        //       </p>
-        //     );
-
-        //   case 'header':
-        //     return (
-        //       <div key={i} className={margin + ' text-md font-bold'}>
-        //         {item.text}
-        //       </div>
-        //     );
-
-        //   case 'list':
-        //     return (
-        //       <ul key={i} className={margin + ' list-disc pl-5'}>
-        //         {item.items.map((subitem: string, j: number) => (
-        //           <li key={j} className={margin}>
-        //             {subitem}
-        //           </li>
-        //         ))}
-        //       </ul>
-        //     );
-
-        //   default:
-        //     return ;
-        // }
-      })}
+    <div className="max-w-none">
+      <PortableText value={project.content} components={components} />
     </div>
   );
 }
@@ -92,21 +88,14 @@ export default async function ProjectPage({
   return (
     <div>
       <div className="block relative w-full h-full overflow-hidden max-h-100">
-        <img
-          className="w-full h-100 object-cover"
-          src={project.coverImage}
-        />
-        <div 
+        <img className="w-full h-100 object-cover" src={project.coverImage} />
+        <div
           className="absolute inset-0 bg-gradient-to-t from-black to-transparent"
           aria-hidden="true"
         />
         <div className="absolute inset-0 left-1/4 top-1/2 right-1/8">
-          <h1 className="text-white text-4xl font-bold">
-            {project.title}
-          </h1>
-          <p className="mt-2 text-white text-s">
-            {project.description}
-          </p>
+          <h1 className="text-white text-4xl font-serif">{project.title}</h1>
+          <p className="mt-2 text-white text-s">{project.description}</p>
           <div>
             {project.relevantLinks?.map((link: string, i: number) => {
               return <a key={i} href={link}></a>;
@@ -114,20 +103,21 @@ export default async function ProjectPage({
           </div>
         </div>
       </div>
-      
+
       <div className="flex relative z-10">
         {/* navigation sidebar */}
         <aside className="-mt-24 bg-white h-100 w-80 sticky left-0 self-start top-[10vh]">
           {/*should dynamically generate the side navbar from the headers in the content */}
           <div className="pl-10 pt-15">
-            <Link href="/research/projects" 
-            className="text-gray-500 hover:text-gray-700"
-            > 
-              {"< Research"} 
+            <Link
+              href="/research/projects"
+              className="text-gray-500 hover:text-gray-700"
+            >
+              {'< Research'}
             </Link>
           </div>
         </aside>
-        
+
         {/* main content */}
         <div className="flex-1 min-w-0 pl-10 pr-25 pt-10">
           <div className="col-start-2 col-span-2">{getContent(project)}</div>
