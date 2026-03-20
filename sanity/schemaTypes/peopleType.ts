@@ -8,12 +8,7 @@ export const peopleType = defineType({
   icon: UserIcon,
   fields: [
     defineField({
-      name: "firstname",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "lastname",
+      name: "fullname",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
@@ -39,5 +34,20 @@ export const peopleType = defineType({
       of: [{ type: "string" }],
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: "slug",
+      type: "slug",
+      options: {
+        source: "name",
+      },
+      validation: (Rule) => Rule.required(),
+    }),
   ],
+  // orderings: [
+  //   {
+  //     title: "name",
+  //     name: "nameDesc",
+  //     by: [{ field: "name", direction: "desc" }],
+  //   },
+  // ],
 });
