@@ -1,94 +1,27 @@
-"use client";
+// "use client";
 import Image from "next/image";
-import icon from "../favicon.ico";
+import Link from "next/link";
+import { type SanityDocument } from "next-sanity";
+import { defineQuery } from "next-sanity";
+import { client } from "@/sanity/lib/client";
+import createImageUrlBuilder from "@sanity/image-url";
+import type SanityImageSource from "@sanity/image-url";
 
-const labels = [
-  "All",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+// Create an image URL builder using the client
+const builder = createImageUrlBuilder(client);
 
-const generic_people = [
-  {
-    name: "FIRSTNAME LASTNAME",
-    titles: ["Job Title", "Another Job Title"],
-    focuses: "Topic of Interest A, Topic of Interest B",
-    link: "",
-    image: "",
-  },
-];
-
-function Buttons() {
-  return (
-    <fieldset>
-      {labels.map((label) => (
-        <label key={`${label} button label`}>
-          <input
-            name="name letters"
-            key={`${label} button`}
-            type="radio"
-            defaultChecked={label === "All"}
-          />
-          {label}
-        </label>
-      ))}
-    </fieldset>
-  );
+// Export a function that can be used to get image URLs
+export function urlFor(source: typeof SanityImageSource) {
+  return builder.image(source);
 }
 
-function Person() {
-  return (
-    <article>
-      <div>
-        {generic_people.map((person) => (
-          <a
-            key={`${person.name} link`}
-            className="person links"
-            href={person.link}
-          >
-            <Image alt="generic image" src={icon} width={100} height={100} />
-            <div>
-              <h2 className="name">{person.name}</h2>
-              {person.titles.map((title, index) => (
-                <span key={`${person.name} ${title} ${index}`}>{title}</span>
-              ))}
-              <p>{person.focuses}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-      <div>
-        <h3>Something Recent</h3>
-        <a href="">Link</a>
-        <time dateTime="01-01-01">January 1, 2001</time>
-      </div>
-    </article>
-  );
-}
+const DEFAULT_QUERY = `*[
+  _type == "peopleType"
+]|order(fullname desc){_id, fullname, image, recentwork, jobtitles, interests, slug}`;
+
+const counter = defineQuery(`count(*[_type == 'peopleType'])`);
+
+function FilterPeople() {}
 
 function SearchInput() {
   return (
@@ -103,41 +36,78 @@ function SearchInput() {
 }
 
 function Search() {}
+export default async function People() {
+  const options = { next: { revalidate: 30 } };
 
-function InterviewReq() {
-  return (
-    <div>
-      <button onClick={Interview} className="border-solid border">
-        Request Interview
-      </button>
-    </div>
+  const datasets = await client.fetch<SanityDocument[]>(
+    DEFAULT_QUERY,
+    {},
+    options,
   );
-}
+  console.log("Fetched datasets:", datasets);
 
-function Interview() {}
+  const peoplecount = await client.fetch(counter, {}, options);
+  const plural = peoplecount > 1 ? "people" : "person";
 
-function ConsultReq() {
+  const interestsall = [datasets.map((person) => person.interests)];
+  const interestsflat = interestsall.flat(Infinity);
+  const interests = Array.from(new Set(interestsflat));
+  interests.sort();
+
   return (
     <div>
-      <button onClick={Consult} className="border-solid border">
-        Request Consulting
-      </button>
-    </div>
-  );
-}
+      <div>
+        <p>BANNER PHOTO HERE</p>
+        <h1>Experts</h1>
+        <h2>
+          The Conflict Research and Security Studies Lab brings together experts
+          across the disciplines.
+        </h2>
+        <div>
+          <fieldset>
+            {interests.map((interest) => (
+              <label key={`${interest} button label`}>
+                <input
+                  className="checkboxes"
+                  id={`${interest} checkbox`}
+                  name="checkbox"
+                  key={`${interest} checkbox`}
+                  type="checkbox"
+                />
+                {interest}
+              </label>
+            ))}
+          </fieldset>
+        </div>
+        <p>
+          {peoplecount} {plural}{" "}
+        </p>
+        <ul className="flex flex-col gap-y-4">
+          {datasets.map((person) => (
+            <li className="personlist" key={person._id}>
+              <Link
+                className="hover:underline"
+                href={`/people/${person.slug.current}`}
+              >
+                <h2 className="font-semibold">{person.name}</h2>
+                <p>{person.fullname}</p>
+              </Link>
+              <Image
+                alt="generic profile image"
+                src={urlFor(person.image).url()}
+                width={100}
+                height={100}
+              />
+              <p>{person.jobtitles.join(", ")}</p>
+              <p>{person.interests.join(", ")}</p>
 
-function Consult() {}
-
-export default function People() {
-  return (
-    <div>
-      <h1>People</h1>
-      <p>Some blurb</p>
-      <InterviewReq />
-      <ConsultReq />
-      <SearchInput />
-      <Buttons />
-      <Person />
+              <Link className="hover:underline" href={`${person.recentwork}`}>
+                <p>Title of most recent work</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
