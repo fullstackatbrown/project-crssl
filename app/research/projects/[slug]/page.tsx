@@ -3,21 +3,16 @@ import { type SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/lib/client';
 import Link from 'next/link';
 import { PortableText } from '@portabletext/react';
+import imageUrlBuilder from '@sanity/image-url';
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source: any) {
+  return builder.image(source);
+}
 
 function getContent(project: any) {
-  const margin = 'my-2';
-
-  /**
-   * Object { _key: "e039d8a92786", _type: "block", style: "h2", … }
-_key: "e039d8a92786"
-_type: "block"
-children: Array [ {…} ]
-    0: Object { _key: "61ab0d04dfa4", _type: "span", text: "Maintaining secure, accurate, and accessible voter registration rolls is an ongoing challenge that has come under increased political scrutiny in recent years.", … }
-length: 1
-<prototype>: Array []
-markDefs: Array []
-style: "h2"
-   */
+  console.log(project.content);
   const components = {
     block: {
       h2: ({ children }: any) => (
@@ -43,6 +38,25 @@ style: "h2"
         >
           {children}
         </a>
+      ),
+    },
+    list: {
+      bullet: ({ children }: any) => (
+        <ul className="list-disc pl-6 my-4 space-y-2">{children}</ul>
+      ),
+    },
+    listItem: {
+      bullet: ({ children }: any) => (
+        <li className="text-gray-800">{children}</li>
+      ),
+    },
+    types: {
+      image: ({ value }: any) => (
+        <img
+          src={urlFor(value).width(800).url()}
+          alt={value.alt || ''}
+          className="my-6 rounded-lg"
+        />
       ),
     },
   };
