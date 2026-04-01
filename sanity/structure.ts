@@ -12,8 +12,9 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.documentTypeListItem('exampleDataset').title('Example Dataset'),
       S.documentTypeListItem('examplePerson').title('Example Person'),
+      S.documentTypeListItem('projectType').title('Project Type'),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['exampleDataset', 'examplePerson'].includes(item.getId()!),
+        (item) => item.getId() && !['exampleDataset', 'examplePerson', 'projectType'].includes(item.getId()!),
       ),
     ])
