@@ -1,94 +1,28 @@
-"use client";
+// "use client";
 import Image from "next/image";
-import icon from "../favicon.ico";
+import Link from "next/link";
+import { type SanityDocument } from "next-sanity";
+import { defineQuery } from "next-sanity";
+import { client } from "@/sanity/lib/client";
+import createImageUrlBuilder from "@sanity/image-url";
+import type SanityImageSource from "@sanity/image-url";
+import { relative } from "path";
 
-const labels = [
-  "All",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+// Create an image URL builder using the client
+const builder = createImageUrlBuilder(client);
 
-const generic_people = [
-  {
-    name: "FIRSTNAME LASTNAME",
-    titles: ["Job Title", "Another Job Title"],
-    focuses: "Topic of Interest A, Topic of Interest B",
-    link: "",
-    image: "",
-  },
-];
-
-function Buttons() {
-  return (
-    <fieldset>
-      {labels.map((label) => (
-        <label key={`${label} button label`}>
-          <input
-            name="name letters"
-            key={`${label} button`}
-            type="radio"
-            defaultChecked={label === "All"}
-          />
-          {label}
-        </label>
-      ))}
-    </fieldset>
-  );
+// Export a function that can be used to get image URLs
+export function urlFor(source: typeof SanityImageSource) {
+  return builder.image(source);
 }
 
-function Person() {
-  return (
-    <article>
-      <div>
-        {generic_people.map((person) => (
-          <a
-            key={`${person.name} link`}
-            className="person links"
-            href={person.link}
-          >
-            <Image alt="generic image" src={icon} width={100} height={100} />
-            <div>
-              <h2 className="name">{person.name}</h2>
-              {person.titles.map((title, index) => (
-                <span key={`${person.name} ${title} ${index}`}>{title}</span>
-              ))}
-              <p>{person.focuses}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-      <div>
-        <h3>Something Recent</h3>
-        <a href="">Link</a>
-        <time dateTime="01-01-01">January 1, 2001</time>
-      </div>
-    </article>
-  );
-}
+const DEFAULT_QUERY = `*[
+  _type == "peopleType"
+]|order(fullname asc){_id, fullname, image, email, recentwork, jobtitles, interests, slug}`;
+
+const counter = defineQuery(`count(*[_type == 'peopleType'])`);
+
+function FilterPeople() {}
 
 function SearchInput() {
   return (
@@ -103,41 +37,222 @@ function SearchInput() {
 }
 
 function Search() {}
+export default async function People() {
+  const options = { next: { revalidate: 30 } };
 
-function InterviewReq() {
-  return (
-    <div>
-      <button onClick={Interview} className="border-solid border">
-        Request Interview
-      </button>
-    </div>
+  const datasets = await client.fetch<SanityDocument[]>(
+    DEFAULT_QUERY,
+    {},
+    options,
   );
-}
+  console.log("Fetched datasets:", datasets);
 
-function Interview() {}
+  const peoplecount = await client.fetch(counter, {}, options);
+  const plural = peoplecount > 1 ? "people" : "person";
 
-function ConsultReq() {
+  const interestsall = [datasets.map((person) => person.interests)];
+  const interestsflat = interestsall.flat(Infinity);
+  const interests = Array.from(new Set(interestsflat));
+  interests.sort();
+
+  const titlesall = [datasets.map((person) => person.jobtitles)];
+  const titlesflat = titlesall.flat(Infinity);
+  const titles = Array.from(new Set(titlesflat));
+  titles.sort();
+
   return (
     <div>
-      <button onClick={Consult} className="border-solid border">
-        Request Consulting
-      </button>
-    </div>
-  );
-}
+      <div>
+        <div
+          style={{
+            height: "15rem",
+            background: "pink",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+            // alignItems: "flex-end",
+          }}
+        >
+          <h1
+            style={{
+              position: "absolute",
+              bottom: "3rem",
+              marginLeft: "2rem",
+            }}
+            className="text-4xl"
+          >
+            Experts
+          </h1>
+          <h2
+            style={{
+              position: "absolute",
+              bottom: "1rem",
+              marginLeft: "2rem",
+            }}
+            className="text-xl"
+          >
+            The Conflict Research and Security Studies Lab brings together
+            experts across the disciplines.
+          </h2>
+        </div>
+        <p
+          className="text-lg"
+          style={{ marginLeft: "3rem", marginTop: "2rem" }}
+        >
+          <b>{peoplecount}</b> {plural}{" "}
+        </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "2rem",
+          }}
+        >
+          <input
+            style={{
+              width: "88.5rem",
+              height: "3rem",
+              textIndent: "2rem",
+            }}
+            className="border-solid border bg-gray-50"
+            type="search"
+            placeholder="Search"
+          />
+          <button
+            style={{ width: "3rem", height: "3rem" }}
+            className="group absolute right-[3rem] hover:bg-[#a51c30]"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="relative -right-[0.75rem] "
+            >
+              <path
+                d="M19 19L14.66 14.66M17 9C17 13.4183 13.4183 17 9 17C4.58172 17 1 13.4183 1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9Z"
+                stroke="#979696"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="group-hover:stroke-gray-50"
+              />
+            </svg>
+          </button>
+        </div>
+        <div style={{ display: "flex" }}>
+          <div style={{ marginLeft: "3rem", marginTop: "2rem" }}>
+            <h1 className="text-lg">Filters</h1>
+            <hr
+              style={{
+                width: "15rem",
+                marginTop: "0.1rem",
+                // marginBottom: "0.1rem",
+              }}
+            ></hr>
+            <fieldset>
+              {interests.map((interest) => (
+                <label
+                  className="text-base"
+                  style={{
+                    display: "block",
+                    clear: "left",
+                    marginTop: "0.1rem",
+                  }}
+                  key={`${interest} button label`}
+                >
+                  <input
+                    style={{
+                      clear: "left",
+                      marginRight: "0.5rem",
+                      marginTop: "0.5rem",
+                    }}
+                    className="checkboxes"
+                    id={`${interest} checkbox`}
+                    name="checkbox"
+                    key={`${interest} checkbox`}
+                    type="checkbox"
+                  />
+                  {interest}
+                </label>
+              ))}
+            </fieldset>
+            <hr
+              style={{
+                width: "15rem",
+                marginTop: "0.2rem",
+              }}
+            ></hr>
+            <fieldset>
+              {titles.map((title) => (
+                <label
+                  style={{
+                    display: "block",
+                    clear: "left",
+                    marginTop: "0.1rem",
+                  }}
+                  key={`${title} button label`}
+                >
+                  <input
+                    style={{
+                      clear: "left",
+                      marginRight: "0.5rem",
+                      marginTop: "0.5rem",
+                    }}
+                    className="checkboxes"
+                    id={`${title} checkbox`}
+                    name="checkbox"
+                    key={`${title} checkbox`}
+                    type="checkbox"
+                  />
+                  {title}
+                </label>
+              ))}
+            </fieldset>
+          </div>
+          <div
+            className="allpeople"
+            style={{ marginTop: "2rem", marginLeft: "2rem" }}
+          >
+            <div className="flex flex-col gap-y-4">
+              {datasets.map((person) => (
+                <div
+                  style={{ display: "flex", alignItems: "center" }}
+                  className="personlist"
+                  key={person._id}
+                >
+                  <div>
+                    {" "}
+                    <Image
+                      alt="generic profile image"
+                      src={urlFor(person.image).url()}
+                      width={150}
+                      height={150}
+                    />
+                  </div>
+                  <div style={{ marginLeft: "1rem" }}>
+                    <Link
+                      className="hover:underline"
+                      href={`/people/${person.slug.current}`}
+                    >
+                      <b className="text-lg">{person.fullname}</b>
+                    </Link>
 
-function Consult() {}
-
-export default function People() {
-  return (
-    <div>
-      <h1>People</h1>
-      <p>Some blurb</p>
-      <InterviewReq />
-      <ConsultReq />
-      <SearchInput />
-      <Buttons />
-      <Person />
+                    <p className="text-gray-500">
+                      {person.jobtitles.join(", ")}
+                    </p>
+                    <p style={{ marginTop: "1rem" }}>
+                      {person.interests.join(", ")}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
