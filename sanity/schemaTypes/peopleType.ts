@@ -18,6 +18,16 @@ export const peopleType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "email",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "bio",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "recentwork",
       type: "url",
       validation: (Rule) => Rule.required(),
