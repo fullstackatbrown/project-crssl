@@ -1,70 +1,220 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Download, Database } from 'lucide-react';
+import { client } from '../../sanity/lib/client';
 
+// We can add more later too, these are just to match figma
+const FILTER_CATEGORIES = [
+    'Global Securities',
+    'Conflicts',
+    'Macroeconomics',
+    'World Domination',
+    'Make Love, Not War',
+];
+
+// Creating data type for dataset imported from Sanity
+type Dataset = {
+    _id: string;
+    name: string;
+    slug: { current: string };
+    publishedAt: string;
+    description: string;
+    files: { asset: { url: string } }[];
+    links: { title: string; url: string }[];
+    contributors: { _id: string; name: string }[];
+    content: any[];
+}
+
+
+// Main page
 const DataPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    return (
-        <div className="min-h-screen bg-white">
-            {/* 1. Hero Section: Split Layout */}
-            <section className="flex flex-col md:flex-row min-h-[82vh]">
-                {/* Left Side: Text */}
-                <div className="w-full md:w-1/2 p-40 flex flex-col justify-center">
-                    <h1 className="text-6xl font-black text-black mb-6 tracking-tighter">DATA</h1>
-                    <p className="text-x text-black leading-relaxed text-black-700 max-w-md" style={{ width: '800px' }}>
-                        The Conflict Research and Security Studies (CRSS)
-                        Lab offers students hands-on experience in data collection,
-                        data analysis, and research methods. (this is filler btw)
-                    </p>
-                </div>
+    const [activeTab, setActiveTab] = useState<'datasets' | 'tools'>('datasets');
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
+    const [datasets, setDatasets] = useState<Dataset[]>([]);
 
-                {/* Right Side: Image CURRENTLY FILLER */}
-                <div
-                    className="w-full md:w-1/2 bg-cover bg-center min-h-[400px]"
-                    style={{
-                        backgroundImage:
-                            "url(https://ih1.redbubble.net/image.872088403.2390/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg)"
-                    }}
-                >
-                    {/* Background image container */}
-                </div>
+    // Call client 
+    useEffect(() => {
+        client.fetch(`*[_type == "exampleDataset"]{
+        _id,
+        name,
+        slug,
+        publishedAt,
+        description,
+        files[]{asset->{url}},
+        links,
+        contributors[]->{_id, name},
+        content
+    }`).then(data => setDatasets(data));
+    }, []);
+
+    const toggleFilter = (cat: string) => {
+        setActiveFilters(prev =>
+            prev.includes(cat) ? prev.filter(f => f !== cat) : [...prev, cat]
+        );
+    };
+
+    return (
+        <div className="min-h-screen bg-white font-serif" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+
+            {/* ── Site Header ── */}
+            <header className="border-b border-gray-200 bg-white py-4 text-center">
+                <h1 className="text-3xl font-bold tracking-widest text-gray-900" style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.15em' }}>
+                    CRSS LAB
+                </h1>
+                <p className="text-sm text-gray-500 mt-0.5" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                    Conflict Research and Security Studies
+                </p>
+                <nav className="mt-3 flex justify-center gap-10 text-sm text-gray-700">
+                    {['About', 'Team', 'Project', 'Subscribe'].map(item => (
+                        <a key={item} href="#" className="hover:text-black transition-colors">{item}</a>
+                    ))}
+                </nav>
+            </header>
+
+            {/* ── Dark Hero Banner ── */}
+            <section
+                className="relative flex flex-col justify-end px-10 pb-10"
+                style={{
+                    background: 'linear-gradient(160deg, #4a4a48 0%, #2e2e2c 60%, #1a1a18 100%)',
+                    minHeight: '280px',
+                }}
+            >
+                <h2 className="text-4xl font-bold text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>Data</h2>
+                <p className="text-gray-300 text-sm max-w-md" style={{ fontFamily: 'Georgia, serif' }}>
+                    Our lab collects data on some of the most vital problems in the world.
+                </p>
             </section>
 
-            {/* 2. Page Switching Bar */}
-            <nav className="flex items-center justify-center min-h-screen-sticky top-0 z-10 border-b-20 border-[#a51c30] flex bg-white">
-                <button className="bg-slate-600 text-white px-8 py-3 font-bold uppercase tracking-wider text-sm">
-                    Our Data
+            {/* ── Tab Bar ── */}
+            <div className="grid grid-cols-2 border-b border-gray-300 bg-white">
+                <button
+                    onClick={() => setActiveTab('datasets')}
+                    className={`py-4 text-sm font-semibold tracking-wide transition-colors border-r border-gray-300 ${activeTab === 'datasets'
+                        ? 'bg-white text-gray-900'
+                        : 'bg-gray-50 text-gray-500 hover:bg-white'
+                        }`}
+                    style={{ fontFamily: 'Georgia, serif' }}
+                >
+                    Datasets
                 </button>
-                <button className="flex items-center gap-2 px-8 py-3 text-gray-600 font-bold uppercase tracking-wider text-sm hover:bg-gray-50">
-                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                    Tools + Resources
+                <button
+                    onClick={() => setActiveTab('tools')}
+                    className={`py-4 text-sm font-semibold tracking-wide transition-colors ${activeTab === 'tools'
+                        ? 'bg-white text-gray-900'
+                        : 'bg-gray-50 text-gray-500 hover:bg-white'
+                        }`}
+                    style={{ fontFamily: 'Georgia, serif' }}
+                >
+                    Tools &amp; Resources
                 </button>
-            </nav>
+            </div>
 
-            {/* 3. Data Area */}
-            <main className="p-12 space-y-8 bg-gray-100">
-                <section className="max-w-3xl mx-auto">
-                    <h1 className="mb-8 text-5xl font-bold text-[#a51c30]">Data</h1>
+            {/* ── Main Content ── */}
+            <main className="bg-gray-100 px-10 py-8 min-h-screen">
 
-                    <div className="flex items-center gap-3 border-b-2 border-gray-400 pb-2">
-                        <Search className="w-6 h-6 text-gray-500" />
-                        <input
-                            type="text"
-                            placeholder="Search datasets"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-transparent text-lg text-gray-700 placeholder-gray-500 outline-none"
-                        />
-                    </div>
+                {/* Results count */}
+                <p className="text-sm text-gray-600 mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+                    <span className="font-bold text-gray-900">{datasets.length}</span> results
+                </p>
 
-                </section>
+                {/* Search bar */}
+                <div className="flex items-center gap-2 bg-white border border-gray-300 rounded px-4 py-2 mb-6">
+                    <Search className="w-4 h-4 text-gray-400 shrink-0" />
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        className="w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+                        style={{ fontFamily: 'Georgia, serif' }}
+                    />
+                </div>
 
-                <section>
-                    <h1 className="pl-50 mb-20 text-black">search and filter is placeholder text, data links will show below</h1>
-                    <h6 className="pl-25 text-1xl font-bold text-black mb-5 text-black">RESULTS</h6>
-                    <h1 className="pl-25 text-black">data links will go here</h1>
-                </section>
+                <div className="flex gap-8">
+
+                    {/* ── Sidebar Filters ── */}
+                    <aside className="w-48 shrink-0">
+                        <div className="flex items-center gap-2 mb-3">
+                            <span className="text-sm font-semibold text-gray-800" style={{ fontFamily: 'Georgia, serif' }}>Filters</span>
+                        </div>
+                        <ul className="space-y-2">
+                            {FILTER_CATEGORIES.map(cat => (
+                                <li key={cat} className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        id={cat}
+                                        checked={activeFilters.includes(cat)}
+                                        onChange={() => toggleFilter(cat)}
+                                        className="w-3.5 h-3.5 accent-gray-700"
+                                    />
+                                    <label
+                                        htmlFor={cat}
+                                        className="text-xs text-gray-700 cursor-pointer"
+                                        style={{ fontFamily: 'Georgia, serif' }}
+                                    >
+                                        {cat}
+                                    </label>
+                                </li>
+                            ))}
+                        </ul>
+                    </aside>
+
+                    {/* ── 3-Column Card Grid ── */}
+                    <section className="flex-1 grid grid-cols-3 gap-4">
+                        {datasets.map(ds => (
+                            <article
+                                key={ds._id}
+                                className="bg-white border border-gray-200 rounded p-4 flex flex-col gap-2"
+                            >
+                                <span className="text-xs text-gray-400">
+                                    {new Date(ds.publishedAt).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                    })}
+                                </span>
+                                <h3
+                                    className="text-sm font-semibold text-gray-900 leading-snug"
+                                    style={{ fontFamily: 'Georgia, serif' }}
+                                >
+                                    {ds.name}
+                                </h3>
+                                <p className="text-xs text-gray-500 flex-1" style={{ fontFamily: 'Georgia, serif' }}>
+                                    {ds.description}
+                                </p>
+
+                                {/* Contributors */}
+                                {ds.contributors?.length > 0 && (
+                                    <p className="text-xs text-gray-400">
+                                        {ds.contributors.map(c => c.name).join(', ')}
+                                    </p>
+                                )}
+
+                                <div className="flex gap-2 mt-1">
+                                    {/* Links */}
+                                    {ds.links?.map(link => (
+                                        <a href={link.url} key={link.url} className="flex items-center gap-1 border border-gray-300 rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-50">
+                                            <Database className="w-3 h-3" />
+                                            {link.title}
+                                        </a>
+                                    ))}
+
+                                    {/* Files */}
+                                    {ds.files?.map((file, i) => (
+                                        <a href={file.asset.url} key={i} download className="flex items-center gap-1 border border-gray-300 rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-50">
+                                            <Download className="w-3 h-3" />
+                                            CSV
+                                        </a>
+                                    ))}
+                                </div>
+                            </article>
+                        ))}
+
+                    </section>
+
+                </div>
             </main>
         </div>
     );
