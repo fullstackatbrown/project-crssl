@@ -12,6 +12,31 @@ const navLinks = [
   { name: "Resources", href: "/resources" },
 ];
 
+function SlashLogo({ size = 1 }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center" }}>
+      {/* slash */}
+      <span
+        style={{
+          width: `${3 * size}px`,
+          height: `${28 * size}px`,
+          backgroundColor: "#7c0a0b",
+          transform: "rotate(20deg)",
+          marginRight: `${6 * size}px`,
+        }}
+      />
+      {/* rectangle */}
+      <span
+        style={{
+          width: `${10 * size}px`,
+          height: `${28 * size}px`,
+          backgroundColor: "#7c0a0b",
+        }}
+      />
+    </span>
+  );
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,16 +47,46 @@ export default function Navbar() {
         {/* Centered Logo + Description */}
         <div className="flex flex-col items-center pt-10 pb-2">
           <Link href="/">
-            <Image
-              src="/templogoblack.png"
-              alt="CRSSL logo"
-              width={250}
-              height={125}
+          <h1
+          style={{
+            fontFamily: "'Georgia', serif",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            letterSpacing: "0.05em",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "6px",
+          }}
+        >
+          CRSS LAB
+          <span style={{ display: "inline-flex", alignItems: "center" }}>
+            {/* slash */}
+            <span
+              style={{
+                width: "3px",
+                height: "28px",
+                backgroundColor: "#7c0a0b",
+                transform: "rotate(20deg)",
+                marginRight: "6px",
+                marginLeft: "3px",
+              }}
             />
-          </Link>
-          <p className="mt-2 mb-3 text-md text-gray-500 font-serif tracking-wide text-center">
-            Placeholder for description
-          </p>
+            {/* rectangle */}
+            <span
+              style={{
+                width: "10px",
+                height: "28px",
+                backgroundColor: "#7c0a0b",
+              }}
+            />
+          </span>
+        </h1>
+        </Link>
+
+        <p style={{ fontFamily: "sans-serif", fontSize: "0.8rem", color: "#888", marginTop: "4px", letterSpacing: "0.05em" }}>
+          Conflict Research and Security Studies
+        </p>
         </div>
 
         {/* Desktop Nav Links */}
