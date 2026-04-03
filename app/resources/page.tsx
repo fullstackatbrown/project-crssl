@@ -1,107 +1,143 @@
-type LinkItem = {
-  id: number;
+import { client } from "@/sanity/lib/client";
+
+async function getResourcesPage() {
+  return client.fetch(`
+    *[_type == "resourcesPage"][0] {
+      title,
+      sections[] {
+        title,
+        description,
+        items[] {
+          label,
+          description,
+          resourceType,
+          url,
+          file { asset-> { url } },
+          image { asset-> { url }, alt },
+          youtubeUrl
+        }
+      }
+    }
+  `);
+}
+
+type ResourceItem = {
   label: string;
   description: string;
-  href: string;
+  resourceType: "link" | "file" | "image" | "youtube";
+  url?: string;
+  file?: { asset: { url: string } };
+  image?: { asset: { url: string }; alt?: string };
+  youtubeUrl?: string;
 };
 
 type Section = {
-  id: number;
-  sectionLabel: string;
-  sectionDescription: string;
-  items: LinkItem[];
+  title: string;
+  description: string;
+  items: ResourceItem[];
 };
 
-const sections: Section[] = [
-  {
-    id: 1,
-    sectionLabel: "Tools & Resources",
-    sectionDescription: "A curated list of tools and resources.",
-    items: [
-      {
-        id: 1,
-        label: "Resource One",
-        description: "Description for resource one.",
-        href: "#",
-      },
-    ],
-  },
-  {
-    id: 2,
-    sectionLabel: "Speaker Series",
-    sectionDescription: "Upcoming and past speaker series events.",
-    items: [
-      {
-        id: 1,
-        label: "Speaker Series Event One",
-        description: "Description for speaker series event one.",
-        href: "#",
-      },
-    ],
-  },
-  {
-    id: 3,
-    sectionLabel: "Trainings",
-    sectionDescription: "Available training programs and workshops.",
-    items: [
-      {
-        id: 1,
-        label: "Training One",
-        description: "Description for training one.",
-        href: "#",
-      },
-    ],
-  },
-];
+function ResourceItem({ item }: { item: ResourceItem }) {
+  const content = (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        padding: "1.25rem 0",
+      }}
+    >
+      <div>
+        <div
+          style={{
+            fontWeight: "bold",
+            fontSize: "1.25rem",
+            marginBottom: "0.5rem",
+          }}
+        >
+          {item.label}
+        </div>
+        <div style={{ fontSize: "0.95rem" }}>{item.description}</div>
+      </div>
+      <span style={{ fontSize: "1.25rem", marginLeft: "1rem", flexShrink: 0 }}>
+        →
+      </span>
+    </div>
+  );
 
-function LinkList({ items }: { items: LinkItem[] }) {
+  // YouTube gets its own embed instead of a link
+  if (item.resourceType === "youtube" && item.youtubeUrl) {
+    const id = item.youtubeUrl.match(/(?:v=|youtu\.be\/)([^&?/]+)/)?.[1];
+    return (
+      <li style={{ borderBottom: "1px solid #ccc" }}>
+        <div style={{ padding: "1.25rem 0" }}>
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.25rem",
+              marginBottom: "0.5rem",
+            }}
+          >
+            {item.label}
+          </div>
+          <div style={{ fontSize: "0.95rem", marginBottom: "0.75rem" }}>
+            {item.description}
+          </div>
+          <iframe
+            src={`https://www.youtube.com/embed/${id}`}
+            width="100%"
+            height="315"
+            allowFullScreen
+            style={{ border: "none" }}
+          />
+        </div>
+      </li>
+    );
+  }
+
+  // Everything else is a link
+  const href =
+    item.resourceType === "link"
+      ? item.url
+      : item.resourceType === "file"
+        ? item.file?.asset?.url
+        : item.resourceType === "image"
+          ? item.image?.asset?.url
+          : "#";
+
+  return (
+    <li style={{ borderBottom: "1px solid #ccc" }}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none", display: "block" }}
+      >
+        {content}
+      </a>
+    </li>
+  );
+}
+
+function LinkList({ items }: { items: ResourceItem[] }) {
   return (
     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
       {items.map((item) => (
-        <li key={item.id} style={{ borderBottom: "1px solid #ccc" }}>
-          <a
-            href={item.href}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              padding: "1.25rem 0",
-              textDecoration: "none",
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "1.25rem",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                {item.label}
-              </div>
-              <div style={{ fontSize: "0.95rem" }}>{item.description}</div>
-            </div>
-            <span
-              style={{ fontSize: "1.25rem", marginLeft: "1rem", flexShrink: 0 }}
-            >
-              →
-            </span>
-          </a>
-        </li>
+        <ResourceItem key={item.label} item={item} />
       ))}
     </ul>
   );
 }
 
-export default function ResourcesAndTools() {
+export default async function ResourcesAndTools() {
+  const data = await getResourcesPage();
+
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
-      <h1 style={{ fontSize: "2.5rem", marginBottom: "2rem" }}>
-        Tools + Resources
-      </h1>
+      <h1 style={{ fontSize: "2.5rem", marginBottom: "2rem" }}>{data.title}</h1>
 
-      {sections.map((section) => (
-        <section key={section.id} style={{ marginBottom: "3rem" }}>
+      {data.sections.map((section: Section) => (
+        <section key={section.title} style={{ marginBottom: "3rem" }}>
           <p
             style={{
               fontWeight: "bold",
@@ -111,10 +147,10 @@ export default function ResourcesAndTools() {
               marginBottom: "0.25rem",
             }}
           >
-            {section.sectionLabel}
+            {section.title}
           </p>
           <p style={{ fontSize: "0.95rem", marginBottom: "1rem" }}>
-            {section.sectionDescription}
+            {section.description}
           </p>
           <LinkList items={section.items} />
         </section>

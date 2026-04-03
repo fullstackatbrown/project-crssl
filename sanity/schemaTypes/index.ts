@@ -7,6 +7,7 @@ import { examplePersonType } from "./examplePersonType";
 import { paperType } from "./paperType";
 import { peopleType } from "./peopleType";
 import { projectType } from "./projectType";
+import { resourcesType } from "./resourcesType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -17,5 +18,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     peopleType,
     authorType,
     paperType,
+    resourcesType
   ],
 };
