@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="w-full border-t bg-primary pt-20">
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          
+
           {/* Left */}
           <div className="">
             <div>
