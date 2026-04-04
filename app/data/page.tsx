@@ -57,22 +57,6 @@ const DataPage = () => {
 
     return (
         <div className="min-h-screen bg-white font-serif" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
-
-            {/* ── Site Header ── */}
-            <header className="border-b border-gray-200 bg-white py-4 text-center">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900" style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.15em' }}>
-                    CRSS LAB
-                </h1>
-                <p className="text-sm text-gray-500 mt-0.5" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-                    Conflict Research and Security Studies
-                </p>
-                <nav className="mt-3 flex justify-center gap-10 text-sm text-gray-700">
-                    {['About', 'Team', 'Project', 'Subscribe'].map(item => (
-                        <a key={item} href="#" className="hover:text-black transition-colors">{item}</a>
-                    ))}
-                </nav>
-            </header>
-
             {/* ── Dark Hero Banner ── */}
             <section
                 className="relative flex flex-col justify-end px-10 pb-10"
