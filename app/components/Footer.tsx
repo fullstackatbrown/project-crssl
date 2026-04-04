@@ -1,6 +1,30 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Linkedin, Github, Twitter } from "lucide-react";
+
+function SlashLogo({ size = 1 }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center" }}>
+      {/* slash */}
+      <span
+        style={{
+          width: `${3 * size}px`,
+          height: `${28 * size}px`,
+          backgroundColor: "#fff",
+          transform: "rotate(20deg)",
+          marginRight: `${6 * size}px`,
+        }}
+      />
+      {/* rectangle */}
+      <span
+        style={{
+          width: `${10 * size}px`,
+          height: `${28 * size}px`,
+          backgroundColor: "#fff",
+        }}
+      />
+    </span>
+  );
+}
 
 export default function Footer() {
   return (
@@ -10,16 +34,9 @@ export default function Footer() {
 
           {/* Left */}
           <div className="">
-            <div>
-              <Image
-                src="/templogo.png" 
-                alt="CRSSL logo"
-                width={200}
-                height={100}
-              />
-            </div>
-            <div className="pl-3 text-sm text-background">
-              © {new Date().getFullYear()} CRSSL Lab. All rights reserved.
+            <div className="text-3xl pb-2 text-background font-serif">CRSS LAB <SlashLogo size={0.8} /></div>
+            <div className="text-sm text-background">
+              © {new Date().getFullYear()} CRSS Lab. All rights reserved.
             </div>
           </div>
 
