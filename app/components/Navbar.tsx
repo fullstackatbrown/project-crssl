@@ -12,36 +12,11 @@ const navLinks = [
   { name: "Resources", href: "/resources" },
 ];
 
-function SlashLogo({ size = 1 }) {
-  return (
-    <span style={{ display: "inline-flex", alignItems: "center" }}>
-      {/* slash */}
-      <span
-        style={{
-          width: `${3 * size}px`,
-          height: `${28 * size}px`,
-          backgroundColor: "#7c0a0b",
-          transform: "rotate(20deg)",
-          marginRight: `${6 * size}px`,
-        }}
-      />
-      {/* rectangle */}
-      <span
-        style={{
-          width: `${10 * size}px`,
-          height: `${28 * size}px`,
-          backgroundColor: "#7c0a0b",
-        }}
-      />
-    </span>
-  );
-}
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="w-full border-b bg-white">
+    <nav className="w-full bg-white">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Centered Logo + Description */}
@@ -51,7 +26,6 @@ export default function Navbar() {
           style={{
             fontFamily: "'Georgia', serif",
             fontSize: "2rem",
-            fontWeight: "bold",
             letterSpacing: "0.05em",
             display: "flex",
             justifyContent: "center",
