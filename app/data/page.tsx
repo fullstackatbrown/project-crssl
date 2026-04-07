@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Search, Download, Database } from 'lucide-react';
 import { client } from '../../sanity/lib/client';
 
+// TODO: add debounce to search input or a search button to avoid frequent API calls
+
 // We can add more later too, these are just to match figma
 const FILTER_CATEGORIES = [
     'Global Securities',
@@ -26,6 +28,64 @@ type Dataset = {
     content: any[];
 }
 
+const stringQueryFields = ['name', 'description'];
+
+/**
+ * Builds a search query for filtering datasets based on a search term
+ * @param searchTerm The user's search input, case insensitive
+ * @param allowPartialMatch 1+ instead of all words must be present in one field
+ * @param searchAllFields Match across all string fields instead of checking each field separately
+ * @return A query string that can be appended to the Sanity GROQ query for filtering datasets
+ */
+const buildSearchQuery = (searchTerm: string, searchAllFields: boolean = false, allowPartialMatch: boolean = false): string => {
+    // TODO: add edge case like empty string, unvalid characters
+    const words: string[] = searchTerm.trim()
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (words.length === 0) return '';
+
+    const intraOp = allowPartialMatch ? '||' : '&&';
+
+    const buildSubQuery = (field: string, word: string): string => {
+        return `${field} match "*${word}*"`; // partial match with wildcards
+    }
+    let query: string = '';
+    const results: string[] = [];
+    if (searchAllFields) {
+        // construct boolean for every word
+        for (const word of words) {
+            const wordQuery = stringQueryFields.map(field => buildSubQuery(field, word)).join(` || `);
+            results.push(wordQuery);
+        }
+        query = results.join(` ${intraOp} `);
+    } else {
+        // construct boolean for every field
+        for (const field of stringQueryFields) {
+            const fieldQuery = words.map(word => buildSubQuery(field, word)).join(` ${intraOp} `);
+            results.push(fieldQuery);
+        }
+        query = results.join(' || ');
+    }
+    return `(${query})`;
+}
+
+const buildTagQuery = (): string => {
+    return ''; // TODO
+}
+
+const projection: string = `{
+    _id,
+    name,
+    slug,
+    publishedAt,
+    description,
+    files[]{asset->{url}},
+    links,
+    contributors[]->{_id, name},
+    content
+}`;
 
 // Main page
 const DataPage = () => {
@@ -36,17 +96,20 @@ const DataPage = () => {
 
     // Call client 
     useEffect(() => {
-        client.fetch(`*[_type == "exampleDataset"]{
-        _id,
-        name,
-        slug,
-        publishedAt,
-        description,
-        files[]{asset->{url}},
-        links,
-        contributors[]->{_id, name},
-        content
-    }`).then(data => setDatasets(data));
+        let search: string = '_type == "exampleDataset"';
+        if (searchQuery) {
+            const searchPart = buildSearchQuery(searchQuery, true, true);
+            if (searchPart) {
+                search += ` && ${searchPart}`;
+            }
+        }
+        if (activeFilters.length > 0) {
+            const tagPart = buildTagQuery();
+            if (tagPart) {
+                search += ` && ${tagPart}`;
+            }
+        }
+        client.fetch(`*[${search}]${projection}`).then(data => setDatasets(data));
     }, []);
 
     const toggleFilter = (cat: string) => {
