@@ -1,5 +1,5 @@
 import { defineField } from "sanity";
-import { ArchiveIcon, LinkIcon } from '@sanity/icons'
+import { ArchiveIcon, TagsIcon, LinkIcon } from '@sanity/icons'
 
 export const datasetType = {
     name: 'dataset',
@@ -9,6 +9,7 @@ export const datasetType = {
     fields: [
         defineField({
             name: 'name',
+            title: 'Name',
             type: 'string',
             validation: Rule => Rule.required()
         }),
@@ -22,7 +23,8 @@ export const datasetType = {
         }),
         defineField({
             name: 'date',
-            type: 'datetime',
+            title: 'Date',
+            type: 'date',
             validation: Rule => Rule.required()
         }),
         defineField({
@@ -30,7 +32,41 @@ export const datasetType = {
             type: 'text',
         }),
         defineField({
+            name: 'tags',
+            title: 'Tags',
+            type: 'array',
+            of: [{
+                type: 'object',
+                icon: TagsIcon,
+                fields: [
+                    defineField({
+                        name: 'tag',
+                        title: 'Tag',
+                        type: 'string',
+                        description: 'Lowercase, underscores as spaces, hyphens for compound words — e.g. "time_series" or "pre-trained_models"',
+                        validation: Rule => Rule.required().custom(tag => {
+                            if (typeof tag === 'undefined') return true
+                            if (/[A-Z]/.test(tag)) return 'Must be lowercase'
+                            if (/^[_-]/.test(tag)) return 'Cannot start with an underscore or hyphen'
+                            if (/[_-]$/.test(tag)) return 'Cannot end with an underscore or hyphen'
+                            if (/[_-]{2,}/.test(tag)) return 'No consecutive underscores or hyphens'
+                            if (/[^a-z0-9_-]/.test(tag)) return 'Only letters, numbers, underscores and hyphens allowed'
+                            return true
+                        })
+                    })
+                ],
+                preview: { select: { title: 'tag' } }
+            }],
+            validation: Rule => Rule.custom(tags => {
+                if (!tags) return true
+                const values = tags.map(t => t.tag)
+                const unique = new Set(values)
+                return unique.size === values.length ? true : 'Duplicate tags found.'
+            }).warning()
+        }),
+        defineField({
             name: 'files',
+            title: 'Files',
             type: 'array',
             of: [
                 defineField({
@@ -44,6 +80,7 @@ export const datasetType = {
         }),
         defineField({
             name: 'links',
+            title: 'Links',
             type: 'array',
             of: [
                 defineField({

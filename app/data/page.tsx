@@ -21,7 +21,7 @@ type Dataset = {
     _id: string;
     name: string;
     slug: { current: string };
-    publishedAt: string;
+    date: string;
     description: string;
     tags: string[];
     files: { asset: { originalFilename: string; url: string } }[];
@@ -78,15 +78,16 @@ const buildTagQuery = (): string => {
 }
 
 const projection: string = `{
-    _id,
-    name,
-    slug,
-    publishedAt,
-    description,
-    files[]{asset->{originalFilename, url}},
-    links,
-    contributors[]->{_id, name},
-    content
+  _id,
+  name,
+  slug,
+  date,
+  description,
+  "tags": tags[].tag,
+  files[]{ asset->{ originalFilename, url } },
+  links,
+  contributors[]->{ _id, name },
+  content
 }`;
 
 // Main page
@@ -235,7 +236,7 @@ const DataPage = () => {
                                 className="bg-white border border-gray-200 rounded p-4 flex flex-col gap-2"
                             >
                                 <span className="text-xs text-gray-400">
-                                    {new Date(ds.publishedAt).toLocaleDateString('en-US', {
+                                    {new Date(ds.date).toLocaleDateString('en-US', {
                                         month: 'short',
                                         day: 'numeric',
                                         year: 'numeric'
