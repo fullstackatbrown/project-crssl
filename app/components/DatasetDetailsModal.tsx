@@ -67,17 +67,17 @@ const DatasetDetailsModal = ({ dataset, onClose }: DatasetDetailsModalProps) => 
                     </button>
                 </div>
                 <div className="px-10 pt-5 pb-3">
-                    <h2 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
-                        {displayName}
-                    </h2>
                     <h4 className={`text-md font-medium text-gray-500 ${dataset.date ? '' : 'invisible'}`} style={{ fontFamily: 'Georgia, serif' }}>
                         {displayDate}
                     </h4>
+                    <h2 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
+                        {displayName}
+                    </h2>
                     <p className="mt-2 text-gray-800" style={{ fontFamily: 'Georgia, serif' }}>
                         {displayDescription}
                     </p>
                 </div>
-                <div className="max-h-[70vh] overflow-y-auto px-10 py-4">
+                <div className="max-h-[70vh] overflow-y-auto px-10 py-8">
                     <div className="space-y-2">
                         {/* files and links */}
                         {Object.entries({ Tags: displayTags, Files: dataset.files, Links: dataset.links }).map(([field, value]) => (
