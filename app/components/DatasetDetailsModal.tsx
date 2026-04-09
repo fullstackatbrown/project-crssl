@@ -28,10 +28,11 @@ const DatasetDetailsModal = ({ dataset, onClose }: DatasetDetailsModalProps) => 
     }, [dataset]);
 
     if (!dataset) return null;
-    const { name, description, date } = dataset;
+    const { name, description, date, tags } = dataset;
     const displayName = name.trim() ? name.trim() : 'Dataset';
     const displayDescription = description.trim() ? description.trim() : '\u00A0'; // non-breaking space
     const displayDate = date || '\u00A0';
+    const displayTags = tags.map(tag => tag.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())).join(', ') || 'None';
 
     return (
         <div
@@ -79,14 +80,14 @@ const DatasetDetailsModal = ({ dataset, onClose }: DatasetDetailsModalProps) => 
                 <div className="max-h-[70vh] overflow-y-auto px-10 py-4">
                     <div className="space-y-2">
                         {/* files and links */}
-                        {Object.entries({ Tags: dataset.tags, Files: dataset.files, Links: dataset.links }).map(([field, value]) => (
+                        {Object.entries({ Tags: displayTags, Files: dataset.files, Links: dataset.links }).map(([field, value]) => (
                             <div key={field.toLowerCase()} className="grid grid-cols-1 gap-1 py-2 text-sm sm:grid-cols-[150px_1fr] sm:gap-3">
                                 <div className="font-semibold text-gray-800" style={{ fontFamily: 'Georgia, serif' }}>
                                     {field}
                                 </div>
                                 <div className="min-w-0 text-gray-700" style={{ fontFamily: 'Georgia, serif' }}>
                                     {field === 'Tags'
-                                        ? (value as typeof dataset.tags)?.join(', ') || 'None'
+                                        ? displayTags
                                         : field === 'Files'
                                         ? renderList((value as typeof dataset.files)?.map(file => ({
                                             text: file.asset.originalFilename || file.asset.url.split('/').pop()!,
