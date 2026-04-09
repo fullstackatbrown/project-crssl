@@ -100,7 +100,7 @@ const DataPage = () => {
 
     // Call client 
     useEffect(() => {
-        let search: string = '_type == "exampleDataset"';
+        let search: string = '_type == "dataset"';
         if (searchQuery) {
             const searchPart = buildSearchQuery(searchQuery, true, true);
             if (searchPart) {
