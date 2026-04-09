@@ -10,7 +10,7 @@ type DatasetDetailsModalProps = {
         date: string;
         tags: string[];
         files: { asset: { originalFilename: string; url: string } }[];
-        links: { title: string; url: string }[];
+        links: { text: string; url: string }[];
     } | null;
     onClose: () => void;
 };
@@ -94,7 +94,7 @@ const DatasetDetailsModal = ({ dataset, onClose }: DatasetDetailsModalProps) => 
                                             download: true,
                                         })))
                                         : renderList((value as typeof dataset.links)?.map(link => ({
-                                            text: link.title?.trim() || link.url,
+                                            text: link.text?.trim() || link.url,
                                             url: link.url,
                                             link: true,
                                         })))}

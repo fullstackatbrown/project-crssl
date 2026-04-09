@@ -25,7 +25,7 @@ type Dataset = {
     description: string;
     tags: string[];
     files: { asset: { originalFilename: string; url: string } }[];
-    links: { title: string; url: string }[];
+    links: { text: string; url: string }[];
     contributors: { _id: string; name: string }[];
     content: any[];
 }
