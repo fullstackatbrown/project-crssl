@@ -69,7 +69,7 @@ const buildSearchQuery = (searchTerm: string, searchAllFields: boolean = false, 
 
 const buildTagQuery = (tags: string[]): string => {
     if (tags.length === 0) return '';
-    const tagConditions = tags.map(tag => `"${tag}" in tags[].tag`).join(' || ');
+    const tagConditions = tags.map(tag => `"${tag}" in tags[].tag`).join(' && ');
     return `(${tagConditions})`;
 }
 
