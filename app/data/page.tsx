@@ -22,7 +22,7 @@ type Dataset = {
     slug: { current: string };
     publishedAt: string;
     description: string;
-    files: { asset: { url: string } }[];
+    files: { asset: { originalFilename?: string; url: string } }[];
     links: { title: string; url: string }[];
     contributors: { _id: string; name: string }[];
     content: any[];
@@ -81,7 +81,7 @@ const projection: string = `{
     slug,
     publishedAt,
     description,
-    files[]{asset->{url}},
+    files[]{asset->{originalFilename, url}},
     links,
     contributors[]->{_id, name},
     content
