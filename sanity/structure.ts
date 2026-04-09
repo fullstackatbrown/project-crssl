@@ -1,20 +1,25 @@
-import type {StructureResolver} from 'sanity/structure'
+import type { StructureResolver } from 'sanity/structure'
+
+const demoTypes = ['exampleDataset', 'examplePerson']
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title('TODO: Add custom structure here')
+    .title('Menu')
     .items([
-      S.divider(),
-    ])
-
-    .title('Examples')
-    .items([
-      S.documentTypeListItem('exampleDataset').title('Example Dataset'),
-      S.documentTypeListItem('examplePerson').title('Example Person'),
-      S.documentTypeListItem('projectType').title('Project Type'),
-      S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['exampleDataset', 'examplePerson', 'projectType'].includes(item.getId()!),
+        (item) => item.getId() && !demoTypes.includes(item.getId()!),
       ),
+      S.divider(),
+      S.listItem()
+        .title('Example Types for Developers')
+        .child(
+          S.list()
+            .title('Examples')
+            .items([
+              ...S.documentTypeListItems().filter(
+                (item) => item.getId() && demoTypes.includes(item.getId()!),
+              ),
+            ]),
+        )
     ])
