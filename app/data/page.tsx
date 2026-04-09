@@ -236,7 +236,7 @@ const DataPage = () => {
                     </aside>
 
                     {/* ── 3-Column Card Grid ── */}
-                    <section className="flex-1 grid grid-cols-3 gap-4">
+                    <section className="flex-1 grid grid-cols-3 gap-4 self-start">
                         {datasets.map(ds => (
                             <article
                                 key={ds._id}
