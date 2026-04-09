@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Download, Database } from 'lucide-react';
 import { client } from '../../sanity/lib/client';
+import DatasetDetailsModal from '../components/DatasetDetailsModal';
 
 // TODO: add debounce to search input or a search button to avoid frequent API calls
 
@@ -22,7 +23,8 @@ type Dataset = {
     slug: { current: string };
     publishedAt: string;
     description: string;
-    files: { asset: { originalFilename?: string; url: string } }[];
+    tags: string[];
+    files: { asset: { originalFilename: string; url: string } }[];
     links: { title: string; url: string }[];
     contributors: { _id: string; name: string }[];
     content: any[];
@@ -93,6 +95,7 @@ const DataPage = () => {
     const [activeTab, setActiveTab] = useState<'datasets' | 'tools'>('datasets');
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [datasets, setDatasets] = useState<Dataset[]>([]);
+    const [activeDataset, setActiveDataset] = useState<Dataset | null>(null);
 
     // Call client 
     useEffect(() => {
@@ -255,8 +258,9 @@ const DataPage = () => {
                                     </p>
                                 )}
 
+                                {/*
                                 <div className="flex gap-2 mt-1">
-                                    {/* Links */}
+                                    // Links
                                     {ds.links?.map(link => (
                                         <a href={link.url} key={link.url} className="flex items-center gap-1 border border-gray-300 rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-50">
                                             <Database className="w-3 h-3" />
@@ -264,14 +268,24 @@ const DataPage = () => {
                                         </a>
                                     ))}
 
-                                    {/* Files */}
+                                    // Files
                                     {ds.files?.map((file, i) => (
                                         <a href={file.asset.url} key={i} download className="flex items-center gap-1 border border-gray-300 rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-50">
                                             <Download className="w-3 h-3" />
-                                            CSV
+                                            {file.asset.originalFilename || 'Download'}
                                         </a>
                                     ))}
                                 </div>
+                                */}
+
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveDataset(ds)}
+                                    className="mt-2 self-start rounded border cursor-pointer border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+                                    style={{ fontFamily: 'Georgia, serif' }}
+                                >
+                                    View Details
+                                </button>
                             </article>
                         ))}
 
@@ -279,6 +293,11 @@ const DataPage = () => {
 
                 </div>
             </main>
+
+            <DatasetDetailsModal
+                dataset={activeDataset}
+                onClose={() => setActiveDataset(null)}
+            />
         </div>
     );
 };
