@@ -256,15 +256,15 @@ const DataPage = () => {
                                     {ds.name}
                                 </h3>
                                 <p className="text-xs text-gray-500 flex-1" style={{ fontFamily: 'Georgia, serif' }}>
-                                    {ds.description}
+                                    {ds.description.length > 140 ? ds.description.slice(0, 140).trimEnd() + '...' : ds.description}
                                 </p>
 
-                                {/* Contributors */}
+                                {/* Contributors
                                 {ds.contributors?.length > 0 && (
                                     <p className="text-xs text-gray-400">
                                         {ds.contributors.map(c => c.name).join(', ')}
                                     </p>
-                                )}
+                                )} */}
 
                                 {/*
                                 <div className="flex gap-2 mt-1">
