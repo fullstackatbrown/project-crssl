@@ -88,12 +88,12 @@ const DatasetDetailsModal = ({ dataset, onClose }: DatasetDetailsModalProps) => 
                                     {field === 'Tags'
                                         ? (value as typeof dataset.tags)?.join(', ') || 'None'
                                         : field === 'Files'
-                                        ? renderList((value as typeof dataset.files).map(file => ({
+                                        ? renderList((value as typeof dataset.files)?.map(file => ({
                                             text: file.asset.originalFilename || file.asset.url.split('/').pop()!,
                                             url: file.asset.url,
                                             download: true,
                                         })))
-                                        : renderList((value as typeof dataset.links).map(link => ({
+                                        : renderList((value as typeof dataset.links)?.map(link => ({
                                             text: link.title?.trim() || link.url,
                                             url: link.url,
                                             link: true,
@@ -126,7 +126,7 @@ const renderList = (
         link?: boolean
     }[]
 ) => {
-    if (items.length === 0) return 'N/A';
+    if (!items || items.length === 0) return 'N/A';
 
     const renderItem = (item: typeof items[number]) => {
         if (item.link) {
