@@ -1,143 +1,118 @@
 "use client";
-import Image from "next/image";
-import icon from "../favicon.ico";
+import { defineQuery } from "next-sanity";
+import { client } from "@/sanity/lib/client";
+import createImageUrlBuilder from "@sanity/image-url";
+import type SanityImageSource from "@sanity/image-url";
+import PeopleResults from "../components/PeopleResults";
+import PeopleCount from "../components/PeopleCount";
+import PeopleFilter from "../components/PeopleFilter";
 
-const labels = [
-  "All",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+// Create an image URL builder using the client
+const builder = createImageUrlBuilder(client);
 
-const generic_people = [
-  {
-    name: "FIRSTNAME LASTNAME",
-    titles: ["Job Title", "Another Job Title"],
-    focuses: "Topic of Interest A, Topic of Interest B",
-    link: "",
-    image: "",
-  },
-];
-
-function Buttons() {
-  return (
-    <fieldset>
-      {labels.map((label) => (
-        <label key={`${label} button label`}>
-          <input
-            name="name letters"
-            key={`${label} button`}
-            type="radio"
-            defaultChecked={label === "All"}
-          />
-          {label}
-        </label>
-      ))}
-    </fieldset>
-  );
+// Export a function that can be used to get image URLs
+export function urlFor(source: typeof SanityImageSource) {
+  return builder.image(source);
 }
-
-function Person() {
-  return (
-    <article>
-      <div>
-        {generic_people.map((person) => (
-          <a
-            key={`${person.name} link`}
-            className="person links"
-            href={person.link}
-          >
-            <Image alt="generic image" src={icon} width={100} height={100} />
-            <div>
-              <h2 className="name">{person.name}</h2>
-              {person.titles.map((title, index) => (
-                <span key={`${person.name} ${title} ${index}`}>{title}</span>
-              ))}
-              <p>{person.focuses}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-      <div>
-        <h3>Something Recent</h3>
-        <a href="">Link</a>
-        <time dateTime="01-01-01">January 1, 2001</time>
-      </div>
-    </article>
-  );
-}
-
-function SearchInput() {
-  return (
-    <div>
-      <input type="search" className="border-solid border" />
-      <button onClick={Search} className="border-solid border">
-        {" "}
-        Search{" "}
-      </button>
-    </div>
-  );
-}
-
-function Search() {}
-
-function InterviewReq() {
-  return (
-    <div>
-      <button onClick={Interview} className="border-solid border">
-        Request Interview
-      </button>
-    </div>
-  );
-}
-
-function Interview() {}
-
-function ConsultReq() {
-  return (
-    <div>
-      <button onClick={Consult} className="border-solid border">
-        Request Consulting
-      </button>
-    </div>
-  );
-}
-
-function Consult() {}
 
 export default function People() {
   return (
-    <div>
-      <h1>People</h1>
-      <p>Some blurb</p>
-      <InterviewReq />
-      <ConsultReq />
-      <SearchInput />
-      <Buttons />
-      <Person />
+    <div className="bg-white">
+      <div>
+        <div
+          style={{
+            height: "15rem",
+            background: "pink",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+            // alignItems: "flex-end",
+          }}
+        >
+          <h1
+            style={{
+              position: "absolute",
+              bottom: "3rem",
+              marginLeft: "2rem",
+            }}
+            className="text-4xl text-gray-900"
+          >
+            Experts
+          </h1>
+          <h2
+            style={{
+              position: "absolute",
+              bottom: "1rem",
+              marginLeft: "2rem",
+            }}
+            className="text-xl text-gray-900"
+          >
+            The Conflict Research and Security Studies Lab brings together
+            experts across the disciplines.
+          </h2>
+        </div>
+        <PeopleCount />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "2rem",
+          }}
+        >
+          <form action={""}>
+            <input
+              style={{
+                width: "88.5rem",
+                height: "3rem",
+                textIndent: "2rem",
+              }}
+              className="border-solid border bg-gray-50 text-gray-900"
+              type="search"
+              placeholder="Search"
+              id="namesearch"
+              name="search-term"
+            />
+            <button
+              style={{ width: "3rem", height: "3rem" }}
+              className="group absolute right-[3rem] bg-gray-50 hover:bg-[#a51c30] border-black border-r border-t border-b"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="relative -right-[0.75rem] "
+              >
+                <path
+                  d="M19 19L14.66 14.66M17 9C17 13.4183 13.4183 17 9 17C4.58172 17 1 13.4183 1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9Z"
+                  stroke="#979696"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="group-hover:stroke-gray-50"
+                />
+              </svg>
+            </button>
+          </form>
+        </div>
+        <div style={{ display: "flex" }}>
+          <div style={{ marginLeft: "3rem", marginTop: "2rem" }}>
+            <h1 className="text-lg text-gray-900">Filters</h1>
+            <hr
+              className="border-gray-900"
+              style={{
+                width: "15rem",
+                marginTop: "0.1rem",
+                // marginBottom: "0.1rem",
+              }}
+            ></hr>
+            <PeopleFilter />
+          </div>
+          <PeopleResults />
+        </div>
+      </div>
     </div>
   );
 }
