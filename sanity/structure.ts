@@ -1,14 +1,28 @@
-import type { StructureResolver } from 'sanity/structure'
-
-const demoTypes = ['exampleDataset', 'examplePerson']
+import type { StructureResolver } from "sanity/structure";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title('Menu')
+    .title("Content")
     .items([
+      S.documentTypeListItem("projectType").title("Projects"),
+      S.documentTypeListItem("paperType").title("Papers"),
+      S.documentTypeListItem("authorType").title("Authors"),
+      S.documentTypeListItem("peopleType").title("People"),
+      S.documentTypeListItem("dataset").title("Datasets"),
+      S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !demoTypes.includes(item.getId()!),
+        (item) =>
+          item.getId() &&
+          ![
+            "projectType",
+            "paperType",
+            "authorType",
+            "dataset",
+            "peopleType",
+            "exampleDataset",
+            "examplePerson",
+          ].includes(item.getId()!),
       ),
       S.divider(),
       S.listItem()
@@ -17,9 +31,8 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title('Examples')
             .items([
-              ...S.documentTypeListItems().filter(
-                (item) => item.getId() && demoTypes.includes(item.getId()!),
-              ),
-            ]),
-        )
-    ])
+              S.documentTypeListItem("exampleDataset").title("Example Dataset"),
+              S.documentTypeListItem("examplePerson").title("Example Person"),
+            ])
+        ),
+    ]);

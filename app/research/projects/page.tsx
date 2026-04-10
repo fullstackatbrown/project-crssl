@@ -1,8 +1,6 @@
-import Link from 'next/link';
-import mockData from './mockData';
-import Elipsis from './project-extra';
-import { type SanityDocument } from 'next-sanity';
-import { client } from '@/sanity/lib/client';
+import Link from "next/link";
+import Elipsis from "./project-extra";
+import { client } from "@/sanity/lib/client";
 
 type Person = {
   name: String;
@@ -69,7 +67,7 @@ const PROJECTS_QUERY = `*[_type == "projectType"]{
   slug, 
   publishedAt, 
   description, 
-  relaventLinks, 
+  relevantLinks, 
   content, 
   contributors, 
   "coverImage": coverImage.asset->url,
