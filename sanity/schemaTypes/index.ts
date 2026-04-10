@@ -8,16 +8,18 @@ import { paperType } from "./paperType";
 import { peopleType } from "./peopleType";
 import { projectType } from "./projectType";
 import { resourcesType } from "./resourcesType";
+import { aboutType } from "./aboutType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
+    authorType,
     blockContentType,
     examplePersonType,
     exampleDatasetType,
+    paperType,
     projectType,
     peopleType,
-    authorType,
-    paperType,
-    resourcesType
+    resourcesType,
+    aboutType,
   ],
 };
