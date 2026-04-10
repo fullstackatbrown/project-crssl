@@ -5,8 +5,6 @@ import { Search, Download, Database } from 'lucide-react';
 import { client } from '../../sanity/lib/client';
 import DatasetDetailsModal from '../components/DatasetDetailsModal';
 
-// TODO: add debounce to search input or a search button to avoid frequent API calls
-
 async function getAllTags(): Promise<string[]> {
     return client.fetch(`array::unique(*[_type == "dataset"].tags[].tag)`)
 }
