@@ -86,7 +86,6 @@ const options = { next: { revalidate: 30 } };
 async function TileGrid() {
   const projects = await client.fetch<Project[]>(PROJECTS_QUERY, {}, options);
 
-  console.log(projects);
   if (!projects) {
     return <div></div>;
   }
@@ -100,11 +99,35 @@ async function TileGrid() {
   );
 }
 
+const TAGS_QUERY = `*[_type == "projectType"]{
+  _id,
+  tags
+}`
+
+const KEYWORDS_QUERY = `*[_type == "projectType"]{
+  _id,
+  keywords
+}`
+
+const FACULTY_QUERY = `*[_type == "projectType"]{
+  _id,
+  contributors
+}`
+
 /**Temporarily a placeholder for the side bar */
-function SideBar() {
+async function SideBar() {
+  const tags = await client.fetch<Project[]>(TAGS_QUERY, {}, options);
+  const keywords = await client.fetch<Project[]>(KEYWORDS_QUERY, {}, options);
+  const faculty = await client.fetch<Project[]>(FACULTY_QUERY, {}, options);
+
+  console.log(tags, keywords, faculty);
+
   return (
     <div className="w-1/4">
-      <h1>Side Bar</h1>
+      <h1>Filter</h1>
+      <h3>Tags</h3>
+      <h3>Keywords</h3>
+      <h3>Faculty</h3>
     </div>
   );
 }
