@@ -8,6 +8,7 @@ import { paperType } from "./paperType";
 import { peopleType } from "./peopleType";
 import { projectType } from "./projectType";
 import { resourcesType } from "./resourcesType";
+import { datasetType } from "./datasetType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -19,5 +20,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     authorType,
     paperType,
     resourcesType,
+    datasetType,
   ],
 };
