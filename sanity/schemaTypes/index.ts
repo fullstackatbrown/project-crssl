@@ -18,6 +18,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     peopleType,
     authorType,
     paperType,
-    resourcesType
+    resourcesType,
   ],
 };
