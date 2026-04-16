@@ -3,7 +3,6 @@ import { client } from "@/sanity/lib/client";
 import Image from "next/image";
 import createImageUrlBuilder from "@sanity/image-url";
 import type SanityImageSource from "@sanity/image-url";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 // Create an image URL builder using the client
@@ -19,7 +18,7 @@ const DATASET_QUERY = `*[_type == "peopleType" && slug.current == $slug][0]
 
 const options = { next: { revalidate: 30 } };
 
-export default async function SanityExampleDataset({
+export default async function PersonProfile({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -34,10 +33,12 @@ export default async function SanityExampleDataset({
   if (!dataset) notFound();
 
   return (
-    <div className="">
+    <div className="bg-white">
       <div className="flex bg-gray-100">
         <div className="max-w-1/2">
-          <h1 className="text-7xl mt-[5rem] ml-[6rem]">{dataset.fullname}</h1>
+          <h1 className="text-7xl text-gray-900 mt-[5rem] ml-[6rem]">
+            {dataset.fullname}
+          </h1>
           <p className="text-gray-500 mt-[0.6rem] ml-[6rem]">
             {dataset.jobtitles.join(", ")}
           </p>
@@ -58,9 +59,10 @@ export default async function SanityExampleDataset({
           />
         </div>
       </div>
-      <div className="flex">
+      <div className="flex bg-white">
         <div>
           <hr
+            className="border-gray-900"
             style={{
               width: "20rem",
               marginTop: "6rem",
@@ -68,16 +70,16 @@ export default async function SanityExampleDataset({
               marginBottom: "0.5rem",
             }}
           ></hr>
-          <p className="text-lg mt-[1rem] ml-[6rem]">
+          <p className="text-lg text-gray-900 mt-[1rem] ml-[6rem]">
             {dataset.interests.join(", ")}
           </p>
         </div>
-        <div>
-          <p className="text-lg mt-[6rem] mb-[1rem] ml-[6rem] mr-[5rem]">
+        <div className=" mb-[2rem]">
+          <p className="text-lg text-gray-900 mt-[6rem] mb-[1rem] ml-[6rem] mr-[5rem]">
             {dataset.bio}
           </p>
           <a
-            className="font-bold text-lg ml-[6rem] hover:underline"
+            className="font-bold text-gray-900 text-lg ml-[6rem] hover:underline"
             href={`${dataset.recentwork}`}
           >
             Their most recent work
