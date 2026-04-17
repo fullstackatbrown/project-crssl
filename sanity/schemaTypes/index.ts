@@ -11,6 +11,7 @@ import { resourcesType } from "./resourcesType";
 import { newsType } from "./newsType";
 import { aboutType } from "./aboutType";
 import { datasetType } from "./datasetType";
+import { dataPageType } from "./dataPageHeroSingleton";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
