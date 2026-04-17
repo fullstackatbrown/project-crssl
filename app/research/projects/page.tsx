@@ -14,6 +14,7 @@ type Project = {
   };
   publishedAt: object;
   description: string;
+  blurb: string;
   relevantLinks: Array<string>;
   content: string;
   contributors: Array<Object>;
@@ -28,9 +29,9 @@ type Project = {
  */
 function Tile({ project: project }: { project: Project }) {
   return (
-    <div className="display-flex flex-direction-col border-solid border width-200 height-200 min-w-90 min-h-90">
+    <div className="flex flex-col border border-solid min-w-90">
       <Link
-        className="block relative w-full h-full overflow-hidden"
+        className="block relative w-full h-48 overflow-hidden"
         href={`/research/projects/${project.slug.current}`}
       >
         <img
@@ -57,19 +58,25 @@ function Tile({ project: project }: { project: Project }) {
           </div>
         </div>
       </Link>
+      {project.blurb && (
+        <p className="text-sm text-gray-600 font-serif px-2 py-2">
+          {project.blurb}
+        </p>
+      )}
     </div>
   );
 }
 
 const PROJECTS_QUERY = `*[_type == "projectType"]{
-  _id, 
-  title, 
-  slug, 
-  publishedAt, 
-  description, 
-  relevantLinks, 
-  content, 
-  contributors, 
+  _id,
+  title,
+  slug,
+  publishedAt,
+  description,
+  blurb,
+  relevantLinks,
+  content,
+  contributors,
   "coverImage": coverImage.asset->url,
   tags,
   projectLeader
@@ -90,7 +97,7 @@ async function TileGrid() {
   }
 
   return (
-    <div className="grid grid-cols-3">
+    <div className="grid grid-cols-3 gap-6">
       {projects.map((project: Project, ind: number) => {
         return <Tile key={ind} project={project} />;
       })}
@@ -98,23 +105,21 @@ async function TileGrid() {
   );
 }
 
-/**Temporarily a placeholder for the side bar */
-function SideBar() {
-  return (
-    <div className="w-1/4">
-      <h1>Side Bar</h1>
-    </div>
-  );
-}
 
 export default function projects() {
   return (
-    <div>
-      <h1>Projects</h1>
-      <div className="flex flex-row justify-between">
-        <SideBar />
+    <div className="bg-white text-black">
+      <section className="bg-black px-6 py-14 text-white md:px-10 md:py-20">
+        <div className="mx-auto max-w-6xl">
+          <h1 className="font-serif text-4xl md:text-5xl">Projects</h1>
+          <p className="mt-2 max-w-xl text-sm text-zinc-300">
+            Research projects conducted by CRSSL.
+          </p>
+        </div>
+      </section>
+      <section className="mx-auto max-w-6xl px-6 py-10">
         <TileGrid />
-      </div>
+      </section>
     </div>
   );
 }

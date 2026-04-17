@@ -1,143 +1,209 @@
 "use client";
-import Image from "next/image";
-import icon from "../favicon.ico";
+import { defineQuery } from "next-sanity";
+import { client } from "@/sanity/lib/client";
+import { Search } from "lucide-react";
+import createImageUrlBuilder from "@sanity/image-url";
+import type SanityImageSource from "@sanity/image-url";
+import { useState, useEffect } from "react";
 
-const labels = [
-  "All",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+// Create an image URL builder using the client
+const builder = createImageUrlBuilder(client);
 
-const generic_people = [
-  {
-    name: "FIRSTNAME LASTNAME",
-    titles: ["Job Title", "Another Job Title"],
-    focuses: "Topic of Interest A, Topic of Interest B",
-    link: "",
-    image: "",
-  },
-];
-
-function Buttons() {
-  return (
-    <fieldset>
-      {labels.map((label) => (
-        <label key={`${label} button label`}>
-          <input
-            name="name letters"
-            key={`${label} button`}
-            type="radio"
-            defaultChecked={label === "All"}
-          />
-          {label}
-        </label>
-      ))}
-    </fieldset>
-  );
+// Export a function that can be used to get image URLs
+export function urlFor(source: typeof SanityImageSource) {
+  return builder.image(source);
 }
 
-function Person() {
-  return (
-    <article>
-      <div>
-        {generic_people.map((person) => (
-          <a
-            key={`${person.name} link`}
-            className="person links"
-            href={person.link}
-          >
-            <Image alt="generic image" src={icon} width={100} height={100} />
-            <div>
-              <h2 className="name">{person.name}</h2>
-              {person.titles.map((title, index) => (
-                <span key={`${person.name} ${title} ${index}`}>{title}</span>
-              ))}
-              <p>{person.focuses}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-      <div>
-        <h3>Something Recent</h3>
-        <a href="">Link</a>
-        <time dateTime="01-01-01">January 1, 2001</time>
-      </div>
-    </article>
-  );
+const options = { next: { revalidate: 30 } };
+
+const counter = defineQuery(`count(*[_type == 'peopleType'])`);
+
+export async function Counter() {
+  const peoplecount = await client.fetch(counter);
+  const plural = peoplecount > 1 ? "people" : "person";
+  return [peoplecount, plural];
 }
 
-function SearchInput() {
-  return (
-    <div>
-      <input type="search" className="border-solid border" />
-      <button onClick={Search} className="border-solid border">
-        {" "}
-        Search{" "}
-      </button>
-    </div>
-  );
+const [peoplecount, plural] = await Counter();
+
+const DEFAULT_QUERY = `*[
+  _type == "peopleType"
+]|order(fullname asc){_id, fullname, image, email, recentwork, jobtitles, interests, slug}`;
+
+async function getInterests(): Promise<string[]> {
+  return client.fetch(`array::unique(*[_type == "peopleType"].interests[])`);
 }
+const allInterests = await getInterests();
+allInterests.sort();
 
-function Search() {}
-
-function InterviewReq() {
-  return (
-    <div>
-      <button onClick={Interview} className="border-solid border">
-        Request Interview
-      </button>
-    </div>
-  );
+async function getTitles(): Promise<string[]> {
+  return client.fetch(`array::unique(*[_type == "peopleType"].jobtitles[])`);
 }
-
-function Interview() {}
-
-function ConsultReq() {
-  return (
-    <div>
-      <button onClick={Consult} className="border-solid border">
-        Request Consulting
-      </button>
-    </div>
-  );
-}
-
-function Consult() {}
+const allTitles = await getTitles();
+allTitles.sort();
 
 export default function People() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeInterests, setActiveInterests] = useState<string[]>([]);
+  const [activeTitles, setActiveTitles] = useState<string[]>([]);
+
   return (
-    <div>
-      <h1>People</h1>
-      <p>Some blurb</p>
-      <InterviewReq />
-      <ConsultReq />
-      <SearchInput />
-      <Buttons />
-      <Person />
+    <div className="bg-white">
+      <div>
+        <div
+          style={{
+            height: "15rem",
+            background: "#7c0b0a",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+            // alignItems: "flex-end",
+          }}
+        >
+          <h1
+            style={{
+              position: "absolute",
+              bottom: "3rem",
+              marginLeft: "2rem",
+            }}
+            className="text-4xl text-white"
+          >
+            Experts
+          </h1>
+          <h2
+            style={{
+              position: "absolute",
+              bottom: "1rem",
+              marginLeft: "2rem",
+            }}
+            className="text-xl text-white"
+          >
+            The Conflict Research and Security Studies Lab brings together
+            experts across the disciplines.
+          </h2>
+        </div>
+        <div>
+          <p
+            className="text-lg text-gray-900"
+            style={{ marginLeft: "3rem", marginTop: "2rem" }}
+          >
+            <b>{peoplecount}</b> {plural}{" "}
+          </p>
+        </div>
+        {/* <PeopleCount /> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "2rem",
+          }}
+        >
+          <div>
+            <Search className="absolute text-gray-400 mt-[0.7rem] ml-[1rem]" />
+            <input
+              style={{
+                width: "88.5rem",
+                height: "3rem",
+                textIndent: "3rem",
+              }}
+              className="border-solid border bg-gray-50 text-gray-900 placeholder-gray-400"
+              type="search"
+              value={searchQuery}
+              placeholder="Search"
+              id="namesearch"
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex" }}>
+          <div style={{ marginLeft: "3rem", marginTop: "2rem" }}>
+            <h1 className="text-lg text-gray-900">Filters</h1>
+            <hr
+              className="border-gray-900"
+              style={{
+                width: "15rem",
+                marginTop: "0.1rem",
+                // marginBottom: "0.1rem",
+              }}
+            ></hr>
+
+            <div>
+              <fieldset>
+                {allInterests.map((interest) => (
+                  <label
+                    className="text-base text-gray-900"
+                    style={{
+                      display: "block",
+                      clear: "left",
+                      marginTop: "0.1rem",
+                    }}
+                    key={`${interest} button label`}
+                  >
+                    <input
+                      style={{
+                        clear: "left",
+                        marginRight: "0.5rem",
+                        marginTop: "0.5rem",
+                      }}
+                      className="checkboxes"
+                      id={`${interest} checkbox`}
+                      name="interest"
+                      key={`${interest} checkbox`}
+                      type="checkbox"
+                    />
+                    {interest}
+                  </label>
+                ))}
+              </fieldset>
+              <hr
+                className="border-gray-900"
+                style={{
+                  width: "15rem",
+                  marginTop: "0.2rem",
+                }}
+              ></hr>
+              <form>
+                <fieldset>
+                  {allTitles.map((title) => (
+                    <label
+                      className="text-base text-gray-900"
+                      style={{
+                        display: "block",
+                        clear: "left",
+                        marginTop: "0.1rem",
+                      }}
+                      key={`${title} button label`}
+                    >
+                      <input
+                        style={{
+                          clear: "left",
+                          marginRight: "0.5rem",
+                          marginTop: "0.5rem",
+                        }}
+                        className="checkboxes"
+                        id={`${title} checkbox`}
+                        name="title"
+                        key={`${title} checkbox`}
+                        type="checkbox"
+                      />
+                      {title}
+                    </label>
+                  ))}
+                </fieldset>
+              </form>
+            </div>
+
+            <form action="https://google.com">
+              <button className="hover:bg-gray-100 mb-[1rem] mt-[1rem] p-[1rem] border rounded bg-gray-50 border-gray-900 text-gray-900">
+                Need something different? <br />
+                Find an expert here!
+              </button>
+            </form>
+          </div>
+          {/* <PeopleResults /> */}
+        </div>
+      </div>
     </div>
   );
 }
