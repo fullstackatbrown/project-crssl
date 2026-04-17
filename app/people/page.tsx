@@ -1,11 +1,10 @@
 "use client";
 import { defineQuery } from "next-sanity";
 import { client } from "@/sanity/lib/client";
+import { Search } from "lucide-react";
 import createImageUrlBuilder from "@sanity/image-url";
 import type SanityImageSource from "@sanity/image-url";
-import PeopleResults from "../components/PeopleResults";
-import PeopleCount from "../components/PeopleCount";
-import PeopleFilter from "../components/PeopleFilter";
+import { useState, useEffect } from "react";
 
 // Create an image URL builder using the client
 const builder = createImageUrlBuilder(client);
@@ -15,14 +14,46 @@ export function urlFor(source: typeof SanityImageSource) {
   return builder.image(source);
 }
 
+const options = { next: { revalidate: 30 } };
+
+const counter = defineQuery(`count(*[_type == 'peopleType'])`);
+
+export async function Counter() {
+  const peoplecount = await client.fetch(counter);
+  const plural = peoplecount > 1 ? "people" : "person";
+  return [peoplecount, plural];
+}
+
+const [peoplecount, plural] = await Counter();
+
+const DEFAULT_QUERY = `*[
+  _type == "peopleType"
+]|order(fullname asc){_id, fullname, image, email, recentwork, jobtitles, interests, slug}`;
+
+async function getInterests(): Promise<string[]> {
+  return client.fetch(`array::unique(*[_type == "peopleType"].interests[])`);
+}
+const allInterests = await getInterests();
+allInterests.sort();
+
+async function getTitles(): Promise<string[]> {
+  return client.fetch(`array::unique(*[_type == "peopleType"].jobtitles[])`);
+}
+const allTitles = await getTitles();
+allTitles.sort();
+
 export default function People() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeInterests, setActiveInterests] = useState<string[]>([]);
+  const [activeTitles, setActiveTitles] = useState<string[]>([]);
+
   return (
     <div className="bg-white">
       <div>
         <div
           style={{
             height: "15rem",
-            background: "pink",
+            background: "#7c0b0a",
             display: "flex",
             flexDirection: "column",
             position: "relative",
@@ -35,7 +66,7 @@ export default function People() {
               bottom: "3rem",
               marginLeft: "2rem",
             }}
-            className="text-4xl text-gray-900"
+            className="text-4xl text-white"
           >
             Experts
           </h1>
@@ -45,13 +76,21 @@ export default function People() {
               bottom: "1rem",
               marginLeft: "2rem",
             }}
-            className="text-xl text-gray-900"
+            className="text-xl text-white"
           >
             The Conflict Research and Security Studies Lab brings together
             experts across the disciplines.
           </h2>
         </div>
-        <PeopleCount />
+        <div>
+          <p
+            className="text-lg text-gray-900"
+            style={{ marginLeft: "3rem", marginTop: "2rem" }}
+          >
+            <b>{peoplecount}</b> {plural}{" "}
+          </p>
+        </div>
+        {/* <PeopleCount /> */}
         <div
           style={{
             display: "flex",
@@ -60,42 +99,22 @@ export default function People() {
             marginTop: "2rem",
           }}
         >
-          <form action={""}>
+          <div>
+            <Search className="absolute text-gray-400 mt-[0.7rem] ml-[1rem]" />
             <input
               style={{
                 width: "88.5rem",
                 height: "3rem",
-                textIndent: "2rem",
+                textIndent: "3rem",
               }}
-              className="border-solid border bg-gray-50 text-gray-900"
+              className="border-solid border bg-gray-50 text-gray-900 placeholder-gray-400"
               type="search"
+              value={searchQuery}
               placeholder="Search"
               id="namesearch"
-              name="search-term"
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button
-              style={{ width: "3rem", height: "3rem" }}
-              className="group absolute right-[3rem] bg-gray-50 hover:bg-[#a51c30] border-black border-r border-t border-b"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="relative -right-[0.75rem] "
-              >
-                <path
-                  d="M19 19L14.66 14.66M17 9C17 13.4183 13.4183 17 9 17C4.58172 17 1 13.4183 1 9C1 4.58172 4.58172 1 9 1C13.4183 1 17 4.58172 17 9Z"
-                  stroke="#979696"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="group-hover:stroke-gray-50"
-                />
-              </svg>
-            </button>
-          </form>
+          </div>
         </div>
         <div style={{ display: "flex" }}>
           <div style={{ marginLeft: "3rem", marginTop: "2rem" }}>
@@ -108,9 +127,81 @@ export default function People() {
                 // marginBottom: "0.1rem",
               }}
             ></hr>
-            <PeopleFilter />
+
+            <div>
+              <fieldset>
+                {allInterests.map((interest) => (
+                  <label
+                    className="text-base text-gray-900"
+                    style={{
+                      display: "block",
+                      clear: "left",
+                      marginTop: "0.1rem",
+                    }}
+                    key={`${interest} button label`}
+                  >
+                    <input
+                      style={{
+                        clear: "left",
+                        marginRight: "0.5rem",
+                        marginTop: "0.5rem",
+                      }}
+                      className="checkboxes"
+                      id={`${interest} checkbox`}
+                      name="interest"
+                      key={`${interest} checkbox`}
+                      type="checkbox"
+                    />
+                    {interest}
+                  </label>
+                ))}
+              </fieldset>
+              <hr
+                className="border-gray-900"
+                style={{
+                  width: "15rem",
+                  marginTop: "0.2rem",
+                }}
+              ></hr>
+              <form>
+                <fieldset>
+                  {allTitles.map((title) => (
+                    <label
+                      className="text-base text-gray-900"
+                      style={{
+                        display: "block",
+                        clear: "left",
+                        marginTop: "0.1rem",
+                      }}
+                      key={`${title} button label`}
+                    >
+                      <input
+                        style={{
+                          clear: "left",
+                          marginRight: "0.5rem",
+                          marginTop: "0.5rem",
+                        }}
+                        className="checkboxes"
+                        id={`${title} checkbox`}
+                        name="title"
+                        key={`${title} checkbox`}
+                        type="checkbox"
+                      />
+                      {title}
+                    </label>
+                  ))}
+                </fieldset>
+              </form>
+            </div>
+
+            <form action="https://google.com">
+              <button className="hover:bg-gray-100 mb-[1rem] mt-[1rem] p-[1rem] border rounded bg-gray-50 border-gray-900 text-gray-900">
+                Need something different? <br />
+                Find an expert here!
+              </button>
+            </form>
           </div>
-          <PeopleResults />
+          {/* <PeopleResults /> */}
         </div>
       </div>
     </div>
