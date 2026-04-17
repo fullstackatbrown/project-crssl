@@ -1,22 +1,10 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 import type { StructureResolver } from "sanity/structure";
-=======
-import type { StructureResolver } from 'sanity/structure'
 
 const demoTypes = ['exampleDataset', 'examplePerson']
->>>>>>> 6c68149b018013aed2c140ed3fd91d2a6512186c
-=======
-import type { StructureResolver } from "sanity/structure";
->>>>>>> fa79a99cd25d9bf4db4c3e13cf77ed3eca0b7a10
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fa79a99cd25d9bf4db4c3e13cf77ed3eca0b7a10
     .title("Content")
     .items([
       S.documentTypeListItem("projectType").title("Projects"),
@@ -49,9 +37,7 @@ export const structure: StructureResolver = (S) =>
               S.documentTypeListItem("examplePerson").title("Example Person"),
             ])
         ),
-    ]);
-<<<<<<< HEAD
-=======
+    ])
     .title('Menu')
     .items([
       ...S.documentTypeListItems().filter(
@@ -69,7 +55,4 @@ export const structure: StructureResolver = (S) =>
               ),
             ]),
         )
-    ])
->>>>>>> 6c68149b018013aed2c140ed3fd91d2a6512186c
-=======
->>>>>>> fa79a99cd25d9bf4db4c3e13cf77ed3eca0b7a10
+    ]);

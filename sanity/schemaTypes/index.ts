@@ -8,6 +8,7 @@ import { paperType } from "./paperType";
 import { peopleType } from "./peopleType";
 import { projectType } from "./projectType";
 import { resourcesType } from "./resourcesType";
+import { newsType } from "./newsType";
 import { aboutType } from "./aboutType";
 import { datasetType } from "./datasetType";
 import { dataPageType } from "./dataPageHeroSingleton";
@@ -22,8 +23,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     projectType,
     peopleType,
     resourcesType,
+    newsType,
     aboutType,
-    datasetType,
-    dataPageType,
+    datasetType
   ],
 };

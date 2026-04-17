@@ -150,7 +150,7 @@ const DataPage = () => {
                     {dataPageHero?.subtext ?? 'Our lab collects data on some of the most vital problems in the world.'}
                 </p>
                 <img
-                    src={dataPageHero?.image?.asset?.url ?? "/brown-logo.png"}
+                    src={dataPageHero?.image?.asset?.url}
                     alt={dataPageHero?.image?.alt ?? ''}
                     className="absolute top-1/2 -translate-y-1/2"
                     style={{ height: '280px', width: 'auto', opacity: 0.85, right: '-40px' }}
