@@ -149,14 +149,12 @@ const DataPage = () => {
                 <p className="text-gray-300 text-sm max-w-md" style={{ fontFamily: 'Georgia, serif' }}>
                     {dataPageHero?.subtext ?? 'Our lab collects data on some of the most vital problems in the world.'}
                 </p>
-                {dataPageHero?.image?.asset?.url && (
-                    <img
-                        src={dataPageHero.image.asset.url}
-                        alt={dataPageHero.image.alt ?? ''}
-                        className="absolute top-1/2 -translate-y-1/2"
-                        style={{ height: '280px', width: 'auto', opacity: 0.85, right: '-40px' }}
-                    />
-                )}
+                <img
+                    src={dataPageHero?.image?.asset?.url ?? "/brown-logo.png"}
+                    alt={dataPageHero?.image?.alt ?? ''}
+                    className="absolute top-1/2 -translate-y-1/2"
+                    style={{ height: '280px', width: 'auto', opacity: 0.85, right: '-40px' }}
+                />
             </section>
 
             {/*── Tab Bar ──
