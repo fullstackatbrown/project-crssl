@@ -78,7 +78,7 @@ export const projectType = defineType({
       of: [
         {
           type: 'reference',
-          to: [{ type: 'examplePerson' }],
+          to: [{ type: 'peopleType' }],
         },
       ],
     }),
@@ -110,16 +110,16 @@ export const projectType = defineType({
       type: 'text',
       description: 'A short paragraph shown under the project tile on the Research Projects page.',
     }),
-    // definteField({
-    //     name: "relatedResearch",
-    //     type: "array",
-    //     of: [
-    //         {
-    //             type: "reference",
-    //             to: [{ type: }] // fill with papers type when that comes out
-    //         }
-    //     ]
-    // })
+    defineField({
+        name: "papers",
+        type: "array",
+        of: [
+            {
+              type: 'reference',
+              to: [{ type: 'paperType' }],
+            },
+        ],
+    }),
     defineField({
       name: 'content',
       type: 'blockContent',
