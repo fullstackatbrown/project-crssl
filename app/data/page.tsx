@@ -159,7 +159,7 @@ const DataPage = () => {
                 )}
             </section>
 
-            {/* ── Tab Bar ── */}
+            {/*── Tab Bar ──
             <div className="grid grid-cols-2 border-b border-gray-300 bg-white">
                 <button
                     onClick={() => setActiveTab('datasets')}
@@ -181,8 +181,7 @@ const DataPage = () => {
                 >
                     Tools &amp; Resources
                 </button>
-            </div>
-
+            </div>*/}
             {/* ── Main Content ── */}
             <main className="bg-gray-100 px-10 py-8 min-h-screen">
 
