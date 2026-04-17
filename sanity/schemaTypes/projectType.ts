@@ -95,6 +95,12 @@ export const projectType = defineType({
       name: 'description',
       type: 'string',
     }),
+    defineField({
+      name: 'blurb',
+      title: 'Blurb',
+      type: 'text',
+      description: 'A short paragraph shown under the project tile on the Research Projects page.',
+    }),
     // definteField({
     //     name: "relatedResearch",
     //     type: "array",
