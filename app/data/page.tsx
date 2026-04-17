@@ -5,10 +5,19 @@ import { Search, Download, Database } from 'lucide-react';
 import { client } from '../../sanity/lib/client';
 import DatasetDetailsModal from '../components/DatasetDetailsModal';
 
+type DataPageHero = {
+    image?: { alt?: string; asset?: { url?: string } };
+    heading?: string;
+    subtext?: string;
+};
+
 async function getAllTags(): Promise<string[]> {
     return client.fetch(`array::unique(*[_type == "dataset"].tags[].tag)`)
 }
-const allTags = await getAllTags();
+async function getDataPageHero(): Promise<DataPageHero> {
+    return client.fetch(`*[_type == "dataPage"][0].hero{ heading, subtext, image{ alt, asset->{ url } } }`)
+}
+const [allTags, dataPageHero] = await Promise.all([getAllTags(), getDataPageHero()]);
 
 // Creating data type for dataset imported from Sanity
 type Dataset = {
@@ -130,14 +139,24 @@ const DataPage = () => {
             <section
                 className="relative flex flex-col justify-end px-10 pb-10"
                 style={{
-                    background: 'linear-gradient(160deg, #4a4a48 0%, #2e2e2c 60%, #1a1a18 100%)',
+                    background: "#7c0a0b",
                     minHeight: '280px',
                 }}
             >
-                <h2 className="text-4xl font-bold text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>Data</h2>
+                <h2 className="text-4xl font-bold text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>
+                    {dataPageHero?.heading ?? 'Data'}
+                </h2>
                 <p className="text-gray-300 text-sm max-w-md" style={{ fontFamily: 'Georgia, serif' }}>
-                    Our lab collects data on some of the most vital problems in the world.
+                    {dataPageHero?.subtext ?? 'Our lab collects data on some of the most vital problems in the world.'}
                 </p>
+                {dataPageHero?.image?.asset?.url && (
+                    <img
+                        src={dataPageHero.image.asset.url}
+                        alt={dataPageHero.image.alt ?? ''}
+                        className="absolute top-1/2 -translate-y-1/2"
+                        style={{ height: '280px', width: 'auto', opacity: 0.85, right: '-40px' }}
+                    />
+                )}
             </section>
 
             {/* ── Tab Bar ── */}
