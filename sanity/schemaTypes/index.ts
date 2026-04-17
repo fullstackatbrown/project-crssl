@@ -21,8 +21,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     paperType,
     projectType,
     peopleType,
-    authorType,
-    paperType,
     resourcesType,
     newsType,
     aboutType,
