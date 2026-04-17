@@ -1,4 +1,4 @@
-import { defineField, defineType, defineArrayMember } from "sanity";
+import { defineType, defineField, defineArrayMember } from "sanity";
 
 export const aboutType = defineType({
   name: "about",
@@ -9,51 +9,99 @@ export const aboutType = defineType({
       name: "title",
       title: "Internal Title",
       type: "string",
+      validation: (Rule) => Rule.required(),
       initialValue: "About Page",
+    }),
+
+    defineField({
+      name: "heroTitle",
+      title: "Hero Title",
+      type: "string",
+      initialValue: "About",
       validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: "siteTitle",
-      title: "Site Title",
-      type: "string",
-      initialValue: "CRSS LAB",
+      name: "heroDescription",
+      title: "Hero Description",
+      type: "text",
+      rows: 3,
       validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: "siteSubtitle",
-      title: "Site Subtitle",
-      type: "string",
-      initialValue: "Conflict Research and Security Studies",
+      name: "heroImage",
+      title: "Hero Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: "navLinks",
-      title: "Navigation Links",
+      name: "missionBody",
+      title: "Mission Body",
       type: "array",
+      of: [{ type: "block" }],
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "missionImage",
+      title: "Mission Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "historyTitle",
+      title: "History Title",
+      type: "string",
+      initialValue: "Our History",
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "historyItems",
+      title: "History Items",
+      type: "array",
+      validation: (Rule) => Rule.min(1).required(),
       of: [
         defineArrayMember({
           type: "object",
           fields: [
             defineField({
-              name: "label",
-              title: "Label",
+              name: "year",
+              title: "Year",
               type: "string",
               validation: (Rule) => Rule.required(),
             }),
             defineField({
-              name: "href",
-              title: "Href",
-              type: "string",
+              name: "body",
+              title: "Body",
+              type: "array",
+              of: [{ type: "block" }],
               validation: (Rule) => Rule.required(),
-              description: "Example: #about, /team, /project",
             }),
           ],
           preview: {
             select: {
-              title: "label",
-              subtitle: "href",
+              title: "year",
+              subtitle: "body.0.children.0.text",
             },
           },
         }),
@@ -61,153 +109,26 @@ export const aboutType = defineType({
     }),
 
     defineField({
-      name: "hero",
-      title: "Hero Section",
-      type: "object",
-      fields: [
-        defineField({
-          name: "backgroundImage",
-          title: "Background Image",
-          type: "image",
-          options: { hotspot: true },
-          validation: (Rule) => Rule.required(),
-          fields: [
-            defineField({
-              name: "alt",
-              title: "Alt Text",
-              type: "string",
-            }),
-          ],
-        }),
-        defineField({
-          name: "overlayHeading",
-          title: "Overlay Heading",
-          type: "string",
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: "overlayText",
-          title: "Overlay Text",
-          type: "text",
-          rows: 4,
-        }),
-      ],
+      name: "impactTitle",
+      title: "Impact Title",
+      type: "string",
+      initialValue: "Our Impact",
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: "missionSection",
-      title: "Mission Section",
-      type: "object",
-      fields: [
-        defineField({
-          name: "sectionId",
-          title: "Section ID",
-          type: "slug",
-          options: { source: "heading" },
-        }),
-        defineField({
-          name: "heading",
-          title: "Heading",
-          type: "string",
-          initialValue: "About",
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: "body",
-          title: "Body",
-          type: "blockContent",
-        }),
-        defineField({
-          name: "image",
-          title: "Image",
-          type: "image",
-          options: { hotspot: true },
-          fields: [
-            defineField({
-              name: "alt",
-              title: "Alt Text",
-              type: "string",
-            }),
-          ],
-        }),
-      ],
-    }),
-
-    defineField({
-      name: "historySection",
-      title: "History Section",
-      type: "object",
-      fields: [
-        defineField({
-          name: "heading",
-          title: "Heading",
-          type: "string",
-          initialValue: "Our History",
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: "items",
-          title: "Timeline Items",
-          type: "array",
-          of: [
-            defineArrayMember({
-              type: "object",
-              fields: [
-                defineField({
-                  name: "year",
-                  title: "Year",
-                  type: "string",
-                  validation: (Rule) => Rule.required(),
-                }),
-                defineField({
-                  name: "title",
-                  title: "Title",
-                  type: "string",
-                }),
-                defineField({
-                  name: "description",
-                  title: "Description",
-                  type: "text",
-                  rows: 5,
-                  validation: (Rule) => Rule.required(),
-                }),
-              ],
-              preview: {
-                select: {
-                  title: "year",
-                  subtitle: "description",
-                },
-              },
-            }),
-          ],
-        }),
-      ],
-    }),
-
-    defineField({
-      name: "impactSection",
-      title: "Impact Section",
-      type: "object",
-      fields: [
-        defineField({
-          name: "heading",
-          title: "Heading",
-          type: "string",
-          initialValue: "Our Impact",
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: "body",
-          title: "Body",
-          type: "blockContent",
-        }),
-      ],
+      name: "impactBody",
+      title: "Impact Body",
+      type: "array",
+      of: [{ type: "block" }],
+      validation: (Rule) => Rule.required(),
     }),
   ],
+
   preview: {
     select: {
       title: "title",
-      subtitle: "siteTitle",
+      media: "heroImage",
     },
   },
 });
