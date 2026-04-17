@@ -6,18 +6,17 @@ export const HOME_QUERY = `{
     date,
     "imageUrl": image.asset->url,
   },
-  "tools": *[_type == "resourcesPage"][0].sections[0..2] {
-    "_id": title,
+  "recentWork": *[_type == "paperType"] | order(date desc)[0..2] {
+    _id,
+    title,
+    "description": abstract,
+    date,
+  },
+  "news": *[_type == "newsType"] | order(date desc)[0..2] {
+    _id,
     title,
     description,
-    "items": items[0..2] {
-      label,
-      description,
-      resourceType,
-      url,
-      "fileUrl": file.asset->url,
-      "imageUrl": image.asset->url,
-      youtubeUrl,
-    }
+    date,
+    "imageUrl": image.asset->url,
   },
 }`

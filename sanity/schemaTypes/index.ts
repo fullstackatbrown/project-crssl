@@ -8,6 +8,7 @@ import { paperType } from "./paperType";
 import { peopleType } from "./peopleType";
 import { projectType } from "./projectType";
 import { resourcesType } from "./resourcesType";
+import { newsType } from "./newsType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -18,6 +19,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     peopleType,
     authorType,
     paperType,
-    resourcesType
+    resourcesType,
+    newsType
   ],
 };

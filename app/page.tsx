@@ -1,24 +1,7 @@
 import { client } from '../sanity/lib/client'
 import { HOME_QUERY } from './lib/queries'
-
-function SlashLogo({ size = 1 }: { size?: number }) {
-  return (
-    <span style={{ display: "inline-flex", alignItems: "center" }}>
-      <span style={{
-        width: `${3 * size}px`,
-        height: `${28 * size}px`,
-        backgroundColor: "#7c0a0b",
-        transform: "rotate(20deg)",
-        marginRight: `${6 * size}px`,
-      }} />
-      <span style={{
-        width: `${10 * size}px`,
-        height: `${28 * size}px`,
-        backgroundColor: "#7c0a0b",
-      }} />
-    </span>
-  )
-}
+import Link from 'next/link'
+import ScrollRow from './components/ScrollRow'
 
 type CardItem = {
   _id: string
@@ -26,36 +9,49 @@ type CardItem = {
   description?: string
   date?: string
   imageUrl?: string
-  items?: {
-    label: string
-    description?: string
-    resourceType: string
-    url?: string
-    fileUrl?: string
-    imageUrl?: string
-    youtubeUrl?: string
-  }[]
 }
 
 type Sections = {
-  events?: CardItem[]
+  news?: CardItem[]
   recentWork?: CardItem[]
   datasets?: CardItem[]
-  tools?: CardItem[]
 }
 
-const SECTION_CONFIG: { key: keyof Sections; label: string }[] = [
-  { key: 'events',     label: 'Event' },
-  { key: 'recentWork', label: 'Recent Work' },
-  { key: 'datasets',   label: 'Data' },
-  { key: 'tools',      label: 'Tools and Resources' },
+const FUNDERS: CardItem[] = [
+  { _id: 'brown',    title: 'Brown University' },
+  { _id: 'pitt',     title: 'University of Pittsburgh' },
+  { _id: 'nsf',      title: 'National Science Foundation' },
+  { _id: 'mit',      title: 'MIT' },
+  { _id: 'stanford', title: 'Stanford University' },
 ]
 
-function formatDate(dateStr?: string) {
-  if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric'
-  })
+const SECTION_CONFIG: {
+  key: keyof Sections
+  label: string
+  href: string
+}[] = [
+  { key: 'news',       label: 'News',       href: '/news' },
+  { key: 'recentWork', label: 'Recent Work', href: '/projects' },
+  { key: 'datasets',   label: 'Data',        href: '/data' },
+]
+
+function SlashLogo({ size = 1, color = "#7c0a0b" }: { size?: number; color?: string }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center" }}>
+      <span style={{
+        width: `${3 * size}px`,
+        height: `${28 * size}px`,
+        backgroundColor: color,
+        transform: "rotate(20deg)",
+        marginRight: `${6 * size}px`,
+      }} />
+      <span style={{
+        width: `${10 * size}px`,
+        height: `${28 * size}px`,
+        backgroundColor: color,
+      }} />
+    </span>
+  )
 }
 
 export default async function Home() {
@@ -67,98 +63,113 @@ export default async function Home() {
       {/* Hero */}
       <section style={{
         backgroundColor: "#7c0a0b",
-        minHeight: "320px",
+        minHeight: "260px",
         display: "flex",
-        alignItems: "flex-end",
-        padding: "40px 36px",
+        alignItems: "stretch",
+        padding: "28px 80px",
       }}>
-        <div style={{ flex: 1 }}>
+        {/* Left: slash logo directly above text */}
+        <div style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          gap: "8px",
+          paddingBottom: "4px",
+        }}>
+          <div style={{ marginLeft: "2px", marginBottom: "4px" }}>
+            <SlashLogo size={1.2} color="white" />
+          </div>
           <p style={{
             color: "white",
             fontFamily: "'Georgia', serif",
-            fontSize: "1.35rem",
+            fontSize: "1.1rem",
             lineHeight: "1.6",
             maxWidth: "420px",
+            margin: 0,
           }}>
             The Conflict Research and Security Studies (CRSS) Lab offers students hands-on experience in data collection, data analysis, and research methods.
           </p>
         </div>
-        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-          <img src="/globe.png" alt="Globe" style={{ maxWidth: "300px", width: "100%", height: "auto", objectFit: "contain" }} />
+
+        {/* Right: globe shifted right and slightly bigger */}
+        <div style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          paddingRight: "40px",
+        }}>
+          <img
+            src="/globe.png"
+            alt="Globe"
+            style={{ width: "260px", height: "auto", objectFit: "contain" }}
+          />
         </div>
       </section>
 
       {/* Content Sections */}
       <main>
-        {SECTION_CONFIG.map(({ key, label }) => {
+        {SECTION_CONFIG.map(({ key, label, href }) => {
           const items = sections[key] ?? []
-          const isTools = key === 'tools'
 
           return (
             <section key={key} style={{
               borderBottom: "1px solid #e5e7eb",
-              padding: "36px",
+              padding: "48px 0 48px 80px",
               display: "grid",
-              gridTemplateColumns: "160px 1fr",
-              gap: "24px",
+              gridTemplateColumns: "220px 1fr",
+              gap: "32px",
               alignItems: "start",
             }}>
-              <div>
-                <h2 style={{ fontFamily: "'Georgia', serif", fontSize: "1.1rem", fontWeight: "normal", color: "#7c0a0b" }}>
-                  {label}
-                </h2>
+              <div style={{ paddingTop: "8px" }}>
+                <Link href={href} style={{ textDecoration: "none" }}>
+                  <h2 style={{
+                    fontFamily: "'Georgia', serif",
+                    fontSize: "1.4rem",
+                    fontWeight: "normal",
+                    color: "#7c0a0b",
+                    cursor: "pointer",
+                    margin: 0,
+                  }}>
+                    {label}
+                  </h2>
+                </Link>
               </div>
 
-              <div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
-                  {items.length > 0
-                    ? items.map(item => (
-                        <div key={item._id} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "180px" }}>
-                          {item.imageUrl
-                            ? <img src={item.imageUrl} alt={item.title} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", marginBottom: "12px" }} />
-                            : <div style={{ flex: 1, backgroundColor: "#f5f5f5", marginBottom: "12px" }} />
-                          }
-                          <p style={{ fontFamily: "sans-serif", fontSize: "0.78rem", color: "#444", lineHeight: "1.5", marginBottom: "12px" }}>
-                            {isTools ? item.title : item.description}
-                          </p>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontFamily: "sans-serif", fontSize: "0.7rem", color: "#999" }}>
-                              {isTools
-                                ? item.items?.[0]?.resourceType === 'link' && item.items[0].url
-                                  ? <a href={item.items[0].url} style={{ color: "#7c0a0b" }}>{item.items[0].label} →</a>
-                                  : null
-                                : formatDate(item.date)
-                              }
-                            </span>
-                            <SlashLogo size={0.5} />
-                          </div>
-                        </div>
-                      ))
-                    : [1, 2, 3].map(i => (
-                        <div key={i} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "180px" }}>
-                          <div style={{ flex: 1, backgroundColor: "#f5f5f5", marginBottom: "12px" }} />
-                          <p style={{ fontFamily: "sans-serif", fontSize: "0.78rem", color: "#ccc", lineHeight: "1.5", marginBottom: "12px" }}>
-                            No content yet.
-                          </p>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontFamily: "sans-serif", fontSize: "0.7rem", color: "#ccc" }}>—</span>
-                            <SlashLogo size={0.5} />
-                          </div>
-                        </div>
-                      ))
-                  }
-                </div>
-
-                {/* Progress bar */}
-                <div style={{ marginTop: "20px", display: "flex", alignItems: "center" }}>
-                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "#a51c30" }} />
-                  <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e7eb", marginLeft: "4px" }} />
-                </div>
-              </div>
+              <ScrollRow items={items} />
             </section>
           )
         })}
+
+        {/* Funders */}
+        <section style={{
+          borderBottom: "1px solid #e5e7eb",
+          padding: "48px 0 48px 80px",
+          display: "grid",
+          gridTemplateColumns: "220px 1fr",
+          gap: "32px",
+          alignItems: "start",
+        }}>
+          <div style={{ paddingTop: "8px" }}>
+            <h2 style={{
+              fontFamily: "'Georgia', serif",
+              fontSize: "1.4rem",
+              fontWeight: "normal",
+              color: "#7c0a0b",
+              margin: 0,
+            }}>
+              Funders
+            </h2>
+          </div>
+
+          <ScrollRow items={FUNDERS} />
+        </section>
       </main>
+
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+      `}</style>
     </div>
   )
 }
