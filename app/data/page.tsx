@@ -5,10 +5,19 @@ import { Search, Download, Database } from 'lucide-react';
 import { client } from '../../sanity/lib/client';
 import DatasetDetailsModal from '../components/DatasetDetailsModal';
 
+type DataPageHero = {
+    image?: { alt?: string; asset?: { url?: string } };
+    heading?: string;
+    subtext?: string;
+};
+
 async function getAllTags(): Promise<string[]> {
     return client.fetch(`array::unique(*[_type == "dataset"].tags[].tag)`)
 }
-const allTags = await getAllTags();
+async function getDataPageHero(): Promise<DataPageHero> {
+    return client.fetch(`*[_type == "dataPage"][0].hero{ heading, subtext, image{ alt, asset->{ url } } }`)
+}
+const [allTags, dataPageHero] = await Promise.all([getAllTags(), getDataPageHero()]);
 
 // Creating data type for dataset imported from Sanity
 type Dataset = {
@@ -126,37 +135,29 @@ const DataPage = () => {
 
     return (
         <div className="min-h-screen bg-white font-serif" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
-
-            {/* ── Site Header ── */}
-            <header className="border-b border-gray-200 bg-white py-4 text-center">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900" style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.15em' }}>
-                    CRSS LAB
-                </h1>
-                <p className="text-sm text-gray-500 mt-0.5" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-                    Conflict Research and Security Studies
-                </p>
-                <nav className="mt-3 flex justify-center gap-10 text-sm text-gray-700">
-                    {['About', 'Team', 'Project', 'Subscribe'].map(item => (
-                        <a key={item} href="#" className="hover:text-black transition-colors">{item}</a>
-                    ))}
-                </nav>
-            </header>
-
             {/* ── Dark Hero Banner ── */}
             <section
                 className="relative flex flex-col justify-end px-10 pb-10"
                 style={{
-                    background: 'linear-gradient(160deg, #4a4a48 0%, #2e2e2c 60%, #1a1a18 100%)',
+                    background: "#7c0a0b",
                     minHeight: '280px',
                 }}
             >
-                <h2 className="text-4xl font-bold text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>Data</h2>
+                <h2 className="text-4xl font-bold text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>
+                    {dataPageHero?.heading ?? 'Data'}
+                </h2>
                 <p className="text-gray-300 text-sm max-w-md" style={{ fontFamily: 'Georgia, serif' }}>
-                    Our lab collects data on some of the most vital problems in the world.
+                    {dataPageHero?.subtext ?? 'Our lab collects data on some of the most vital problems in the world.'}
                 </p>
+                <img
+                    src={dataPageHero?.image?.asset?.url}
+                    alt={dataPageHero?.image?.alt ?? ''}
+                    className="absolute top-1/2 -translate-y-1/2"
+                    style={{ height: '280px', width: 'auto', opacity: 0.85, right: '-40px' }}
+                />
             </section>
 
-            {/* ── Tab Bar ── */}
+            {/*── Tab Bar ──
             <div className="grid grid-cols-2 border-b border-gray-300 bg-white">
                 <button
                     onClick={() => setActiveTab('datasets')}
@@ -178,8 +179,7 @@ const DataPage = () => {
                 >
                     Tools &amp; Resources
                 </button>
-            </div>
-
+            </div>*/}
             {/* ── Main Content ── */}
             <main className="bg-gray-100 px-10 py-8 min-h-screen">
 

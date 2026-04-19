@@ -1,116 +1,147 @@
-const teamMembers = [
-  {
-    id: 1,
-    name: "Thomas",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 2,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 3,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 4,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 5,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 6,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-  {
-    id: 7,
-    name: "Person",
-    jobTitle: "Job",
-    image: undefined,
-  },
-];
+import { PortableText } from "@portabletext/react";
+import { sanityFetch } from "@/sanity/lib/live";
+import { Poppins, Cormorant_Garamond } from "next/font/google";
 
-function TeamGrid() {
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const ABOUT_QUERY = `*[_type == "about"][0]{
+  title,
+  heroTitle,
+  heroDescription,
+  heroImage{
+    asset->{
+      url
+    },
+    alt
+  },
+  missionBody,
+  missionImage{
+    asset->{
+      url
+    },
+    alt
+  },
+  historyTitle,
+  historyItems[]{
+    year,
+    body
+  },
+  impactTitle,
+  impactBody
+}`;
+
+export default async function AboutPage() {
+  const { data } = await sanityFetch({
+    query: ABOUT_QUERY,
+  });
+
+  if (!data) {
+    return (
+      <main className={`min-h-screen bg-white px-6 py-20 ${poppins.className}`}>
+        <p className="text-lg text-slate-700">No About page content found.</p>
+      </main>
+    );
+  }
+
   return (
-    <div className="grid grid-col1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
-      {teamMembers.map((person) => (
-        <div
-          key={person.id}
-          className="bg-white rounded-xl overflow-hidden border border-slate-200"
-        >
-          <div className="h-48 bg-white flex items-center justify-center">
-            {person.image ? (
-              <img
-                src={person.image}
-                alt={person.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="bg-white text-4xl">👤</span>
-            )}
-          </div>
-          <div className="p-4 text-center">
-            <h2 className="text-xl font-bold text-slate-800">{person.name}</h2>
-            <p className="text-slate-500 font-medium">{person.jobTitle}</p>
+    <main className={`${poppins.className} bg-white text-black`}>
+      <section className="px-0 pt-0">
+        <div className="relative mx-auto h-[420px] max-w-[1400px] overflow-hidden border-[6px] border-sky-400">
+          {data.heroImage?.asset?.url && (
+            <img
+              src={data.heroImage.asset.url}
+              alt={data.heroImage.alt || data.heroTitle || "About hero image"}
+              className="h-full w-full object-cover"
+            />
+          )}
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+
+          <div className="absolute bottom-8 left-8 max-w-3xl text-white">
+            <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+              {data.heroTitle}
+            </h1>
+            <p className="mt-3 max-w-3xl text-sm font-light leading-6 md:text-base">
+              {data.heroDescription}
+            </p>
           </div>
         </div>
-      ))}
-    </div>
-  );
-}
+      </section>
 
-function NavBar() {
-  return (
-    <nav className="flex flex-col gap-4">
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
-      >
-        People
-      </button>
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
-      >
-        Mission
-      </button>
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
-      >
-        Looking Ahead
-      </button>
-      <button
-        className="text-lg text-zinc-700 hover:text-orange-400
-            transition-all duration-200 ease-in-out"
-      >
-        Timeline
-      </button>
-    </nav>
-  );
-}
-export default function AboutPage() {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-10 min-h-screen">
-      <div className="hidden md:block md:col-span-3 bg-white p-10 sticky top-0 h-screen overflow-y-auto">
-        <NavBar />
-      </div>
-      <div className="md:col-span-7 bg-white">
-        <TeamGrid />
-      </div>
-    </div>
+      <section className="bg-black px-6 py-10 md:px-12">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
+          <div className="text-white">
+            <div className="prose prose-invert max-w-none prose-p:text-[18px] prose-p:leading-[1.7] prose-p:font-light">
+              <PortableText value={data.missionBody} />
+            </div>
+          </div>
+
+          <div className="overflow-hidden">
+            {data.missionImage?.asset?.url && (
+              <img
+                src={data.missionImage.asset.url}
+                alt={data.missionImage.alt || "Mission image"}
+                className="h-full w-full object-cover"
+              />
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#efefef] px-6 py-12 md:px-12">
+        <div className="mx-auto max-w-[1400px]">
+          <h2 className="text-[22px] font-semibold tracking-tight text-black">
+            {data.historyTitle}
+          </h2>
+
+          <div className="mt-6 mb-4 flex items-center">
+            <div className="h-[2px] flex-1 bg-black" />
+            <div className="mx-4 h-4 w-4 rounded-full bg-black" />
+            <div className="h-[2px] flex-1 bg-black" />
+          </div>
+
+          <div className="overflow-x-auto pb-4">
+            <div className="flex min-w-max gap-4">
+              {data.historyItems?.map((item: any, index: number) => (
+                <div
+                  key={`${item.year}-${index}`}
+                  className="min-h-[320px] w-[340px] flex-shrink-0 border border-neutral-300 bg-[#f3f3f3] p-8"
+                >
+                  <h3
+                    className={`${cormorant.className} text-[30px] leading-none text-black`}
+                  >
+                    {item.year}
+                  </h3>
+
+                  <div className="prose mt-5 max-w-none prose-p:mb-4 prose-p:text-[16px] prose-p:leading-8 prose-p:text-black">
+                    <PortableText value={item.body} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#efefef] px-6 pb-20 pt-4 md:px-12">
+        <div className="mx-auto max-w-[1400px]">
+          <h2 className="text-[22px] font-semibold tracking-tight text-black">
+            {data.impactTitle}
+          </h2>
+
+          <div className="mt-6 space-y-6 text-[17px] leading-8 text-black">
+            <PortableText value={data.impactBody} />
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
