@@ -5,6 +5,8 @@ import { Search } from "lucide-react";
 import createImageUrlBuilder from "@sanity/image-url";
 import type SanityImageSource from "@sanity/image-url";
 import { useState, useEffect } from "react";
+import PeopleResults, { type Person } from "../components/PeopleResults";
+import { buildSearchQuery, buildTagQuery } from "../lib/queries";
 
 // Create an image URL builder using the client
 const builder = createImageUrlBuilder(client);
@@ -26,9 +28,8 @@ export async function Counter() {
 
 const [peoplecount, plural] = await Counter();
 
-const DEFAULT_QUERY = `*[
-  _type == "peopleType"
-]|order(fullname asc){_id, fullname, image, email, recentwork, jobtitles, interests, slug}`;
+const STRING_QUERY_FIELDS = ["fullname"];
+
 
 async function getInterests(): Promise<string[]> {
   return client.fetch(`array::unique(*[_type == "peopleType"].interests[])`);
@@ -43,9 +44,46 @@ const allTitles = await getTitles();
 allTitles.sort();
 
 export default function People() {
+  const [peopleData, setPeopleData] = useState<Person[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeInterests, setActiveInterests] = useState<string[]>([]);
   const [activeTitles, setActiveTitles] = useState<string[]>([]);
+
+  useEffect(() => {
+    let filter = '_type == "peopleType"';
+
+    if (searchQuery.trim()) {
+      const searchPart = buildSearchQuery(searchQuery, STRING_QUERY_FIELDS, true, true);
+      if (searchPart) filter += ` && ${searchPart}`;
+    }
+
+    if (activeInterests.length > 0) {
+      const interestPart = buildTagQuery(activeInterests, "interests");
+      if (interestPart) filter += ` && ${interestPart}`;
+    }
+
+    if (activeTitles.length > 0) {
+      const titlePart = buildTagQuery(activeTitles, "jobtitles");
+      if (titlePart) filter += ` && ${titlePart}`;
+    }
+
+    const query = `*[${filter}]|order(fullname asc){_id, fullname, image, email, recentwork, jobtitles, interests, slug}`;
+    client.fetch<Person[]>(query).then(setPeopleData);
+  }, [searchQuery, activeInterests, activeTitles]);
+
+  const handleInterestToggle = (interest: string, checked: boolean) => {
+    setActiveInterests((prev) =>
+      checked ? [...prev, interest] : prev.filter((item) => item !== interest)
+    );
+    console.log(activeInterests, interest, checked);  // TODO: remove after debugging
+  };
+
+  const handleTitleToggle = (title: string, checked: boolean) => {
+    setActiveTitles((prev) =>
+      checked ? [...prev, title] : prev.filter((item) => item !== title)
+    );
+    console.log(activeTitles, title, checked);  // TODO: remove after debugging
+  };
 
   return (
     <div className="bg-white">
@@ -151,6 +189,10 @@ export default function People() {
                       name="interest"
                       key={`${interest} checkbox`}
                       type="checkbox"
+                      checked={activeInterests.includes(interest)}
+                      onChange={(e) =>
+                        handleInterestToggle(interest, e.target.checked)
+                      }
                     />
                     {interest}
                   </label>
@@ -186,6 +228,10 @@ export default function People() {
                         name="title"
                         key={`${title} checkbox`}
                         type="checkbox"
+                        checked={activeTitles.includes(title)}
+                        onChange={(e) =>
+                          handleTitleToggle(title, e.target.checked)
+                        }
                       />
                       {title}
                     </label>
@@ -201,7 +247,7 @@ export default function People() {
               </button>
             </form>
           </div>
-          {/* <PeopleResults /> */}
+          <PeopleResults people={peopleData} />
         </div>
       </div>
     </div>
