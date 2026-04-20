@@ -18,6 +18,8 @@ export function urlFor(source: typeof SanityImageSource) {
 
 const options = { next: { revalidate: 30 } };
 
+const DEBOUNCE_MS = 400;
+
 const STRING_QUERY_FIELDS = ["fullname"];
 
 async function getInterests(): Promise<string[]> {
@@ -35,14 +37,20 @@ allTitles.sort();
 export default function People() {
   const [peopleData, setPeopleData] = useState<Person[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [activeInterests, setActiveInterests] = useState<string[]>([]);
   const [activeTitles, setActiveTitles] = useState<string[]>([]);
 
   useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
     let filter = '_type == "peopleType"';
 
-    if (searchQuery.trim()) {
-      const searchPart = buildSearchQuery(searchQuery, STRING_QUERY_FIELDS, true, true);
+    if (debouncedSearch.trim()) {
+      const searchPart = buildSearchQuery(debouncedSearch, STRING_QUERY_FIELDS, true, true);
       if (searchPart) filter += ` && ${searchPart}`;
     }
 
@@ -58,7 +66,7 @@ export default function People() {
 
     const query = `*[${filter}]|order(fullname asc){_id, fullname, image, email, recentwork, jobtitles, interests, slug}`;
     client.fetch<Person[]>(query).then(setPeopleData);
-  }, [searchQuery, activeInterests, activeTitles]);
+  }, [debouncedSearch, activeInterests, activeTitles]);
 
   const handleInterestToggle = (interest: string, checked: boolean) => {
     setActiveInterests((prev) =>
