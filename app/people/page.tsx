@@ -75,14 +75,12 @@ export default function People() {
     setActiveInterests((prev) =>
       checked ? [...prev, interest] : prev.filter((item) => item !== interest)
     );
-    console.log(activeInterests, interest, checked);  // TODO: remove after debugging
   };
 
   const handleTitleToggle = (title: string, checked: boolean) => {
     setActiveTitles((prev) =>
       checked ? [...prev, title] : prev.filter((item) => item !== title)
     );
-    console.log(activeTitles, title, checked);  // TODO: remove after debugging
   };
 
   return (
