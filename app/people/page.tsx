@@ -18,18 +18,7 @@ export function urlFor(source: typeof SanityImageSource) {
 
 const options = { next: { revalidate: 30 } };
 
-const counter = defineQuery(`count(*[_type == 'peopleType'])`);
-
-export async function Counter() {
-  const peoplecount = await client.fetch(counter);
-  const plural = peoplecount > 1 ? "people" : "person";
-  return [peoplecount, plural];
-}
-
-const [peoplecount, plural] = await Counter();
-
 const STRING_QUERY_FIELDS = ["fullname"];
-
 
 async function getInterests(): Promise<string[]> {
   return client.fetch(`array::unique(*[_type == "peopleType"].interests[])`);
@@ -123,7 +112,7 @@ export default function People() {
             className="text-lg text-gray-900"
             style={{ marginLeft: "3rem", marginTop: "2rem" }}
           >
-            <b>{peoplecount}</b> {plural}{" "}
+            <b>{peopleData.length}</b> {peopleData.length === 1 ? "person" : "people"}{" "}
           </p>
         </div>
         {/* <PeopleCount /> */}
