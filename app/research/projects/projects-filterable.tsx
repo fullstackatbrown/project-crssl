@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import Fuse from "fuse.js";
 import Elipsis from "./project-extra";
 
 export type Project = {
@@ -18,6 +19,7 @@ export type Project = {
   contributors: Array<string>;
   coverImage: string;
   tags: Array<string>;
+  keywords?: Array<string>;
   projectLeader: Array<{ name: string }>;
 };
 
@@ -89,6 +91,9 @@ export default function ProjectsFilterable({
 }) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedFaculty, setSelectedFaculty] = useState<string[]>([]);
+  const [keywordQuery, setKeywordQuery] = useState("");
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [isKeywordSuggestionsOpen, setIsKeywordSuggestionsOpen] = useState(false);
 
   const tagsList = useMemo(
     () =>
@@ -106,8 +111,52 @@ export default function ProjectsFilterable({
     [projects],
   );
 
+  const keywordList = useMemo(
+    () =>
+      [...new Set(projects.flatMap((project) => project.keywords ?? []))]
+        .filter(Boolean)
+        .sort(),
+    [projects],
+  );
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(projects, {
+        keys: ["keywords"],
+        threshold: 0.35,
+        ignoreLocation: true,
+      }),
+    [projects],
+  );
+
+  const keywordFuse = useMemo(
+    () =>
+      new Fuse(keywordList, {
+        threshold: 0.35,
+        ignoreLocation: true,
+      }),
+    [keywordList],
+  );
+
+  const keywordSuggestions = useMemo(() => {
+    const trimmedKeywordQuery = keywordQuery.trim();
+    if (trimmedKeywordQuery.length === 0) {
+      return keywordList.slice(0, 8);
+    }
+
+    return keywordFuse
+      .search(trimmedKeywordQuery, { limit: 8 })
+      .map((result) => result.item);
+  }, [keywordQuery, keywordList, keywordFuse]);
+
   const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
+    const trimmedKeywordQuery = keywordQuery.trim();
+    const baseProjects =
+      trimmedKeywordQuery.length > 0
+        ? fuse.search(trimmedKeywordQuery).map((result) => result.item)
+        : projects;
+
+    return baseProjects.filter((project) => {
       const tagMatch =
         selectedTags.length === 0 ||
         selectedTags.some((tag) => project.tags?.includes(tag));
@@ -119,7 +168,7 @@ export default function ProjectsFilterable({
 
       return tagMatch && facultyMatch;
     });
-  }, [projects, selectedTags, selectedFaculty]);
+  }, [projects, selectedTags, selectedFaculty, keywordQuery, fuse]);
 
   const toggleSelection = (
     value: string,
@@ -131,6 +180,12 @@ export default function ProjectsFilterable({
       return;
     }
     setSelectedValues([...selectedValues, value]);
+  };
+
+  const selectKeywordSuggestion = (value: string) => {
+    setKeywordQuery(value);
+    setActiveSuggestionIndex(-1);
+    setIsKeywordSuggestionsOpen(false);
   };
 
   return (
@@ -149,7 +204,6 @@ export default function ProjectsFilterable({
             }
           />
         ))}
-        <h3 className="font-semibold text-zinc-700">Keywords</h3>
         <h3 className="font-semibold text-zinc-700">Faculty</h3>
         {facultyList.map((faculty) => (
           <FilterCheckbox
@@ -162,6 +216,80 @@ export default function ProjectsFilterable({
             }
           />
         ))}
+        <h3 className="font-semibold text-zinc-700">Keywords</h3>
+        <div className="relative">
+          <input
+            type="text"
+            value={keywordQuery}
+            onChange={(event) => {
+              setKeywordQuery(event.target.value);
+              setActiveSuggestionIndex(-1);
+              setIsKeywordSuggestionsOpen(true);
+            }}
+            onFocus={() => setIsKeywordSuggestionsOpen(true)}
+            onBlur={() => setIsKeywordSuggestionsOpen(false)}
+            onKeyDown={(event) => {
+              if (!isKeywordSuggestionsOpen || keywordSuggestions.length === 0) {
+                return;
+              }
+
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setActiveSuggestionIndex((currentIndex) =>
+                  currentIndex < keywordSuggestions.length - 1
+                    ? currentIndex + 1
+                    : 0,
+                );
+              }
+
+              if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setActiveSuggestionIndex((currentIndex) =>
+                  currentIndex > 0
+                    ? currentIndex - 1
+                    : keywordSuggestions.length - 1,
+                );
+              }
+
+              if (event.key === "Enter" && activeSuggestionIndex >= 0) {
+                event.preventDefault();
+                selectKeywordSuggestion(keywordSuggestions[activeSuggestionIndex]);
+              }
+
+              if (event.key === "Escape") {
+                setActiveSuggestionIndex(-1);
+                setIsKeywordSuggestionsOpen(false);
+              }
+            }}
+            placeholder="Search keywords"
+            className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
+            role="combobox"
+            aria-expanded={isKeywordSuggestionsOpen && keywordSuggestions.length > 0}
+            aria-controls="keyword-suggestions-list"
+          />
+          {isKeywordSuggestionsOpen && keywordSuggestions.length > 0 ? (
+            <ul
+              id="keyword-suggestions-list"
+              className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded border border-zinc-200 bg-white text-sm shadow"
+            >
+              {keywordSuggestions.map((suggestion, index) => (
+                <li key={suggestion}>
+                  <button
+                    type="button"
+                    className={`w-full px-2 py-1 text-left ${index === activeSuggestionIndex
+                        ? "bg-zinc-100 text-zinc-900"
+                        : "hover:bg-zinc-50"
+                      }`}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => selectKeywordSuggestion(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
       </div>
       <div className="flex-1 min-h-[52rem]">
         {filteredProjects.length === 0 ? (
