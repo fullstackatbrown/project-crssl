@@ -14,7 +14,7 @@ const PROJECTS_QUERY = `*[_type == "projectType"]{
   "contributors": contributors[]->fullname,
   "coverImage": coverImage.asset->url,
   tags,
-  projectLeader,
+  "projectLeader": projectLeader[]->fullname,
   keywords,
   papers
 }`;

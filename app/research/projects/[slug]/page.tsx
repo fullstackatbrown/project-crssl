@@ -110,12 +110,32 @@ type ProjectPageSection = {
   body?: PortableTextBlock[];
 };
 
+type ProjectPaper = {
+  _id: string;
+  title: string;
+  slug?: string;
+  externalUrl?: string;
+  pdfUrl?: string;
+};
+
 type FetchedProject = SanityDocument & {
   coverImage?: string;
   tags?: string[];
   keywords?: string[];
+  projectLeader?: string[];
+  contributors?: string[];
   pageSections?: ProjectPageSection[];
+  papers?: ProjectPaper[];
 };
+
+const PAPERS_SECTION_ID = 'related-papers';
+
+function getPaperHref(paper: ProjectPaper): string {
+  if (paper.pdfUrl) return paper.pdfUrl;
+  if (paper.externalUrl) return paper.externalUrl;
+  if (paper.slug) return `/research/papers/${paper.slug}`;
+  return '';
+}
 
 function getContent(project: FetchedProject) {
   const sections = project.pageSections;
@@ -158,9 +178,17 @@ const PROJECTS_QUERY = `*[_type == "projectType" && slug.current == $slug][0]{
   description, 
   tags,
   keywords,
+  "projectLeader": projectLeader[]->fullname,
+  "contributors": contributors[]->fullname,
+  "papers": papers[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    externalUrl,
+    "pdfUrl": pdf.asset->url
+  },
   relevantLinks, 
   pageSections,
-  contributors, 
   "coverImage": coverImage.asset->url
 }`;
 
@@ -184,8 +212,10 @@ export default async function ProjectPage({
   }
 
   const pageSections = project.pageSections;
+  const papers = project.papers ?? [];
   const hasSectionNav =
     Array.isArray(pageSections) && pageSections.length > 0;
+  const hasPapers = papers.length > 0;
 
   return (
     <div>
@@ -232,7 +262,7 @@ export default async function ProjectPage({
         </div>
       </div>
 
-      <div className="relative z-10 grid grid-cols-[1fr_3fr]">
+      <div className="relative z-10 grid grid-cols-[1fr_3fr] bg-white">
         {/* Sidebar */}
         <aside className="-mt-24 self-start bg-white p-6 text-zinc-700 sticky top-[10vh]">
           <Link
@@ -242,10 +272,10 @@ export default async function ProjectPage({
             {'< Research'}
           </Link>
           <p className="pt-12 font-serif text-lg font-semibold text-zinc-900">In this Group</p>
-          {hasSectionNav ? (
+          {hasSectionNav || hasPapers ? (
             <nav aria-label="On this page" className="mt-3 text-sm">
               <ul className="space-y-2 text-zinc-700">
-                {pageSections.map((section: ProjectPageSection) => {
+                {(pageSections ?? []).map((section: ProjectPageSection) => {
                   const href = `#${sectionDomId(section)}`;
                   const outlineLabel = section.outlineTitle || section.title;
                   return (
@@ -259,6 +289,16 @@ export default async function ProjectPage({
                     </li>
                   );
                 })}
+                {hasPapers ? (
+                  <li>
+                    <a
+                      href={`#${PAPERS_SECTION_ID}`}
+                      className="font-medium underline-offset-2 hover:text-zinc-900 hover:underline"
+                    >
+                      Related Papers
+                    </a>
+                  </li>
+                ) : null}
               </ul>
             </nav>
           ) : null}
@@ -266,22 +306,73 @@ export default async function ProjectPage({
 
         {/* Main content */}
         <div className="w-250 p-6 text-zinc-700">
-          <div className="flex flex-row gap-2">
-          <h3 className="font-serif text-m text-zinc-900">Keywords:</h3>
-          {project.keywords?.length ? (
-            <div className="mb-8 flex flex-wrap gap-2">
-              {project.keywords.map((keyword) => (
-                <span
-                  key={keyword}
-                  className="inline-flex items-center rounded-full border border-zinc-300 px-3 py-1 text-xs font-medium tracking-wide text-zinc-700"
-                >
-                  {keyword}
-                </span>
-              ))}
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row gap-2">
+              <h3 className="font-serif text-m text-zinc-900">Keywords:</h3>
+              {project.keywords?.length ? (
+                <div className=" flex flex-wrap gap-2">
+                  {project.keywords.map((keyword) => (
+                    <span
+                      key={keyword}
+                      className="inline-flex items-center rounded-full border border-zinc-300 px-3 py-1 text-xs font-medium tracking-wide text-zinc-700"
+                    >
+                      {keyword}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
             </div>
-          ) : null}
+            <div className="flex flex-row gap-2 space-y-3">
+              {project.projectLeader?.length ? (
+                <p className="text-xs leading-6 text-zinc-700">
+                  <span className="mr-1 font-serif text-base text-zinc-900">
+                    Project Leader:
+                  </span>
+                  {project.projectLeader.join(", ")}
+                </p>
+              ) : null}
+              {project.contributors?.length ? (
+                <p className="text-xs leading-6 text-zinc-700">
+                  <span className="mr-1 font-serif text-base text-zinc-900">
+                    Contributors:
+                  </span>
+                  {project.contributors.join(", ")}
+                </p>
+              ) : null}
+            </div>
           </div>
           {getContent(project)}
+          {hasPapers ? (
+            <section id={PAPERS_SECTION_ID} className="mt-12 scroll-mt-28">
+              <h2 className="mb-4 font-serif text-3xl font-semibold text-zinc-900">
+                Related Papers
+              </h2>
+              <ul className="space-y-2">
+                {papers.map((paper) => {
+                  const href = getPaperHref(paper);
+                  const hasLink = href.length > 0;
+                  const isExternal = hasLink && href.startsWith('http');
+
+                  return (
+                    <li key={paper._id} className="text-zinc-700">
+                      {hasLink ? (
+                        <a
+                          href={href}
+                          target={isExternal ? '_blank' : undefined}
+                          rel={isExternal ? 'noopener noreferrer' : undefined}
+                          className="font-medium underline decoration-zinc-400 underline-offset-2 hover:text-zinc-900"
+                        >
+                          {paper.title}
+                        </a>
+                      ) : (
+                        <span>{paper.title}</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ) : null}
         </div>
       </div>
     </div>
