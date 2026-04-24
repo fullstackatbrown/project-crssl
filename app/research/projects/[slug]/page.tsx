@@ -104,12 +104,14 @@ function sectionDomId(section: {
 type ProjectPageSection = {
   _key: string;
   title?: string;
+  outlineTitle?: string;
   anchorId?: { current?: string };
   body?: PortableTextBlock[];
 };
 
 type FetchedProject = SanityDocument & {
   coverImage?: string;
+  keywords?: string[];
   pageSections?: ProjectPageSection[];
 };
 
@@ -123,7 +125,7 @@ function getContent(project: FetchedProject) {
           const id = sectionDomId(section);
           return (
             <section key={section._key} id={id} className="scroll-mt-28">
-              <h2 className="text-3xl font-serif font-bold border-b border-zinc-200 pb-2 mb-4">
+              <h2 className="text-3xl font-bold mb-4">
                 {section.title}
               </h2>
               {section.body?.length ? (
@@ -152,6 +154,7 @@ const PROJECTS_QUERY = `*[_type == "projectType" && slug.current == $slug][0]{
   slug, 
   publishedAt, 
   description, 
+  keywords,
   relevantLinks, 
   pageSections,
   contributors, 
@@ -193,6 +196,18 @@ export default async function ProjectPage({
           <div className="flex flex-col justify-end w-250 p-6">
             <h1 className="text-4xl font-serif">{project.title}</h1>
             <p className="mt-2">{project.description}</p>
+            {project.keywords?.length ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {project.keywords.map((keyword) => (
+                  <span
+                    key={keyword}
+                    className="inline-flex items-center rounded-full border border-white/70 px-3 py-1 text-xs text-white"
+                  >
+                    {keyword}
+                  </span>
+                ))}
+              </div>
+            ) : null}
             <div className="mt-2">
               {project.relevantLinks?.map(
                 (item: {
@@ -225,16 +240,17 @@ export default async function ProjectPage({
           <p className="font-bold pt-15">In this Group</p>
           {hasSectionNav ? (
             <nav aria-label="On this page" className="mt-3 text-sm">
-              <ul className="space-y-1.5 text-gray-600">
+              <ul className="space-y-1.5 text-gray-600 font-serif">
                 {pageSections.map((section: ProjectPageSection) => {
                   const href = `#${sectionDomId(section)}`;
+                  const outlineLabel = section.outlineTitle || section.title;
                   return (
                     <li key={section._key}>
                       <a
                         href={href}
                         className="hover:text-gray-900 underline-offset-2 hover:underline"
                       >
-                        {section.title}
+                        {outlineLabel}
                       </a>
                     </li>
                   );
