@@ -12,8 +12,15 @@ export const projectPageSectionType = defineType({
       name: 'title',
       type: 'string',
       title: 'Section title',
-      description: 'Shown as a link in the page outline.',
+      description: 'Shown as the section heading in the project page body.',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'outlineTitle',
+      type: 'string',
+      title: 'Outline title',
+      description: 'Shown in the page outline/sidebar navigation. (Max 60 characters)',
+      validation: (Rule) => Rule.required().max(60),
     }),
     defineField({
       name: 'anchorId',
