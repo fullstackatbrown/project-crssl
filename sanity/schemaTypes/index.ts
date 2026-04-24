@@ -6,6 +6,7 @@ import { exampleDatasetType } from "./exampleDatasetType";
 import { examplePersonType } from "./examplePersonType";
 import { paperType } from "./paperType";
 import { peopleType } from "./peopleType";
+import { projectPageSectionType } from "./projectPageSectionType";
 import { projectType } from "./projectType";
 import { resourcesType } from "./resourcesType";
 import { newsType } from "./newsType";
@@ -20,6 +21,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     examplePersonType,
     exampleDatasetType,
     paperType,
+    projectPageSectionType,
     projectType,
     peopleType,
     resourcesType,

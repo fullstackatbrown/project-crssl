@@ -1,5 +1,4 @@
 import { defineField, defineType } from 'sanity';
-import { UserIcon } from '@sanity/icons';
 
 export const projectType = defineType({
   title: 'projectType',
@@ -13,7 +12,7 @@ export const projectType = defineType({
      * relevant links
      * short description
      *
-     * content : blockContentType, but allow color text
+     * page sections (reorderable)
      * references
      */
     defineField({
@@ -115,14 +114,17 @@ export const projectType = defineType({
         type: "array",
         of: [
             {
-              type: 'reference',
-              to: [{ type: 'paperType' }],
+                type: 'reference',
+                to: [{ type: 'paperType' }],
             },
         ],
     }),
     defineField({
-      name: 'content',
-      type: 'blockContent',
+      name: 'pageSections',
+      title: 'Page sections',
+      type: 'array',
+      description: 'Add sections and drag to reorder. Each section has its own title and rich text.',
+      of: [{ type: 'projectPageSection' }],
     }),
   ],
 });
