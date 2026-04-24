@@ -114,7 +114,12 @@ export default async function PapersPage() {
           <div className="border-r border-zinc-300 bg-black px-4 py-4 text-white">
             Papers
           </div>
-          <div className="px-4 py-4 text-zinc-500">Explainers</div>
+          <Link
+            href="/research/explainers"
+            className="px-4 py-4 text-zinc-500 hover:bg-zinc-50 hover:text-[#a51c30]"
+          >
+            Explainers
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[220px_1fr]">

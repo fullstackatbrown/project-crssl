@@ -9,9 +9,19 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.documentTypeListItem("projectType").title("Projects"),
       S.documentTypeListItem("paperType").title("Papers"),
+      S.documentTypeListItem("explainerSectionType").title("Explainers"),
       S.documentTypeListItem("authorType").title("Authors"),
       S.documentTypeListItem("peopleType").title("People"),
       S.documentTypeListItem("dataset").title("Datasets"),
+      S.divider(),
+      S.listItem()
+        .title('Data Page Hero')
+        .id('dataPage')
+        .child(
+          S.document()
+            .schemaType('dataPage')
+            .documentId('dataPage-singleton')
+        ),
       S.divider(),
       ...S.documentTypeListItems().filter(
         (item) =>
@@ -24,6 +34,8 @@ export const structure: StructureResolver = (S) =>
             "peopleType",
             "exampleDataset",
             "examplePerson",
+            "dataPage",
+            "explainerSectionType",
           ].includes(item.getId()!),
       ),
       S.divider(),
