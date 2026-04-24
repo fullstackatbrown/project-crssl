@@ -20,7 +20,7 @@ export type Project = {
   coverImage: string;
   tags: Array<string>;
   keywords?: Array<string>;
-  projectLeader: Array<{ name: string }>;
+  projectLeader?: Array<string>;
 };
 
 function Tile({ project }: { project: Project }) {
@@ -52,6 +52,11 @@ function Tile({ project }: { project: Project }) {
           <div className="px-1 py-1 font-serif text-xl text-white">
             {project.title}
           </div>
+          {project.projectLeader?.length ? (
+            <div className="px-1 pb-1 text-xs text-zinc-200">
+              PL: {project.projectLeader.join(", ")}
+            </div>
+          ) : null}
         </div>
       </Link>
     </article>
