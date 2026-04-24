@@ -35,7 +35,11 @@ const ABOUT_QUERY = `*[_type == "about"][0]{
     body
   },
   impactTitle,
-  impactBody
+  impactBody,
+  sections[]{
+    title,
+    body
+  }
 }`;
 
 export default async function AboutPage() {
@@ -142,6 +146,23 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      {data.sections?.map((section: any, index: number) => (
+        <section
+          key={`${section.title}-${index}`}
+          className="bg-[#efefef] px-6 pb-20 pt-4 md:px-12"
+        >
+          <div className="mx-auto max-w-[1400px]">
+            <h2 className="text-[22px] font-semibold tracking-tight text-black">
+              {section.title}
+            </h2>
+
+            <div className="mt-6 space-y-6 text-[17px] leading-8 text-black">
+              <PortableText value={section.body} />
+            </div>
+          </div>
+        </section>
+      ))}
     </main>
   );
 }

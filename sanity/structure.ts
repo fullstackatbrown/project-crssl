@@ -9,6 +9,7 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.documentTypeListItem("projectType").title("Projects"),
       S.documentTypeListItem("paperType").title("Papers"),
+      S.documentTypeListItem("explainerSectionType").title("Explainers"),
       S.documentTypeListItem("authorType").title("Authors"),
       S.documentTypeListItem("peopleType").title("People"),
       S.documentTypeListItem("dataset").title("Datasets"),
@@ -34,6 +35,7 @@ export const structure: StructureResolver = (S) =>
             "exampleDataset",
             "examplePerson",
             "dataPage",
+            "explainerSectionType",
           ].includes(item.getId()!),
       ),
       S.divider(),

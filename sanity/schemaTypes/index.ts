@@ -12,6 +12,7 @@ import { newsType } from "./newsType";
 import { aboutType } from "./aboutType";
 import { datasetType } from "./datasetType";
 import { dataPageType } from "./dataPageHeroSingleton";
+import { explainerSectionType } from "./explainerCategoryType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -27,5 +28,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     aboutType,
     datasetType,
     dataPageType,
+    explainerSectionType,
   ],
 };
