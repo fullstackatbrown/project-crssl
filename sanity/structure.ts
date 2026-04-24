@@ -1,6 +1,6 @@
 import type { StructureResolver } from "sanity/structure";
 
-const demoTypes = ['exampleDataset', 'examplePerson']
+const demoTypes = ["exampleDataset", "examplePerson"];
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -9,7 +9,6 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.documentTypeListItem("projectType").title("Projects"),
       S.documentTypeListItem("paperType").title("Papers"),
-      S.documentTypeListItem("authorType").title("Authors"),
       S.documentTypeListItem("peopleType").title("People"),
       S.documentTypeListItem("dataset").title("Datasets"),
       S.divider(),
@@ -19,7 +18,6 @@ export const structure: StructureResolver = (S) =>
           ![
             "projectType",
             "paperType",
-            "authorType",
             "dataset",
             "peopleType",
             "exampleDataset",
@@ -28,31 +26,31 @@ export const structure: StructureResolver = (S) =>
       ),
       S.divider(),
       S.listItem()
-        .title('Example Types for Developers')
+        .title("Example Types for Developers")
         .child(
           S.list()
-            .title('Examples')
+            .title("Examples")
             .items([
               S.documentTypeListItem("exampleDataset").title("Example Dataset"),
               S.documentTypeListItem("examplePerson").title("Example Person"),
-            ])
+            ]),
         ),
     ])
-    .title('Menu')
+    .title("Menu")
     .items([
       ...S.documentTypeListItems().filter(
         (item) => item.getId() && !demoTypes.includes(item.getId()!),
       ),
       S.divider(),
       S.listItem()
-        .title('Example Types for Developers')
+        .title("Example Types for Developers")
         .child(
           S.list()
-            .title('Examples')
+            .title("Examples")
             .items([
               ...S.documentTypeListItems().filter(
                 (item) => item.getId() && demoTypes.includes(item.getId()!),
               ),
             ]),
-        )
+        ),
     ]);

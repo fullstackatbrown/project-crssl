@@ -1,6 +1,5 @@
 import { type SchemaTypeDefinition } from "sanity";
 
-import { authorType } from "./authorType";
 import { blockContentType } from "./blockContentType";
 import { exampleDatasetType } from "./exampleDatasetType";
 import { examplePersonType } from "./examplePersonType";
@@ -15,7 +14,6 @@ import { dataPageType } from "./dataPageHeroSingleton";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
-    authorType,
     blockContentType,
     examplePersonType,
     exampleDatasetType,
@@ -25,6 +23,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     resourcesType,
     newsType,
     aboutType,
-    datasetType
+    datasetType,
+    dataPageType,
   ],
 };

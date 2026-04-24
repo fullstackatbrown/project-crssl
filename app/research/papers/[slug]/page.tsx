@@ -1,6 +1,23 @@
-import { type SanityDocument } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
+
+type PaperAuthor = {
+  _id: string;
+  fullname: string;
+  slug?: string;
+};
+
+type Paper = {
+  _id: string;
+  title: string;
+  date: string;
+  type: string;
+  abstract?: string;
+  tags?: string[];
+  externalUrl?: string;
+  pdfUrl?: string;
+  authors?: PaperAuthor[];
+};
 
 const PAPER_QUERY =
   '*[_type == "paperType" && slug.current == $slug][0]{' +
@@ -15,8 +32,8 @@ const PAPER_QUERY =
   '  "pdfUrl": pdf.asset->url,' +
   '  "authors": authors[]->{' +
   "    _id," +
-  "    name," +
-  "    affiliation" +
+  "    fullname," +
+  '    "slug": slug.current' +
   "  }" +
   "}";
 
@@ -29,7 +46,7 @@ export default async function PaperPage({
 }) {
   const { slug } = await params;
 
-  const paper = await client.fetch<SanityDocument | null>(
+  const paper = await client.fetch<Paper | null>(
     PAPER_QUERY,
     { slug },
     options,
@@ -46,7 +63,23 @@ export default async function PaperPage({
         {new Date(paper.date).toLocaleDateString()} • {paper.type}
       </p>
       <p className="mt-2 text-sm text-zinc-700">
-        {paper.authors?.map((a: { name: string }) => a.name).join(", ")}
+        {paper.authors?.length
+          ? paper.authors.map((author, index) => (
+              <span key={author._id}>
+                {index > 0 ? ", " : ""}
+                {author.slug ? (
+                  <Link
+                    href={`/people/${author.slug}`}
+                    className="hover:text-[#a51c30] hover:underline"
+                  >
+                    {author.fullname}
+                  </Link>
+                ) : (
+                  <span>{author.fullname}</span>
+                )}
+              </span>
+            ))
+          : "Unknown"}
       </p>
 
       {paper.abstract ? <p className="mt-6">{paper.abstract}</p> : null}
