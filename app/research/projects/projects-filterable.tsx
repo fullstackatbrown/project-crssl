@@ -92,6 +92,7 @@ export default function ProjectsFilterable({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedFaculty, setSelectedFaculty] = useState<string[]>([]);
   const [keywordQuery, setKeywordQuery] = useState("");
+  const [keywordInputValue, setKeywordInputValue] = useState("");
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [isKeywordSuggestionsOpen, setIsKeywordSuggestionsOpen] = useState(false);
 
@@ -139,7 +140,7 @@ export default function ProjectsFilterable({
   );
 
   const keywordSuggestions = useMemo(() => {
-    const trimmedKeywordQuery = keywordQuery.trim();
+    const trimmedKeywordQuery = keywordInputValue.trim();
     if (trimmedKeywordQuery.length === 0) {
       return keywordList.slice(0, 8);
     }
@@ -147,13 +148,24 @@ export default function ProjectsFilterable({
     return keywordFuse
       .search(trimmedKeywordQuery, { limit: 8 })
       .map((result) => result.item);
-  }, [keywordQuery, keywordList, keywordFuse]);
+  }, [keywordInputValue, keywordList, keywordFuse]);
 
   const filteredProjects = useMemo(() => {
     const trimmedKeywordQuery = keywordQuery.trim();
+    const keywordTerms = trimmedKeywordQuery
+      .split(/\s+/)
+      .map((term) => term.trim())
+      .filter(Boolean);
+
     const baseProjects =
-      trimmedKeywordQuery.length > 0
-        ? fuse.search(trimmedKeywordQuery).map((result) => result.item)
+      keywordTerms.length > 0
+        ? projects.filter((project) =>
+            keywordTerms.every((term) =>
+              fuse
+                .search(term)
+                .some((result) => result.item._id === project._id),
+            ),
+          )
         : projects;
 
     return baseProjects.filter((project) => {
@@ -183,7 +195,14 @@ export default function ProjectsFilterable({
   };
 
   const selectKeywordSuggestion = (value: string) => {
+    setKeywordInputValue(value);
     setKeywordQuery(value);
+    setActiveSuggestionIndex(-1);
+    setIsKeywordSuggestionsOpen(false);
+  };
+
+  const applyKeywordQuery = () => {
+    setKeywordQuery(keywordInputValue.trim().replace(/\s+/g, " "));
     setActiveSuggestionIndex(-1);
     setIsKeywordSuggestionsOpen(false);
   };
@@ -218,55 +237,65 @@ export default function ProjectsFilterable({
         ))}
         <h3 className="font-semibold text-zinc-700">Keywords</h3>
         <div className="relative">
-          <input
-            type="text"
-            value={keywordQuery}
-            onChange={(event) => {
-              setKeywordQuery(event.target.value);
-              setActiveSuggestionIndex(-1);
-              setIsKeywordSuggestionsOpen(true);
+          <form
+            className="flex items-center gap-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              applyKeywordQuery();
             }}
-            onFocus={() => setIsKeywordSuggestionsOpen(true)}
-            onBlur={() => setIsKeywordSuggestionsOpen(false)}
-            onKeyDown={(event) => {
-              if (!isKeywordSuggestionsOpen || keywordSuggestions.length === 0) {
-                return;
-              }
-
-              if (event.key === "ArrowDown") {
-                event.preventDefault();
-                setActiveSuggestionIndex((currentIndex) =>
-                  currentIndex < keywordSuggestions.length - 1
-                    ? currentIndex + 1
-                    : 0,
-                );
-              }
-
-              if (event.key === "ArrowUp") {
-                event.preventDefault();
-                setActiveSuggestionIndex((currentIndex) =>
-                  currentIndex > 0
-                    ? currentIndex - 1
-                    : keywordSuggestions.length - 1,
-                );
-              }
-
-              if (event.key === "Enter" && activeSuggestionIndex >= 0) {
-                event.preventDefault();
-                selectKeywordSuggestion(keywordSuggestions[activeSuggestionIndex]);
-              }
-
-              if (event.key === "Escape") {
+          >
+            <input
+              type="text"
+              value={keywordInputValue}
+              onChange={(event) => {
+                setKeywordInputValue(event.target.value);
                 setActiveSuggestionIndex(-1);
-                setIsKeywordSuggestionsOpen(false);
-              }
-            }}
-            placeholder="Search keywords"
-            className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
-            role="combobox"
-            aria-expanded={isKeywordSuggestionsOpen && keywordSuggestions.length > 0}
-            aria-controls="keyword-suggestions-list"
-          />
+                setIsKeywordSuggestionsOpen(true);
+              }}
+              onFocus={() => setIsKeywordSuggestionsOpen(true)}
+              onBlur={() => setIsKeywordSuggestionsOpen(false)}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowDown" && keywordSuggestions.length > 0) {
+                  event.preventDefault();
+                  setActiveSuggestionIndex((currentIndex) =>
+                    currentIndex < keywordSuggestions.length - 1
+                      ? currentIndex + 1
+                      : 0,
+                  );
+                }
+
+                if (event.key === "ArrowUp" && keywordSuggestions.length > 0) {
+                  event.preventDefault();
+                  setActiveSuggestionIndex((currentIndex) =>
+                    currentIndex > 0
+                      ? currentIndex - 1
+                      : keywordSuggestions.length - 1,
+                  );
+                }
+
+                if (event.key === "Enter" && activeSuggestionIndex >= 0) {
+                  event.preventDefault();
+                  selectKeywordSuggestion(keywordSuggestions[activeSuggestionIndex]);
+                }
+
+                if (event.key === "Escape") {
+                  setActiveSuggestionIndex(-1);
+                  setIsKeywordSuggestionsOpen(false);
+                }
+              }}
+              placeholder="Search keywords"
+              className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
+              role="combobox"
+              aria-expanded={isKeywordSuggestionsOpen && keywordSuggestions.length > 0}
+              aria-controls="keyword-suggestions-list"
+            />
+            <button
+              type="submit"
+              className="rounded border border-zinc-300 px-2 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-50"
+            >
+              Enter
+            </button>
+          </form>
           {isKeywordSuggestionsOpen && keywordSuggestions.length > 0 ? (
             <ul
               id="keyword-suggestions-list"
