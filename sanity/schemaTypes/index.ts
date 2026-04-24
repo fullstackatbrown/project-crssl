@@ -13,6 +13,7 @@ import { aboutType } from "./aboutType";
 import { datasetType } from "./datasetType";
 import { dataPageType } from "./dataPageHeroSingleton";
 import { explainerSectionType } from "./explainerCategoryType";
+import { funderType } from "./funderType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -29,5 +30,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     datasetType,
     dataPageType,
     explainerSectionType,
+    funderType,
   ],
 };

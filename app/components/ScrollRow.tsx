@@ -87,7 +87,51 @@ function ContentCard({ item }: { item: CardItem }) {
   )
 }
 
-export default function ScrollRow({ items }: { items: CardItem[] }) {
+function FunderCard({ item }: { item: CardItem }) {
+  return (
+    <div style={{
+      minWidth: "300px",
+      flex: "0 0 300px",
+      scrollSnapAlign: "start",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      height: "240px",
+      flexShrink: 0,
+      border: "1px solid #e5e7eb",
+      padding: "20px",
+    }}>
+      <div style={{
+        flex: 1,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}>
+        {item.imageUrl
+          ? <img src={item.imageUrl} alt={item.title} style={{ maxWidth: "80%", maxHeight: "100px", objectFit: "contain" }} />
+          : <span style={{ fontFamily: "'Georgia', serif", fontSize: "1rem", color: "#333", textAlign: "center" }}>
+              {item.title}
+            </span>
+        }
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <SlashLogo size={0.6} />
+      </div>
+    </div>
+  )
+}
+
+function renderCards(items: CardItem[], variant: "default" | "funder") {
+  if (items.length === 0) {
+    return [1, 2, 3, 4, 5].map(i => <PlaceholderCard key={i} />)
+  }
+  if (variant === "funder") {
+    return items.map(item => <FunderCard key={item._id} item={item} />)
+  }
+  return items.map(item => <ContentCard key={item._id} item={item} />)
+}
+
+export default function ScrollRow({ items, variant = "default" }: { items: CardItem[], variant?: "default" | "funder" }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -115,19 +159,14 @@ export default function ScrollRow({ items }: { items: CardItem[] }) {
           overflowX: "scroll",
           scrollSnapType: "x mandatory",
           paddingBottom: "16px",
-          paddingRight: "40px",
           scrollbarWidth: "none",
           WebkitOverflowScrolling: "touch",
         }}
         className="hide-scrollbar"
       >
-        {items.length > 0
-          ? items.map(item => <ContentCard key={item._id} item={item} />)
-          : [1, 2, 3, 4, 5].map(i => <PlaceholderCard key={i} />)
-        }
+        {renderCards(items, variant)}
       </div>
 
-      {/* Progress bar */}
       <div style={{
         marginTop: "16px",
         marginRight: "80px",
@@ -136,7 +175,6 @@ export default function ScrollRow({ items }: { items: CardItem[] }) {
         borderRadius: "1px",
         position: "relative",
       }}>
-        {/* Red fill left of dot */}
         <div
           ref={fillRef}
           style={{
@@ -150,7 +188,6 @@ export default function ScrollRow({ items }: { items: CardItem[] }) {
             transition: "width 0.1s ease",
           }}
         />
-        {/* Dot */}
         <div
           ref={dotRef}
           style={{
