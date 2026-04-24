@@ -208,7 +208,7 @@ export default function ProjectsFilterable({
   };
 
   return (
-    <section className="mx-auto flex max-w-6xl flex-row items-stretch px-6">
+    <section className="mx-auto flex max-w-6xl flex-row items-stretch">
       <div className="min-h-[50rem] w-1/4 self-stretch border border-[0.5px] border-zinc-900 bg-white p-6">
         <h1 className="text-l font-semibold text-zinc-900">Filters</h1>
         <h3 className="text-sm mt-4 mb-1 font-semibold text-zinc-700">Tags</h3>
