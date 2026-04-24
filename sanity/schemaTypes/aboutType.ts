@@ -123,12 +123,37 @@ export const aboutType = defineType({
       of: [{ type: "block" }],
       validation: (Rule) => Rule.required(),
     }),
-  ],
 
-  preview: {
-    select: {
-      title: "title",
-      media: "heroImage",
-    },
-  },
+    defineField({
+      name: "sections",
+      title: "Additional Sections",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Section Title",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "body",
+              title: "Section Body",
+              type: "array",
+              of: [{ type: "block" }],
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "title",
+              subtitle: "body.0.children.0.text",
+            },
+          },
+        }),
+      ],
+    }),
+  ],
 });
