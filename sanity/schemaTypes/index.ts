@@ -13,15 +13,15 @@ import { datasetType } from "./datasetType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
+    authorType,
     blockContentType,
     examplePersonType,
     exampleDatasetType,
+    paperType,
     projectType,
     peopleType,
-    authorType,
-    paperType,
     resourcesType,
-    datasetType,
     aboutType,
+    datasetType
   ],
 };
