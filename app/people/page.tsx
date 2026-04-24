@@ -7,6 +7,7 @@ import type SanityImageSource from "@sanity/image-url";
 import { useState, useEffect } from "react";
 import PeopleResults, { type Person } from "../components/PeopleResults";
 import { buildSearchQuery, buildTagQuery } from "../lib/queries";
+import Image from "next/image";
 
 // Create an image URL builder using the client
 const builder = createImageUrlBuilder(client);
@@ -42,7 +43,10 @@ export default function People() {
   const [activeTitles, setActiveTitles] = useState<string[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(searchQuery), DEBOUNCE_MS);
+    const timer = setTimeout(
+      () => setDebouncedSearch(searchQuery),
+      DEBOUNCE_MS,
+    );
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
@@ -50,7 +54,12 @@ export default function People() {
     let filter = '_type == "peopleType"';
 
     if (debouncedSearch.trim()) {
-      const searchPart = buildSearchQuery(debouncedSearch, STRING_QUERY_FIELDS, true, true);
+      const searchPart = buildSearchQuery(
+        debouncedSearch,
+        STRING_QUERY_FIELDS,
+        true,
+        true,
+      );
       if (searchPart) filter += ` && ${searchPart}`;
     }
 
@@ -70,13 +79,13 @@ export default function People() {
 
   const handleInterestToggle = (interest: string, checked: boolean) => {
     setActiveInterests((prev) =>
-      checked ? [...prev, interest] : prev.filter((item) => item !== interest)
+      checked ? [...prev, interest] : prev.filter((item) => item !== interest),
     );
   };
 
   const handleTitleToggle = (title: string, checked: boolean) => {
     setActiveTitles((prev) =>
-      checked ? [...prev, title] : prev.filter((item) => item !== title)
+      checked ? [...prev, title] : prev.filter((item) => item !== title),
     );
   };
 
@@ -85,7 +94,7 @@ export default function People() {
       <div>
         <div
           style={{
-            height: "15rem",
+            height: "25rem",
             background: "#7c0b0a",
             display: "flex",
             flexDirection: "column",
@@ -93,6 +102,15 @@ export default function People() {
             // alignItems: "flex-end",
           }}
         >
+          <img
+            className="height-[15rem]"
+            src="/meeting.jpg"
+            alt="Meeting image"
+            style={{
+              height: "inherit",
+              width: "auto",
+            }}
+          />
           <h1
             style={{
               position: "absolute",
@@ -120,7 +138,8 @@ export default function People() {
             className="text-lg text-gray-900"
             style={{ marginLeft: "3rem", marginTop: "2rem" }}
           >
-            <b>{peopleData.length}</b> {peopleData.length === 1 ? "person" : "people"}{" "}
+            <b>{peopleData.length}</b>{" "}
+            {peopleData.length === 1 ? "person" : "people"}{" "}
           </p>
         </div>
         {/* <PeopleCount /> */}
@@ -140,7 +159,7 @@ export default function People() {
                 height: "3rem",
                 textIndent: "3rem",
               }}
-              className="border-solid border bg-gray-50 text-gray-900 placeholder-gray-400"
+              className="border-solid border-2 border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400"
               type="search"
               value={searchQuery}
               placeholder="Search"
@@ -151,9 +170,11 @@ export default function People() {
         </div>
         <div style={{ display: "flex" }}>
           <div style={{ marginLeft: "3rem", marginTop: "2rem" }}>
-            <h1 className="text-lg text-gray-900">Filters</h1>
+            <h1 className="text-lg text-gray-900">
+              <b>Filters</b>
+            </h1>
             <hr
-              className="border-gray-900"
+              className="border-gray-300"
               style={{
                 width: "15rem",
                 marginTop: "0.1rem",
@@ -165,7 +186,7 @@ export default function People() {
               <fieldset>
                 {allInterests.map((interest) => (
                   <label
-                    className="text-base text-gray-900"
+                    className="text-base text-gray-600"
                     style={{
                       display: "block",
                       clear: "left",
@@ -194,7 +215,7 @@ export default function People() {
                 ))}
               </fieldset>
               <hr
-                className="border-gray-900"
+                className="border-gray-300"
                 style={{
                   width: "15rem",
                   marginTop: "0.2rem",
@@ -204,7 +225,7 @@ export default function People() {
                 <fieldset>
                   {allTitles.map((title) => (
                     <label
-                      className="text-base text-gray-900"
+                      className="text-base text-gray-600"
                       style={{
                         display: "block",
                         clear: "left",
@@ -236,7 +257,7 @@ export default function People() {
             </div>
 
             <form action="https://google.com">
-              <button className="hover:bg-gray-100 mb-[1rem] mt-[1rem] p-[1rem] border rounded bg-gray-50 border-gray-900 text-gray-900">
+              <button className="hover:bg-gray-100 mb-[1rem] mt-[1rem] p-[1rem] border-1 border-gray-400 rounded bg-gray-50 text-gray-600">
                 Need something different? <br />
                 Find an expert here!
               </button>
