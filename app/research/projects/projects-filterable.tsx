@@ -25,9 +25,9 @@ export type Project = {
 
 function Tile({ project }: { project: Project }) {
   return (
-    <article className="w-full min-w-0 min-h-50 overflow-hidden border border-solid border-black">
+    <article className="min-h-50 w-full min-w-0 overflow-hidden border border-[0.5px] border-zinc-900 bg-white transition-shadow hover:shadow-sm">
       <Link
-        className="relative block w-full overflow-hidden aspect-[1/1]"
+        className="relative block aspect-[1/1] w-full overflow-hidden"
         href={`/research/projects/${project.slug.current}`}
       >
         <img
@@ -40,8 +40,8 @@ function Tile({ project }: { project: Project }) {
         />
         <div className="absolute inset-0 flex flex-col justify-end p-4">
           {project.tags?.length ? (
-            <div className=" inline-block border-solid border-1 border-white rounded-[60px] text-white text-center text-xs w-fit px-2 py-1">
-              <div className="flex flex-row gap-2 items-center">
+            <div className="inline-block w-fit rounded-full border border-white/80 px-2 py-1 text-center text-xs text-white">
+              <div className="flex flex-row items-center gap-2">
                 <Elipsis />
                 {project.tags[0]}
               </div>
@@ -49,7 +49,7 @@ function Tile({ project }: { project: Project }) {
           ) : (
             <div />
           )}
-          <div className="text-white px-1 py-1 font-serif text-xl">
+          <div className="px-1 py-1 font-serif text-xl text-white">
             {project.title}
           </div>
         </div>
@@ -70,16 +70,16 @@ function FilterCheckbox({
   onChange: () => void;
 }) {
   return (
-    <div>
+    <div className="flex items-center gap-2 py-0.5">
       <input
-        className="w-3 h-3"
+        className="h-3 w-3 accent-zinc-900"
         type="checkbox"
         id={id}
         name={id}
         checked={checked}
         onChange={onChange}
       />
-      <label className='text-sm text-zinc-700' htmlFor={id}>{label}</label>
+      <label className="text-sm text-zinc-700" htmlFor={id}>{label}</label>
     </div>
   );
 }
@@ -208,10 +208,10 @@ export default function ProjectsFilterable({
   };
 
   return (
-    <section className="mx-auto flex max-w-6xl flex-row gap-6 px-6 py-10">
-      <div className="w-1/4">
-        <h1 className="font-bold">Filter</h1>
-        <h3 className="font-semibold text-zinc-700">Tags</h3>
+    <section className="mx-auto flex max-w-6xl flex-row items-stretch px-6">
+      <div className="min-h-[50rem] w-1/4 self-stretch border border-[0.5px] border-zinc-900 bg-white p-6">
+        <h1 className="text-l font-semibold text-zinc-900">Filters</h1>
+        <h3 className="text-sm mt-4 mb-1 font-semibold text-zinc-700">Tags</h3>
         {tagsList.map((tag) => (
           <FilterCheckbox
             key={tag}
@@ -223,7 +223,7 @@ export default function ProjectsFilterable({
             }
           />
         ))}
-        <h3 className="font-semibold text-zinc-700">Faculty</h3>
+        <h3 className="text-sm mt-4 mb-1 font-semibold text-zinc-700">Faculty</h3>
         {facultyList.map((faculty) => (
           <FilterCheckbox
             key={faculty}
@@ -235,7 +235,7 @@ export default function ProjectsFilterable({
             }
           />
         ))}
-        <h3 className="font-semibold text-zinc-700">Keywords</h3>
+        <h3 className="text-sm mt-4 mb-1 font-semibold text-zinc-700">Keywords</h3>
         <div className="relative">
           <form
             className="flex items-center gap-2"
@@ -284,14 +284,14 @@ export default function ProjectsFilterable({
                 }
               }}
               placeholder="Search keywords"
-              className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
+              className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-800 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none"
               role="combobox"
               aria-expanded={isKeywordSuggestionsOpen && keywordSuggestions.length > 0}
               aria-controls="keyword-suggestions-list"
             />
             <button
               type="submit"
-              className="rounded border border-zinc-300 px-2 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-50"
+              className="rounded border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-100"
             >
               Enter
             </button>
@@ -299,7 +299,7 @@ export default function ProjectsFilterable({
           {isKeywordSuggestionsOpen && keywordSuggestions.length > 0 ? (
             <ul
               id="keyword-suggestions-list"
-              className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded border border-zinc-200 bg-white text-sm shadow"
+              className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded border border-zinc-200 bg-white text-sm shadow-sm"
             >
               {keywordSuggestions.map((suggestion, index) => (
                 <li key={suggestion}>
@@ -320,13 +320,13 @@ export default function ProjectsFilterable({
           ) : null}
         </div>
       </div>
-      <div className="flex-1 min-h-[52rem]">
+      <div className="min-h-[50rem] flex-1">
         {filteredProjects.length === 0 ? (
-          <div className="flex h-full min-h-[52rem] items-center justify-center px-6 text-center text-zinc-600">
+          <div className="flex h-full min-h-[50rem] items-center justify-center rounded border border-zinc-200 bg-zinc-50 px-6 text-center text-zinc-600">
             No projects match current filters.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+          <div className="grid auto-rows-fr grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProjects.map((project) => (
               <Tile key={project._id} project={project} />
             ))}
