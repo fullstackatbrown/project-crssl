@@ -11,12 +11,13 @@ const PROJECTS_QUERY = `*[_type == "projectType"]{
   blurb,
   relevantLinks,
   content,
-  "contributors": contributors[]->fullname,
   "coverImage": coverImage.asset->url,
   tags,
-  "projectLeader": projectLeader[]->fullname,
   keywords,
-  papers
+  papers,
+  "projectLeader": people[role == "leader"].person->fullname,
+  "contributors": people[role == "contributor"].person->fullname,
+  "facultyForFilter": array::unique(people[].person->fullname)
 }`;
 
 const options = { next: { revalidate: 30 } };
@@ -33,7 +34,7 @@ export default async function projects() {
         <div className="mx-auto max-w-6xl">
           <h1 className="font-serif text-4xl md:text-5xl">Research</h1>
           <p className="mt-2 max-w-xl text-sm text-zinc-300">
-            The Conflict Research and Security Studies Lab conducts research in x, y, and z.
+            CRSSL conducts research in conflict, elections, and institutions.
           </p>
         </div>
       </section>

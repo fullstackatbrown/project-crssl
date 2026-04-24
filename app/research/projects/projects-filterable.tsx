@@ -17,6 +17,7 @@ export type Project = {
   relevantLinks: Array<string>;
   content: string;
   contributors: Array<string>;
+  facultyForFilter: string[];
   coverImage: string;
   tags: Array<string>;
   keywords?: Array<string>;
@@ -25,22 +26,26 @@ export type Project = {
 
 function Tile({ project }: { project: Project }) {
   return (
-    <article className="min-h-50 w-full min-w-0 overflow-hidden border border-[0.5px] border-zinc-900 bg-white transition-shadow hover:shadow-sm">
+    <article className="group min-h-50 w-full min-w-0 overflow-hidden border border-[0.5px] border-zinc-900 bg-white transition-all duration-200 ease-out hover:shadow-md">
       <Link
         className="relative block aspect-[1/1] w-full overflow-hidden"
         href={`/research/projects/${project.slug.current}`}
       >
         <img
-          className="absolute inset-0 w-full h-full object-fill"
+          className="absolute inset-0 h-full w-full object-fill transition-transform duration-300 ease-out group-hover:scale-[1.02]"
           src={project.coverImage}
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-black to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-black to-transparent transition-opacity duration-200 group-hover:opacity-90"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 bg-[#a51c30]/0 transition-colors duration-200 group-hover:bg-[#a51c30]/10"
           aria-hidden="true"
         />
         <div className="absolute inset-0 flex flex-col justify-end p-4">
           {project.tags?.length ? (
-            <div className="inline-block w-fit rounded-full border border-white/80 px-2 py-1 text-center text-xs text-white">
+            <div className="inline-block w-fit rounded-full border border-white/80 bg-transparent px-2 py-1 text-center text-xs text-white transition-colors group-hover:text-white">
               <div className="flex flex-row items-center gap-2">
                 <Elipsis />
                 {project.tags[0]}
@@ -49,11 +54,11 @@ function Tile({ project }: { project: Project }) {
           ) : (
             <div />
           )}
-          <div className="px-1 py-1 font-serif text-xl text-white">
+          <div className="px-1 py-1 font-serif text-xl text-white transition-colors group-hover:text-[#a51c30]/85">
             {project.title}
           </div>
           {project.projectLeader?.length ? (
-            <div className="px-1 pb-1 text-xs text-zinc-200">
+            <div className="px-1 pb-1 text-xs text-zinc-200 transition-colors group-hover:text-[#a51c30]/80">
               PL: {project.projectLeader.join(", ")}
             </div>
           ) : null}
@@ -111,7 +116,11 @@ export default function ProjectsFilterable({
 
   const facultyList = useMemo(
     () =>
-      [...new Set(projects.flatMap((project) => project.contributors ?? []))]
+      [
+        ...new Set(
+          projects.flatMap((project) => project.facultyForFilter ?? []),
+        ),
+      ]
         .filter(Boolean)
         .sort(),
     [projects],
@@ -180,7 +189,7 @@ export default function ProjectsFilterable({
       const facultyMatch =
         selectedFaculty.length === 0 ||
         selectedFaculty.some((faculty) =>
-          project.contributors?.includes(faculty),
+          (project.facultyForFilter ?? []).includes(faculty),
         );
 
       return tagMatch && facultyMatch;

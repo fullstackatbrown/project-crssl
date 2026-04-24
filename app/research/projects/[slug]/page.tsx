@@ -12,6 +12,7 @@ import {
 } from '@portabletext/react';
 import imageUrlBuilder from '@sanity/image-url';
 import Elipsis from '../project-extra';
+import { ProjectMetaPanel } from '../project-meta-panel';
 
 const builder = imageUrlBuilder(client);
 type ImageBuilder = ReturnType<typeof imageUrlBuilder>;
@@ -26,10 +27,14 @@ type PtImageValue = { _type?: string; alt?: string; asset?: unknown };
 const portableTextComponents: PortableTextComponents = {
   block: {
     h2: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h2 className="mt-10 mb-4 font-serif text-3xl font-semibold text-zinc-900">{children}</h2>
+      <h2 className="mt-10 mb-4 border-l-4 border-[#a51c30] pl-3 font-serif text-3xl font-semibold text-zinc-900">
+        {children}
+      </h2>
     ),
     h3: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h3 className="mt-8 mb-3 font-serif text-2xl font-semibold text-zinc-900">{children}</h3>
+      <h3 className="mt-8 mb-3 border-l-2 border-[#a51c30]/50 pl-2.5 font-serif text-2xl font-semibold text-zinc-900">
+        {children}
+      </h3>
     ),
     h4: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
       <h4 className="mt-6 mb-2 font-serif text-xl font-semibold text-zinc-900">{children}</h4>
@@ -45,7 +50,7 @@ const portableTextComponents: PortableTextComponents = {
     }: PortableTextMarkComponentProps<LinkMark>) => (
       <a
         href={value?.href ?? '#'}
-        className="font-medium text-zinc-700 underline decoration-zinc-400 underline-offset-2 hover:text-zinc-900"
+        className="font-medium text-zinc-700 underline decoration-zinc-400 underline-offset-2 transition-colors hover:text-[#a51c30] hover:decoration-[#a51c30]/60"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -55,10 +60,14 @@ const portableTextComponents: PortableTextComponents = {
   },
   list: {
     bullet: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <ul className="my-4 list-disc space-y-2 pl-6 text-zinc-700">{children}</ul>
+      <ul className="my-4 list-disc space-y-2 pl-10 text-zinc-700 marker:text-[#a51c30]">
+        {children}
+      </ul>
     ),
     number: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <ol className="my-4 list-decimal space-y-2 pl-6 text-zinc-700">{children}</ol>
+      <ol className="my-4 list-decimal space-y-2 pl-10 text-zinc-700 marker:text-[#a51c30]">
+        {children}
+      </ol>
     ),
   },
   listItem: {
@@ -118,12 +127,22 @@ type ProjectPaper = {
   pdfUrl?: string;
 };
 
+type RelevantLink = {
+  _key: string;
+  _type: string;
+  title: string;
+  url?: string;
+  pdfUrl?: string;
+};
+
 type FetchedProject = SanityDocument & {
+  publishedAt?: string;
   coverImage?: string;
   tags?: string[];
   keywords?: string[];
   projectLeader?: string[];
   contributors?: string[];
+  relevantLinks?: RelevantLink[];
   pageSections?: ProjectPageSection[];
   papers?: ProjectPaper[];
 };
@@ -137,17 +156,22 @@ function getPaperHref(paper: ProjectPaper): string {
   return '';
 }
 
+function getRelevantLinkHref(link: RelevantLink): string {
+  if (link.pdfUrl) return link.pdfUrl;
+  return link.url ?? '';
+}
+
 function getContent(project: FetchedProject) {
   const sections = project.pageSections;
 
   if (Array.isArray(sections) && sections.length > 0) {
     return (
-      <div className="max-w-none space-y-12">
+      <div className="max-w-none space-y-7">
         {sections.map((section: ProjectPageSection) => {
           const id = sectionDomId(section);
           return (
-            <section key={section._key} id={id} className="scroll-mt-28">
-              <h2 className="mb-4 font-serif text-3xl font-semibold text-zinc-900">
+            <section key={section._key} id={id} className="scroll-mt-20">
+              <h2 className="mb-4 border-l-4 border-[#a51c30] pl-3 font-serif text-3xl font-semibold text-zinc-900">
                 {section.title}
               </h2>
               {section.body?.length ? (
@@ -178,8 +202,8 @@ const PROJECTS_QUERY = `*[_type == "projectType" && slug.current == $slug][0]{
   description, 
   tags,
   keywords,
-  "projectLeader": projectLeader[]->fullname,
-  "contributors": contributors[]->fullname,
+  "projectLeader": people[role == "leader"].person->fullname,
+  "contributors": people[role == "contributor"].person->fullname,
   "papers": papers[]->{
     _id,
     title,
@@ -187,7 +211,13 @@ const PROJECTS_QUERY = `*[_type == "projectType" && slug.current == $slug][0]{
     externalUrl,
     "pdfUrl": pdf.asset->url
   },
-  relevantLinks, 
+  "relevantLinks": relevantLinks[]{
+    _key,
+    _type,
+    title,
+    url,
+    "pdfUrl": pdf.asset->url
+  }, 
   pageSections,
   "coverImage": coverImage.asset->url
 }`;
@@ -216,9 +246,15 @@ export default async function ProjectPage({
   const hasSectionNav =
     Array.isArray(pageSections) && pageSections.length > 0;
   const hasPapers = papers.length > 0;
-
+  const formattedPublishedDate = project.publishedAt
+    ? new Date(project.publishedAt).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : null;
   return (
-    <div>
+    <div className="overflow-x-visible">
       <div className="relative h-[400px] w-full overflow-hidden">
         <img className="w-full h-full object-cover" src={project.coverImage} />
 
@@ -244,14 +280,21 @@ export default async function ProjectPage({
             ) : null}
             <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
               {project.relevantLinks?.map(
-                (item: {
-                  _key: string;
-                  _type: string;
-                  title: string;
-                  url: string;
-                }) => {
+                (item: RelevantLink) => {
+                  const href = getRelevantLinkHref(item);
+                  const isPdfLink = Boolean(item.pdfUrl);
+
+                  if (!href) return null;
+
                   return (
-                    <a className="text-white underline decoration-white/70 underline-offset-2 hover:text-zinc-200" key={item._key} href={item.url}>
+                    <a
+                      className="text-white underline decoration-white/70 underline-offset-2 transition-colors hover:text-[#a51c30] hover:decoration-[#a51c30]"
+                      key={item._key}
+                      href={href}
+                      target={isPdfLink ? undefined : '_blank'}
+                      rel={isPdfLink ? undefined : 'noopener noreferrer'}
+                      download={isPdfLink ? true : undefined}
+                    >
                       {item.title}
                     </a>
                   );
@@ -262,12 +305,12 @@ export default async function ProjectPage({
         </div>
       </div>
 
-      <div className="relative z-10 grid grid-cols-[1fr_3fr] bg-white">
+      <div className="relative z-10 grid grid-cols-[1fr_3fr] overflow-x-visible bg-white">
         {/* Sidebar */}
         <aside className="-mt-24 self-start bg-white p-6 text-zinc-700 sticky top-[10vh]">
           <Link
             href="/research/projects"
-            className="text-sm font-medium text-zinc-500 hover:text-zinc-700"
+            className="text-sm font-medium text-zinc-500 transition-colors hover:text-[#a51c30]"
           >
             {'< Research'}
           </Link>
@@ -282,7 +325,7 @@ export default async function ProjectPage({
                     <li key={section._key}>
                       <a
                         href={href}
-                        className="font-medium underline-offset-2 hover:text-zinc-900 hover:underline"
+                        className="font-medium text-zinc-700 underline-offset-2 transition-colors hover:text-[#a51c30] hover:underline"
                       >
                         {outlineLabel}
                       </a>
@@ -293,7 +336,7 @@ export default async function ProjectPage({
                   <li>
                     <a
                       href={`#${PAPERS_SECTION_ID}`}
-                      className="font-medium underline-offset-2 hover:text-zinc-900 hover:underline"
+                      className="font-medium text-zinc-700 underline-offset-2 transition-colors hover:text-[#a51c30] hover:underline"
                     >
                       Related Papers
                     </a>
@@ -304,47 +347,19 @@ export default async function ProjectPage({
           ) : null}
         </aside>
 
-        {/* Main content */}
-        <div className="w-250 p-6 text-zinc-700">
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-row gap-2">
-              <h3 className="font-serif text-m text-zinc-900">Keywords:</h3>
-              {project.keywords?.length ? (
-                <div className=" flex flex-wrap gap-2">
-                  {project.keywords.map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="inline-flex items-center rounded-full border border-zinc-300 px-3 py-1 text-xs font-medium tracking-wide text-zinc-700"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-            <div className="flex flex-row gap-2 space-y-3">
-              {project.projectLeader?.length ? (
-                <p className="text-xs leading-6 text-zinc-700">
-                  <span className="mr-1 font-serif text-base text-zinc-900">
-                    Project Leader:
-                  </span>
-                  {project.projectLeader.join(", ")}
-                </p>
-              ) : null}
-              {project.contributors?.length ? (
-                <p className="text-xs leading-6 text-zinc-700">
-                  <span className="mr-1 font-serif text-base text-zinc-900">
-                    Contributors:
-                  </span>
-                  {project.contributors.join(", ")}
-                </p>
-              ) : null}
-            </div>
-          </div>
+        {/* Main content: meta bar flush under hero (no top padding); body padded below */}
+        <div className="w-250 min-w-0 overflow-x-visible flex flex-col text-zinc-700">
+          <ProjectMetaPanel
+            formattedPublishedDate={formattedPublishedDate}
+            keywords={project.keywords}
+            projectLeader={project.projectLeader}
+            contributors={project.contributors}
+          />
+          <div className="px-6 pb-6 pt-6">
           {getContent(project)}
           {hasPapers ? (
-            <section id={PAPERS_SECTION_ID} className="mt-12 scroll-mt-28">
-              <h2 className="mb-4 font-serif text-3xl font-semibold text-zinc-900">
+            <section id={PAPERS_SECTION_ID} className="mt-12 scroll-mt-28 mb-10">
+              <h2 className="mb-4 border-l-4 border-[#a51c30] pl-3 font-serif text-3xl font-semibold text-zinc-900">
                 Related Papers
               </h2>
               <ul className="space-y-2">
@@ -360,7 +375,7 @@ export default async function ProjectPage({
                           href={href}
                           target={isExternal ? '_blank' : undefined}
                           rel={isExternal ? 'noopener noreferrer' : undefined}
-                          className="font-medium underline decoration-zinc-400 underline-offset-2 hover:text-zinc-900"
+                          className="font-medium text-zinc-800 underline decoration-zinc-400 underline-offset-2 transition-colors hover:text-[#a51c30] hover:decoration-[#a51c30]/50"
                         >
                           {paper.title}
                         </a>
@@ -373,6 +388,7 @@ export default async function ProjectPage({
               </ul>
             </section>
           ) : null}
+          </div>
         </div>
       </div>
     </div>
