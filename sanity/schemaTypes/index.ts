@@ -27,6 +27,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     newsType,
     aboutType,
     datasetType,
+    dataPageType,
     explainerSectionType,
   ],
 };
