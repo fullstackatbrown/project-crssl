@@ -56,9 +56,15 @@ const portableTextComponents: PortableTextComponents = {
     bullet: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
       <ul className="list-disc pl-6 my-4 space-y-2">{children}</ul>
     ),
+    number: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
+      <ol className="list-decimal pl-6 my-4 space-y-2">{children}</ol>
+    ),
   },
   listItem: {
     bullet: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
+      <li className="text-gray-800">{children}</li>
+    ),
+    number: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
       <li className="text-gray-800">{children}</li>
     ),
   },
