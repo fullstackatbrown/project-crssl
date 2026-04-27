@@ -1,6 +1,6 @@
 function Elipsis() {
     return (
-        <div className="w-2 h-2 border-solid border-1 border-white rounded-[50px] bg-white"/>
+        <div className="h-2 w-2 rounded-[50px] border border-current bg-current" />
     );
 }
 
