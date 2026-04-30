@@ -42,10 +42,13 @@ export default async function PersonProfile({
           <p className="text-gray-500 mt-[0.6rem] ml-[6rem]">
             {dataset.jobtitles.join(", ")}
           </p>
-          <p className="mt-[0.5rem] mt-[1.5rem] ml-[6rem]">
+          <p className="mt-[0.5rem] text-black mt-[1.5rem] ml-[6rem]">
             {" "}
             Email:{" "}
-            <a className="hover:underline" href={`mailto:${dataset.email}`}>
+            <a
+              className="hover:underline text-black"
+              href={`mailto:${dataset.email}`}
+            >
               {dataset.email}
             </a>
           </p>

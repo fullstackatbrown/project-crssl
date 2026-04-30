@@ -22,11 +22,10 @@ export const paperType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      // Ordered author references for rendering author bylines.
-      // Uses authorType to support both internal and external collaborators.
+      // Ordered people references for rendering author bylines.
       name: "authors",
       type: "array",
-      of: [{ type: "reference", to: [{ type: "authorType" }] }],
+      of: [{ type: "reference", to: [{ type: "peopleType" }] }],
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
@@ -59,7 +58,7 @@ export const paperType = defineType({
     defineField({ name: "tags", type: "array", of: [{ type: "string" }] }),
   ],
   validation: (Rule) =>
-    Rule.custom((doc: any) => {
+    Rule.custom((doc: { pdf?: unknown; externalUrl?: string } | undefined) => {
       // Require at least one way for users to access the paper.
       if (doc?.pdf || doc?.externalUrl) return true;
       return "Add either a PDF or an external URL";

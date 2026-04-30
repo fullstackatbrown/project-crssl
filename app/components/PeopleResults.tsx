@@ -1,7 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type SanityDocument } from "next-sanity";
-import { defineQuery } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 import createImageUrlBuilder from "@sanity/image-url";
 import type SanityImageSource from "@sanity/image-url";
@@ -14,30 +12,22 @@ export function urlFor(source: typeof SanityImageSource) {
   return builder.image(source);
 }
 
-const DEFAULT_QUERY = `*[
-  _type == "peopleType"
-]|order(fullname asc){_id, fullname, image, email, recentwork, jobtitles, interests, slug}`;
+export type Person = {
+  _id: string;
+  fullname: string;
+  image: typeof SanityImageSource;
+  email: string;
+  recentwork: string;
+  jobtitles: string[];
+  interests: string[];
+  slug: { current: string };
+};
 
-export default async function PeopleResults() {
-  const options = { next: { revalidate: 30 } };
+type PeopleResultsProps = {
+  people: Person[];
+};
 
-  const datasets = await client.fetch<SanityDocument[]>(
-    DEFAULT_QUERY,
-    {},
-    options,
-  );
-
-  // console.log("Fetched datasets:", datasets);
-
-  const interestsall = [datasets.map((person) => person.interests)];
-  const interestsflat = interestsall.flat(Infinity);
-  const interests = Array.from(new Set(interestsflat));
-  interests.sort();
-
-  const titlesall = [datasets.map((person) => person.jobtitles)];
-  const titlesflat = titlesall.flat(Infinity);
-  const titles = Array.from(new Set(titlesflat));
-  titles.sort();
+export default function PeopleResults({ people }: PeopleResultsProps) {
   return (
     <div
       className="allpeople"
@@ -48,14 +38,13 @@ export default async function PeopleResults() {
       }}
     >
       <div className="flex flex-col gap-y-4">
-        {datasets.map((person) => (
+        {people.map((person) => (
           <div
             style={{ display: "flex", alignItems: "center" }}
             className="personlist"
             key={person._id}
           >
             <div>
-              {" "}
               <Image
                 alt="generic profile image"
                 src={urlFor(person.image).url()}
@@ -70,7 +59,6 @@ export default async function PeopleResults() {
               >
                 <b className="text-lg text-gray-900">{person.fullname}</b>
               </Link>
-
               <p className="text-gray-500">{person.jobtitles.join(", ")}</p>
               <p className="text-gray-900" style={{ marginTop: "1rem" }}>
                 {person.interests.join(", ")}
