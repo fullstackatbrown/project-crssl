@@ -32,7 +32,7 @@ function Tile({ project }: { project: Project }) {
         href={`/research/projects/${project.slug.current}`}
       >
         <img
-          className="absolute inset-0 h-full w-full object-fill transition-transform duration-300 ease-out group-hover:scale-[1.02]"
+          className="absolute object-cover inset-0 h-full w-full transition-transform duration-300 ease-out group-hover:scale-[1.02]"
           src={project.coverImage}
         />
         <div

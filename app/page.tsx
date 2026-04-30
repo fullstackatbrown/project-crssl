@@ -54,7 +54,7 @@ export default async function Home() {
     <div className="min-h-screen bg-white text-zinc-900">
 
       {/* Hero */}
-      <section className="bg-primary flex items-stretch px-5 py-6 min-h-[200px] md:px-20 md:py-7 md:min-h-[260px]">
+      <section className="bg-primary flex items-stretch px-5 py-6 h-[420px] md:px-20 md:py-7 md:min-h-[260px]">
         {/* Left: slash logo directly above text */}
         <div className="flex flex-1 flex-col justify-end gap-2 pb-1">
           <div className="ml-0.5 mb-1">
@@ -70,7 +70,7 @@ export default async function Home() {
           <img
             src="/globe.png"
             alt="Globe"
-            className="w-[260px] h-auto object-contain"
+            className="w-[380px] h-auto object-contain"
           />
         </div>
       </section>
@@ -87,13 +87,15 @@ export default async function Home() {
             >
               <div className="md:pt-2">
                 <Link href={href} className="no-underline">
-                  <h2 className="font-main-serif text-[1.2rem] font-normal text-primary cursor-pointer m-0 md:text-[1.4rem]">
+                  <h2 className="font-main-serif font-bold text-xl font-normal text-primary cursor-pointer m-0 md:text-[1.4rem]">
                     {label}
                   </h2>
                 </Link>
               </div>
 
-              <ScrollRow items={items} />
+              <div className="min-w-0">
+                <ScrollRow items={items} />
+              </div>
             </section>
           )
         })}

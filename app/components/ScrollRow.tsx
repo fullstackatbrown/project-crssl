@@ -52,16 +52,44 @@ function PlaceholderCard() {
 }
 
 function ContentCard({ item }: { item: CardItem }) {
+  const hasImage = Boolean(item.imageUrl)
+
+  if (hasImage) {
+    // Image layout: fixed height, image on top
+    return (
+      <div className="min-w-[300px] w-[300px] shrink-0 flex flex-col h-[240px] snap-start">
+        <img
+          src={item.imageUrl}
+          alt={item.title}
+          className="w-full aspect-video object-cover mb-4"
+        />
+        <p className="font-main-sans text-[1rem] text-[#111] leading-snug mb-4 line-clamp-2">
+          {item.title}
+        </p>
+        <div className="flex justify-between items-center mt-auto">
+          <span className="font-main-sans text-[0.75rem] text-[#999]">
+            {formatDate(item.date)}
+          </span>
+          <SlashLogo size={0.6} />
+        </div>
+      </div>
+    )
+  }
+
+  // Text-only layout: no image, title is prominent, more room for description
   return (
     <div className="min-w-[300px] w-[300px] shrink-0 flex flex-col h-[240px] snap-start">
-      {item.imageUrl
-        ? <img src={item.imageUrl} alt={item.title} className="w-full aspect-video object-cover mb-4" />
-        : <div className="flex-1 bg-[#f5f5f5] mb-4" />
-      }
-      <p className="font-main-sans text-[0.85rem] text-[#444] leading-relaxed mb-4">
-        {item.description}
-      </p>
-      <div className="flex justify-between items-center">
+      {item.title && (
+        <p className="font-main-sans text-lg text-[#111] leading-snug mb-3 line-clamp-2">
+          {item.title}
+        </p>
+      )}
+      {item.description && (
+        <p className="font-main-sans text-[0.85rem] text-[#444] leading-relaxed mb-4 line-clamp-4">
+          {item.description}
+        </p>
+      )}
+      <div className="flex justify-between items-center mt-auto">
         <span className="font-main-sans text-[0.75rem] text-[#999]">
           {formatDate(item.date)}
         </span>
@@ -93,7 +121,7 @@ function FunderCard({ item }: { item: CardItem }) {
       }}>
         {item.imageUrl
           ? <img src={item.imageUrl} alt={item.title} style={{ maxWidth: "80%", maxHeight: "100px", objectFit: "contain" }} />
-          : <span style={{ fontFamily: "'Georgia', serif", fontSize: "1rem", color: "#333", textAlign: "center" }}>
+          : <span className="font-main-sans text-lg text-black" style={{ textAlign: "center" }}>
               {item.title}
             </span>
         }
@@ -145,8 +173,6 @@ export default function ScrollRow({ items, variant = "default" }: { items: CardI
 
       {/* Progress bar */}
       <div className="mt-4 mr-20 h-[2px] bg-gray-200 rounded-[1px] relative">
-        {/* Red fill left of dot */}
-
         <div
           ref={fillRef}
           className="absolute left-0 top-0 w-[6px] h-[2px] bg-primary rounded-[1px] transition-[width] duration-100 ease-in-out"
