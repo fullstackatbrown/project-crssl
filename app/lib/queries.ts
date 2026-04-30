@@ -19,7 +19,14 @@ export const HOME_QUERY = `{
     date,
     "imageUrl": image.asset->url,
   },
+  "funders": *[_type == "funderType"] | order(order asc) {
+    _id,
+    "title": name,
+    "imageUrl": logo.asset->url,
+    url,
+  },
 }`
+
 
 /**
  * Builds a search query for filtering datasets based on a search term

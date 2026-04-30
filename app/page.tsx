@@ -15,15 +15,8 @@ type Sections = {
   news?: CardItem[]
   recentWork?: CardItem[]
   datasets?: CardItem[]
+  funders?: CardItem[]
 }
-
-const FUNDERS: CardItem[] = [
-  { _id: 'brown',    title: 'Brown University' },
-  { _id: 'pitt',     title: 'University of Pittsburgh' },
-  { _id: 'nsf',      title: 'National Science Foundation' },
-  { _id: 'mit',      title: 'MIT' },
-  { _id: 'stanford', title: 'Stanford University' },
-]
 
 const SECTION_CONFIG: {
   key: keyof Sections
@@ -113,7 +106,7 @@ export default async function Home() {
             </h2>
           </div>
 
-          <ScrollRow items={FUNDERS} />
+          <ScrollRow items={sections.funders ?? []} variant="funder" />
         </section>
       </main>
 

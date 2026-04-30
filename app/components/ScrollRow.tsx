@@ -71,7 +71,51 @@ function ContentCard({ item }: { item: CardItem }) {
   )
 }
 
-export default function ScrollRow({ items }: { items: CardItem[] }) {
+function FunderCard({ item }: { item: CardItem }) {
+  return (
+    <div style={{
+      minWidth: "300px",
+      flex: "0 0 300px",
+      scrollSnapAlign: "start",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      height: "240px",
+      flexShrink: 0,
+      border: "1px solid #e5e7eb",
+      padding: "20px",
+    }}>
+      <div style={{
+        flex: 1,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}>
+        {item.imageUrl
+          ? <img src={item.imageUrl} alt={item.title} style={{ maxWidth: "80%", maxHeight: "100px", objectFit: "contain" }} />
+          : <span style={{ fontFamily: "'Georgia', serif", fontSize: "1rem", color: "#333", textAlign: "center" }}>
+              {item.title}
+            </span>
+        }
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <SlashLogo size={0.6} />
+      </div>
+    </div>
+  )
+}
+
+function renderCards(items: CardItem[], variant: "default" | "funder") {
+  if (items.length === 0) {
+    return [1, 2, 3, 4, 5].map(i => <PlaceholderCard key={i} />)
+  }
+  if (variant === "funder") {
+    return items.map(item => <FunderCard key={item._id} item={item} />)
+  }
+  return items.map(item => <ContentCard key={item._id} item={item} />)
+}
+
+export default function ScrollRow({ items, variant = "default" }: { items: CardItem[], variant?: "default" | "funder" }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -96,20 +140,17 @@ export default function ScrollRow({ items }: { items: CardItem[] }) {
         className="hide-scrollbar flex gap-6 overflow-x-scroll snap-x snap-mandatory pb-4 pr-10"
         style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
       >
-        {items.length > 0
-          ? items.map(item => <ContentCard key={item._id} item={item} />)
-          : [1, 2, 3, 4, 5].map(i => <PlaceholderCard key={i} />)
-        }
+        {renderCards(items, variant)}
       </div>
 
       {/* Progress bar */}
       <div className="mt-4 mr-20 h-[2px] bg-gray-200 rounded-[1px] relative">
         {/* Red fill left of dot */}
+
         <div
           ref={fillRef}
           className="absolute left-0 top-0 w-[6px] h-[2px] bg-primary rounded-[1px] transition-[width] duration-100 ease-in-out"
         />
-        {/* Dot */}
         <div
           ref={dotRef}
           className="absolute left-0 -top-1 w-3 h-3 rounded-full bg-primary transition-[left] duration-100 ease-in-out"
