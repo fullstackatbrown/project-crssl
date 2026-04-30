@@ -1,16 +1,5 @@
 import { PortableText } from "@portabletext/react";
 import { sanityFetch } from "@/sanity/lib/live";
-import { Poppins, Cormorant_Garamond } from "next/font/google";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
 
 const ABOUT_QUERY = `*[_type == "about"][0]{
   title,
@@ -49,16 +38,16 @@ export default async function AboutPage() {
 
   if (!data) {
     return (
-      <main className={`min-h-screen bg-white px-6 py-20 ${poppins.className}`}>
+      <main className="min-h-screen bg-white px-6 py-20 font-main-sans">
         <p className="text-lg text-slate-700">No About page content found.</p>
       </main>
     );
   }
 
   return (
-    <main className={`${poppins.className} bg-white text-black`}>
+    <main className="font-main-sans bg-white text-black">
       <section className="px-0 pt-0">
-        <div className="relative mx-auto h-[420px] max-w-[1400px] overflow-hidden border-[6px] border-sky-400">
+        <div className="relative mx-auto h-[420px] overflow-hidden">
           {data.heroImage?.asset?.url && (
             <img
               src={data.heroImage.asset.url}
@@ -70,10 +59,10 @@ export default async function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
 
           <div className="absolute bottom-8 left-8 max-w-3xl text-white">
-            <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+            <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">
               {data.heroTitle}
             </h1>
-            <p className="mt-3 max-w-3xl text-sm font-light leading-6 md:text-base">
+            <p className="font-main-sans mt-3 max-w-3xl text-sm font-light leading-6 md:text-base">
               {data.heroDescription}
             </p>
           </div>
@@ -83,7 +72,7 @@ export default async function AboutPage() {
       <section className="bg-black px-6 py-10 md:px-12">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
           <div className="text-white">
-            <div className="prose prose-invert max-w-none prose-p:text-[18px] prose-p:leading-[1.7] prose-p:font-light">
+            <div className="prose prose-invert max-w-none prose-p:font-main-sans prose-p:text-[18px] prose-p:leading-[1.7] prose-p:font-light">
               <PortableText value={data.missionBody} />
             </div>
           </div>
@@ -100,9 +89,9 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-[#efefef] px-6 py-12 md:px-12">
+      <section className="bg-white px-6 py-12 md:px-12">
         <div className="mx-auto max-w-[1400px]">
-          <h2 className="text-[22px] font-semibold tracking-tight text-black">
+          <h2 className="font-main-serif text-[22px] font-semibold tracking-tight text-black">
             {data.historyTitle}
           </h2>
 
@@ -119,13 +108,11 @@ export default async function AboutPage() {
                   key={`${item.year}-${index}`}
                   className="min-h-[320px] w-[340px] flex-shrink-0 border border-neutral-300 bg-[#f3f3f3] p-8"
                 >
-                  <h3
-                    className={`${cormorant.className} text-[30px] leading-none text-black`}
-                  >
+                  <h3 className="font-main-serif text-[30px] leading-none text-black">
                     {item.year}
                   </h3>
 
-                  <div className="prose mt-5 max-w-none prose-p:mb-4 prose-p:text-[16px] prose-p:leading-8 prose-p:text-black">
+                  <div className="prose mt-5 max-w-none prose-p:font-main-sans prose-p:mb-4 prose-p:text-[16px] prose-p:leading-8 prose-p:text-black">
                     <PortableText value={item.body} />
                   </div>
                 </div>
@@ -135,13 +122,13 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-[#efefef] px-6 pb-20 pt-4 md:px-12">
+      <section className="bg-white px-6 pb-20 pt-4 md:px-12">
         <div className="mx-auto max-w-[1400px]">
-          <h2 className="text-[22px] font-semibold tracking-tight text-black">
+          <h2 className="font-main-serif text-[22px] font-semibold tracking-tight text-black">
             {data.impactTitle}
           </h2>
 
-          <div className="mt-6 space-y-6 text-[17px] leading-8 text-black">
+          <div className="font-main-sans mt-6 space-y-6 text-[17px] leading-8 text-black">
             <PortableText value={data.impactBody} />
           </div>
         </div>
@@ -150,14 +137,14 @@ export default async function AboutPage() {
       {data.sections?.map((section: any, index: number) => (
         <section
           key={`${section.title}-${index}`}
-          className="bg-[#efefef] px-6 pb-20 pt-4 md:px-12"
+          className="bg-white px-6 pb-20 pt-4 md:px-12"
         >
           <div className="mx-auto max-w-[1400px]">
-            <h2 className="text-[22px] font-semibold tracking-tight text-black">
+            <h2 className="font-main-serif text-[22px] font-semibold tracking-tight text-black">
               {section.title}
             </h2>
 
-            <div className="mt-6 space-y-6 text-[17px] leading-8 text-black">
+            <div className="font-main-sans mt-6 space-y-6 text-[17px] leading-8 text-black">
               <PortableText value={section.body} />
             </div>
           </div>

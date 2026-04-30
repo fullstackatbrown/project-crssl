@@ -67,13 +67,13 @@ const DatasetDetailsModal = ({ dataset, onClose }: DatasetDetailsModalProps) => 
                     </button>
                 </div>
                 <div className="px-10 pt-5 pb-3">
-                    <h4 className={`text-md font-medium text-gray-500 ${dataset.date ? '' : 'invisible'}`} style={{ fontFamily: 'Georgia, serif' }}>
+                    <h4 className={`text-md font-medium pb-1 font-main-serif text-black ${dataset.date ? '' : 'invisible'}`}>
                         {displayDate}
                     </h4>
-                    <h2 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
+                    <h2 className="text-lg font-semibold text-gray-900 font-main-sans">
                         {displayName}
                     </h2>
-                    <p className="mt-2 text-gray-800" style={{ fontFamily: 'Georgia, serif' }}>
+                    <p className="mt-2 text-gray-800 font-main-sans">
                         {displayDescription}
                     </p>
                 </div>
@@ -82,10 +82,10 @@ const DatasetDetailsModal = ({ dataset, onClose }: DatasetDetailsModalProps) => 
                         {/* files and links */}
                         {Object.entries({ Tags: displayTags, Files: dataset.files, Links: dataset.links }).map(([field, value]) => (
                             <div key={field.toLowerCase()} className="grid grid-cols-1 gap-1 py-2 text-sm sm:grid-cols-[150px_1fr] sm:gap-3">
-                                <div className="font-semibold text-gray-800" style={{ fontFamily: 'Georgia, serif' }}>
+                                <div className="font-semibold text-gray-800 font-main-sans">
                                     {field}
                                 </div>
-                                <div className="min-w-0 text-gray-700" style={{ fontFamily: 'Georgia, serif' }}>
+                                <div className="min-w-0 text-gray-700 font-main-sans">
                                     {field === 'Tags'
                                         ? displayTags
                                         : field === 'Files'
@@ -132,7 +132,7 @@ const renderList = (
     const renderItem = (item: typeof items[number]) => {
         if (item.link) {
             return (
-                <a href={item.url} target="_blank" rel="noreferrer" className="inline text-gray-700 transition-colors hover:text-gray-500">
+                <a href={item.url} target="_blank" rel="noreferrer" className="inline text-primary transition-colors hover:text-black">
                     <span className="inline-flex items-center gap-1 border-b border-current pb-0">
                         <span>{item.text}</span>
                         <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -145,7 +145,7 @@ const renderList = (
                 <span className="min-w-0 flex-1 text-left wrap-break-word">{item.text}</span>
                 {item.download && (
                     <button
-                        className="shrink-0 cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+                        className="shrink-0 cursor-pointer border border-primary px-2 py-1 text-xs text-primary hover:bg-gray-100"
                         onClick={() => downloadFile(item.url, item.text)}
                     >
                         Download

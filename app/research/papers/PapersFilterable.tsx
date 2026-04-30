@@ -37,7 +37,7 @@ function PaperTile({ paper }: { paper: Paper }) {
   return (
     <li className="grid grid-cols-1 border-b border-zinc-300 md:grid-cols-[1fr_180px]">
       <div className="px-6 py-7 md:px-8">
-        <h2 className="font-serif text-2xl text-black">
+        <h2 className="font-main-serif text-2xl text-black">
           {hasLink ? (
             <a
               href={href}
@@ -156,7 +156,7 @@ export default function PapersFilterable({ papers }: { papers: Paper[] }) {
   }, [papers, search, selectedTags, selectedType, sortBy]);
 
   return (
-    <section className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 md:flex-row">
+    <section className="font-main-sans mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 md:flex-row">
       <aside className="md:w-1/4">
         <p className="text-lg font-bold text-zinc-900">Filter</p>
 

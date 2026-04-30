@@ -1,13 +1,12 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { name: "About", href: "/about" },
   { name: "Experts", href: "/people" },
-  { name: "Research", href: "/research" },
+  { name: "Research", href: "/research/projects" },
   { name: "Data", href: "/data" },
   { name: "Resources", href: "/resources" },
 ];
@@ -22,45 +21,18 @@ export default function Navbar() {
         {/* Centered Logo + Description */}
         <div className="flex flex-col items-center pt-10 pb-2">
           <Link href="/">
-          <h1
-          style={{
-            fontFamily: "'Georgia', serif",
-            fontSize: "2rem",
-            letterSpacing: "0.05em",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "6px",
-          }}
-        >
-          CRSS LAB
-          <span style={{ display: "inline-flex", alignItems: "center" }}>
-            {/* slash */}
-            <span
-              style={{
-                width: "3px",
-                height: "28px",
-                backgroundColor: "#7c0a0b",
-                transform: "rotate(20deg)",
-                marginRight: "6px",
-                marginLeft: "3px",
-              }}
-            />
-            {/* rectangle */}
-            <span
-              style={{
-                width: "10px",
-                height: "28px",
-                backgroundColor: "#7c0a0b",
-              }}
-            />
-          </span>
-        </h1>
-        </Link>
+            <h1 className="font-main-serif font-semibold tracking-[-0.02em] text-[2rem] flex justify-center items-center gap-[6px]">
+              CRSS LAB
+              <span className="inline-flex items-center">
+                <span className="w-[3px] h-[28px] bg-primary rotate-[20deg] mr-[6px] ml-[3px]" />
+                <span className="w-[10px] h-[28px] bg-primary" />
+              </span>
+            </h1>
+          </Link>
 
-        <p style={{ fontFamily: "sans-serif", fontSize: "0.8rem", color: "#888", marginTop: "4px", letterSpacing: "0.05em" }}>
-          Conflict Research and Security Studies
-        </p>
+          <p className="font-main-sans text-[0.8rem] text-[#888] mt-1 tracking-[0.05em]">
+            Conflict Research and Security Studies
+          </p>
         </div>
 
         {/* Desktop Nav Links */}
@@ -69,14 +41,17 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-gray-900 hover:text-black transition"
+              className="font-main-sans text-sm font-medium text-gray-900 relative
+                after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0
+                after:bg-primary after:transition-all after:duration-200
+                hover:text-primary hover:after:w-full"
             >
               {link.name}
             </Link>
           ))}
         </div>
 
-        {/* Mobile: hamburger button (top-right) */}
+        {/* Mobile: hamburger button */}
         <div className="md:hidden flex justify-end py-3">
           <button onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -93,7 +68,10 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="text-sm font-medium text-gray-700 hover:text-black"
+                className="font-main-sans text-sm font-medium text-gray-700
+                  hover:text-primary border-l-2 border-transparent
+                  hover:border-primary pl-2 hover:pl-3
+                  transition-all duration-150"
               >
                 {link.name}
               </Link>

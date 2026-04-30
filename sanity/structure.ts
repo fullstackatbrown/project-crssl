@@ -10,7 +10,6 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("projectType").title("Projects"),
       S.documentTypeListItem("paperType").title("Papers"),
       S.documentTypeListItem("explainerSectionType").title("Explainers"),
-      S.documentTypeListItem("authorType").title("Authors"),
       S.documentTypeListItem("peopleType").title("People"),
       S.documentTypeListItem("dataset").title("Datasets"),
       S.divider(),
@@ -29,7 +28,6 @@ export const structure: StructureResolver = (S) =>
           ![
             "projectType",
             "paperType",
-            "authorType",
             "dataset",
             "peopleType",
             "exampleDataset",

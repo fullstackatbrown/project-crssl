@@ -4,18 +4,18 @@ import { useRef } from 'react'
 
 function SlashLogo({ size = 1 }: { size?: number }) {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center" }}>
+    <span className="inline-flex items-center">
       <span style={{
         width: `${3 * size}px`,
         height: `${28 * size}px`,
-        backgroundColor: "#7c0a0b",
+        backgroundColor: "var(--color-primary)",
         transform: "rotate(20deg)",
         marginRight: `${6 * size}px`,
       }} />
       <span style={{
         width: `${10 * size}px`,
         height: `${28 * size}px`,
-        backgroundColor: "#7c0a0b",
+        backgroundColor: "var(--color-primary)",
       }} />
     </span>
   )
@@ -38,21 +38,13 @@ function formatDate(dateStr?: string) {
 
 function PlaceholderCard() {
   return (
-    <div style={{
-      minWidth: "300px",
-      flex: "0 0 300px",
-      scrollSnapAlign: "start",
-      display: "flex",
-      flexDirection: "column",
-      height: "240px",
-      flexShrink: 0,
-    }}>
-      <div style={{ flex: 1, backgroundColor: "#f5f5f5", marginBottom: "16px" }} />
-      <p style={{ fontFamily: "sans-serif", fontSize: "0.85rem", color: "#ccc", lineHeight: "1.6", marginBottom: "16px" }}>
+    <div className="min-w-[300px] w-[300px] shrink-0 flex flex-col h-[240px] snap-start">
+      <div className="flex-1 bg-[#f5f5f5] mb-4" />
+      <p className="font-main-sans text-[0.85rem] text-[#ccc] leading-relaxed mb-4">
         No content yet.
       </p>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontFamily: "sans-serif", fontSize: "0.75rem", color: "#ccc" }}>—</span>
+      <div className="flex justify-between items-center">
+        <span className="font-main-sans text-[0.75rem] text-[#ccc]">—</span>
         <SlashLogo size={0.6} />
       </div>
     </div>
@@ -61,24 +53,16 @@ function PlaceholderCard() {
 
 function ContentCard({ item }: { item: CardItem }) {
   return (
-    <div style={{
-      minWidth: "300px",
-      flex: "0 0 300px",
-      scrollSnapAlign: "start",
-      display: "flex",
-      flexDirection: "column",
-      height: "240px",
-      flexShrink: 0,
-    }}>
+    <div className="min-w-[300px] w-[300px] shrink-0 flex flex-col h-[240px] snap-start">
       {item.imageUrl
-        ? <img src={item.imageUrl} alt={item.title} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", marginBottom: "16px" }} />
-        : <div style={{ flex: 1, backgroundColor: "#f5f5f5", marginBottom: "16px" }} />
+        ? <img src={item.imageUrl} alt={item.title} className="w-full aspect-video object-cover mb-4" />
+        : <div className="flex-1 bg-[#f5f5f5] mb-4" />
       }
-      <p style={{ fontFamily: "sans-serif", fontSize: "0.85rem", color: "#444", lineHeight: "1.6", marginBottom: "16px" }}>
+      <p className="font-main-sans text-[0.85rem] text-[#444] leading-relaxed mb-4">
         {item.description}
       </p>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontFamily: "sans-serif", fontSize: "0.75rem", color: "#999" }}>
+      <div className="flex justify-between items-center">
+        <span className="font-main-sans text-[0.75rem] text-[#999]">
           {formatDate(item.date)}
         </span>
         <SlashLogo size={0.6} />
@@ -105,21 +89,12 @@ export default function ScrollRow({ items }: { items: CardItem[] }) {
   }
 
   return (
-    <div style={{ minWidth: 0 }}>
+    <div className="min-w-0">
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        style={{
-          display: "flex",
-          gap: "24px",
-          overflowX: "scroll",
-          scrollSnapType: "x mandatory",
-          paddingBottom: "16px",
-          paddingRight: "40px",
-          scrollbarWidth: "none",
-          WebkitOverflowScrolling: "touch",
-        }}
-        className="hide-scrollbar"
+        className="hide-scrollbar flex gap-6 overflow-x-scroll snap-x snap-mandatory pb-4 pr-10"
+        style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
       >
         {items.length > 0
           ? items.map(item => <ContentCard key={item._id} item={item} />)
@@ -128,41 +103,16 @@ export default function ScrollRow({ items }: { items: CardItem[] }) {
       </div>
 
       {/* Progress bar */}
-      <div style={{
-        marginTop: "16px",
-        marginRight: "80px",
-        height: "2px",
-        backgroundColor: "#e5e7eb",
-        borderRadius: "1px",
-        position: "relative",
-      }}>
+      <div className="mt-4 mr-20 h-[2px] bg-gray-200 rounded-[1px] relative">
         {/* Red fill left of dot */}
         <div
           ref={fillRef}
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: "6px",
-            height: "2px",
-            backgroundColor: "#a51c30",
-            borderRadius: "1px",
-            transition: "width 0.1s ease",
-          }}
+          className="absolute left-0 top-0 w-[6px] h-[2px] bg-primary rounded-[1px] transition-[width] duration-100 ease-in-out"
         />
         {/* Dot */}
         <div
           ref={dotRef}
-          style={{
-            position: "absolute",
-            left: 0,
-            top: "-4px",
-            width: "12px",
-            height: "12px",
-            borderRadius: "50%",
-            backgroundColor: "#a51c30",
-            transition: "left 0.1s ease",
-          }}
+          className="absolute left-0 -top-1 w-3 h-3 rounded-full bg-primary transition-[left] duration-100 ease-in-out"
         />
       </div>
     </div>

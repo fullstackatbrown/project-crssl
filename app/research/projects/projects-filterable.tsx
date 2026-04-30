@@ -26,7 +26,7 @@ export type Project = {
 
 function Tile({ project }: { project: Project }) {
   return (
-    <article className="group min-h-50 w-full min-w-0 overflow-hidden border border-[0.5px] border-zinc-900 bg-white transition-all duration-200 ease-out hover:shadow-md">
+    <article className="group min-h-50 w-full min-w-0 overflow-hidden bg-white transition-all duration-200 ease-out hover:shadow-md">
       <Link
         className="relative block aspect-[1/1] w-full overflow-hidden"
         href={`/research/projects/${project.slug.current}`}
@@ -45,7 +45,7 @@ function Tile({ project }: { project: Project }) {
         />
         <div className="absolute inset-0 flex flex-col justify-end p-4">
           {project.tags?.length ? (
-            <div className="inline-block w-fit rounded-full border border-white/80 bg-transparent px-2 py-1 text-center text-xs text-white transition-colors group-hover:text-white">
+            <div className="inline-block w-fit rounded-full border border-white/80 bg-transparent px-2 py-1 text-center font-main-sans text-xs text-white transition-colors group-hover:text-white">
               <div className="flex flex-row items-center gap-2">
                 <Elipsis />
                 {project.tags[0]}
@@ -54,11 +54,11 @@ function Tile({ project }: { project: Project }) {
           ) : (
             <div />
           )}
-          <div className="px-1 py-1 font-serif text-xl text-white transition-colors group-hover:text-[#a51c30]/85">
+          <div className="px-1 py-1 font-main-serif text-xl text-white transition-colors group-hover:text-[#a51c30]/85">
             {project.title}
           </div>
           {project.projectLeader?.length ? (
-            <div className="px-1 pb-1 text-xs text-zinc-200 transition-colors group-hover:text-[#a51c30]/80">
+            <div className="px-1 pb-1 font-main-sans text-xs text-zinc-200 transition-colors group-hover:text-[#a51c30]/80">
               PL: {project.projectLeader.join(", ")}
             </div>
           ) : null}
@@ -89,7 +89,7 @@ function FilterCheckbox({
         checked={checked}
         onChange={onChange}
       />
-      <label className="text-sm text-zinc-700" htmlFor={id}>{label}</label>
+      <label className="text-sm font-main-sans text-zinc-700" htmlFor={id}>{label}</label>
     </div>
   );
 }
@@ -223,9 +223,9 @@ export default function ProjectsFilterable({
 
   return (
     <section className="mx-auto flex max-w-6xl flex-row items-stretch">
-      <div className="min-h-[50rem] w-1/4 self-stretch border border-[0.5px] border-zinc-900 bg-white p-6">
-        <h1 className="text-l font-semibold text-zinc-900">Filters</h1>
-        <h3 className="text-sm mt-4 mb-1 font-semibold text-zinc-700">Tags</h3>
+      <div className="min-h-[50rem] w-1/4 self-stretch bg-white p-6">
+        <h1 className="text-md font-main-sans font-bold text-zinc-900">Filters</h1>
+        <h3 className="text-sm font-main-sans mt-4 mb-1 font-semibold text-zinc-700">Tags</h3>
         {tagsList.map((tag) => (
           <FilterCheckbox
             key={tag}
@@ -237,7 +237,7 @@ export default function ProjectsFilterable({
             }
           />
         ))}
-        <h3 className="text-sm mt-4 mb-1 font-semibold text-zinc-700">Faculty</h3>
+        <h3 className="text-sm font-main-sans mt-4 mb-1 font-semibold text-zinc-700">Faculty</h3>
         {facultyList.map((faculty) => (
           <FilterCheckbox
             key={faculty}
@@ -249,7 +249,7 @@ export default function ProjectsFilterable({
             }
           />
         ))}
-        <h3 className="text-sm mt-4 mb-1 font-semibold text-zinc-700">Keywords</h3>
+        <h3 className="text-sm font-main-sans mt-4 mb-1 font-semibold text-zinc-700">Keywords</h3>
         <div className="relative">
           <form
             className="flex items-center gap-2"
@@ -298,14 +298,14 @@ export default function ProjectsFilterable({
                 }
               }}
               placeholder="Search keywords"
-              className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-800 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none"
+              className="w-full border border-zinc-300 bg-white px-2 py-1 font-main-sans text-sm text-zinc-800 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none"
               role="combobox"
               aria-expanded={isKeywordSuggestionsOpen && keywordSuggestions.length > 0}
               aria-controls="keyword-suggestions-list"
             />
             <button
               type="submit"
-              className="rounded border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-100"
+              className="border border-zinc-300 bg-white px-2 py-1 font-main-sans text-sm font-medium text-zinc-700 hover:bg-zinc-100"
             >
               Enter
             </button>
@@ -313,7 +313,7 @@ export default function ProjectsFilterable({
           {isKeywordSuggestionsOpen && keywordSuggestions.length > 0 ? (
             <ul
               id="keyword-suggestions-list"
-              className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded border border-zinc-200 bg-white text-sm shadow-sm"
+              className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto border border-zinc-200 bg-white text-sm font-main-sans shadow-sm"
             >
               {keywordSuggestions.map((suggestion, index) => (
                 <li key={suggestion}>
@@ -336,7 +336,7 @@ export default function ProjectsFilterable({
       </div>
       <div className="min-h-[50rem] flex-1">
         {filteredProjects.length === 0 ? (
-          <div className="flex h-full min-h-[50rem] items-center justify-center rounded border border-zinc-200 bg-zinc-50 px-6 text-center text-zinc-600">
+          <div className="flex h-full min-h-[50rem] items-center justify-center border border-zinc-200 bg-zinc-50 px-6 font-main-sans text-center text-zinc-600">
             No projects match current filters.
           </div>
         ) : (

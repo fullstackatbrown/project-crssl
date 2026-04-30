@@ -30,14 +30,14 @@ const SECTION_CONFIG: {
   label: string
   href: string
 }[] = [
-  { key: 'news',       label: 'News',       href: '/news' },
-  { key: 'recentWork', label: 'Recent Work', href: '/projects' },
-  { key: 'datasets',   label: 'Data',        href: '/data' },
+  { key: 'news',       label: 'News',        href: '/news' },
+  { key: 'recentWork', label: 'Recent Work',  href: '/projects' },
+  { key: 'datasets',   label: 'Data',         href: '/data' },
 ]
 
-function SlashLogo({ size = 1, color = "#7c0a0b" }: { size?: number; color?: string }) {
+function SlashLogo({ size = 1, color = "var(--color-primary)" }: { size?: number; color?: string }) {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center" }}>
+    <span className="inline-flex items-center">
       <span style={{
         width: `${3 * size}px`,
         height: `${28 * size}px`,
@@ -58,52 +58,26 @@ export default async function Home() {
   const sections: Sections = await client.fetch(HOME_QUERY)
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900" style={{ fontFamily: "'Georgia', serif" }}>
+    <div className="min-h-screen bg-white text-zinc-900">
 
       {/* Hero */}
-      <section style={{
-        backgroundColor: "#7c0a0b",
-        minHeight: "260px",
-        display: "flex",
-        alignItems: "stretch",
-        padding: "28px 80px",
-      }}>
+      <section className="bg-primary flex items-stretch px-5 py-6 min-h-[200px] md:px-20 md:py-7 md:min-h-[260px]">
         {/* Left: slash logo directly above text */}
-        <div style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          gap: "8px",
-          paddingBottom: "4px",
-        }}>
-          <div style={{ marginLeft: "2px", marginBottom: "4px" }}>
+        <div className="flex flex-1 flex-col justify-end gap-2 pb-1">
+          <div className="ml-0.5 mb-1">
             <SlashLogo size={1.2} color="white" />
           </div>
-          <p style={{
-            color: "white",
-            fontFamily: "'Georgia', serif",
-            fontSize: "1.1rem",
-            lineHeight: "1.6",
-            maxWidth: "420px",
-            margin: 0,
-          }}>
+          <p className="text-white font-main-serif text-[0.95rem] leading-relaxed max-w-[420px] m-0 md:text-[1.1rem]">
             The Conflict Research and Security Studies (CRSS) Lab offers students hands-on experience in data collection, data analysis, and research methods.
           </p>
         </div>
 
-        {/* Right: globe shifted right and slightly bigger */}
-        <div style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          paddingRight: "40px",
-        }}>
+        {/* Right: globe — hidden on mobile, visible on desktop */}
+        <div className="hidden md:flex flex-1 justify-end items-center pr-10">
           <img
             src="/globe.png"
             alt="Globe"
-            style={{ width: "260px", height: "auto", objectFit: "contain" }}
+            className="w-[260px] h-auto object-contain"
           />
         </div>
       </section>
@@ -114,24 +88,13 @@ export default async function Home() {
           const items = sections[key] ?? []
 
           return (
-            <section key={key} style={{
-              borderBottom: "1px solid #e5e7eb",
-              padding: "48px 0 48px 80px",
-              display: "grid",
-              gridTemplateColumns: "220px 1fr",
-              gap: "32px",
-              alignItems: "start",
-            }}>
-              <div style={{ paddingTop: "8px" }}>
-                <Link href={href} style={{ textDecoration: "none" }}>
-                  <h2 style={{
-                    fontFamily: "'Georgia', serif",
-                    fontSize: "1.4rem",
-                    fontWeight: "normal",
-                    color: "#7c0a0b",
-                    cursor: "pointer",
-                    margin: 0,
-                  }}>
+            <section
+              key={key}
+              className="border-b border-gray-200 py-8 px-5 flex flex-col gap-3 items-start md:py-12 md:pl-20 md:pr-0 md:grid md:grid-cols-[220px_1fr] md:gap-8"
+            >
+              <div className="md:pt-2">
+                <Link href={href} className="no-underline">
+                  <h2 className="font-main-serif text-[1.2rem] font-normal text-primary cursor-pointer m-0 md:text-[1.4rem]">
                     {label}
                   </h2>
                 </Link>
@@ -143,22 +106,9 @@ export default async function Home() {
         })}
 
         {/* Funders */}
-        <section style={{
-          borderBottom: "1px solid #e5e7eb",
-          padding: "48px 0 48px 80px",
-          display: "grid",
-          gridTemplateColumns: "220px 1fr",
-          gap: "32px",
-          alignItems: "start",
-        }}>
-          <div style={{ paddingTop: "8px" }}>
-            <h2 style={{
-              fontFamily: "'Georgia', serif",
-              fontSize: "1.4rem",
-              fontWeight: "normal",
-              color: "#7c0a0b",
-              margin: 0,
-            }}>
+        <section className="border-b border-gray-200 py-8 px-5 flex flex-col gap-3 items-start md:py-12 md:pl-20 md:pr-0 md:grid md:grid-cols-[220px_1fr] md:gap-8">
+          <div className="md:pt-2">
+            <h2 className="font-main-serif text-[1.2rem] font-normal text-primary m-0 md:text-[1.4rem]">
               Funders
             </h2>
           </div>

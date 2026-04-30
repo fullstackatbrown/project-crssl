@@ -51,15 +51,15 @@ function ResourceItemComponent({ item }: { item: ResourceItem }) {
     const id = item.youtubeUrl.match(/(?:v=|youtu\.be\/)([^&?/]+)/)?.[1];
 
     return (
-      <li className="border-b border-[#d4cfc8] py-5">
-        <p className="font-serif text-[1.15rem] font-semibold text-[#1a1a18] mb-1">
+      <li className="border-b border-gray-200 px-6 py-5 last:border-b-0">
+        <p className="font-main-sans text-[0.95rem] font-semibold text-[#1a1a18] mb-1">
           {item.label}
         </p>
-        <p className="text-[0.95rem] text-[#706b63] mb-3 leading-relaxed">
+        <p className="font-main-sans text-[0.9rem] text-[#706b63] mb-3 leading-relaxed">
           {item.description}
         </p>
         <iframe
-          className="w-full h-[315px]"
+          className="w-full h-[280px]"
           src={`https://www.youtube.com/embed/${id}`}
           allowFullScreen
         />
@@ -77,30 +77,30 @@ function ResourceItemComponent({ item }: { item: ResourceItem }) {
           : "#";
 
   return (
-    <li className="border-b border-[#d4cfc8]">
+    <li className="border-b border-gray-200 last:border-b-0">
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex justify-between items-start gap-4 py-4 text-black hover:bg-[#f3efe9] transition"
+        className="flex justify-between items-start gap-4 py-[0.9rem] px-6 text-black hover:bg-gray-200 transition group"
       >
         <div className="flex flex-col gap-1">
-          <span className="font-serif text-[1.15rem] font-semibold leading-snug">
+          <span className="font-main-sans text-[0.95rem] font-semibold leading-snug">
             {item.label}
           </span>
 
           {item.description && (
-            <span className="text-[0.95rem] text-[#706b63] leading-relaxed">
+            <span className="font-main-sans text-[0.88rem] text-[#706b63] leading-relaxed">
               {item.description}
             </span>
           )}
 
-          <span className="text-[0.65rem] font-bold tracking-[0.18em] uppercase text-[var(--primary,#7c0b0a)] mt-1">
+          <span className="font-main-sans inline-block text-[10px] font-medium tracking-[0.1em] uppercase px-[7px] py-[2px] bg-[#f3e5e4] text-[#7c0b0a] mt-1 self-start">
             {TYPE_LABEL[item.resourceType] ?? item.resourceType}
           </span>
         </div>
 
-        <span className="text-[#9a9189] transition-transform group-hover:translate-x-1">
+        <span className="font-main-sans text-[#9a9189] mt-[2px] transition-transform group-hover:translate-x-1">
           →
         </span>
       </a>
@@ -110,7 +110,7 @@ function ResourceItemComponent({ item }: { item: ResourceItem }) {
 
 function LinkList({ items }: { items: ResourceItem[] }) {
   return (
-    <ul className="border-t border-[#d4cfc8]">
+    <ul className="border-t border-gray-200">
       {items.map((item) => (
         <ResourceItemComponent key={item.label} item={item} />
       ))}
@@ -124,23 +124,23 @@ export default async function ResourcesAndTools() {
   return (
     <div className="min-h-screen bg-white">
       {/* Banner */}
-      <div className="relative w-full h-[260px] flex items-end overflow-hidden bg-gray-400">
+      <div className="relative w-full h-[420px] overflow-hidden">
         {data.bannerImage?.asset?.url && (
           <img
             src={data.bannerImage.asset.url}
-            alt={data.bannerImage.alt ?? ""}
-            className="absolute inset-0 w-full h-full object-cover object-[center_40%] grayscale brightness-50"
+            alt={data.bannerImage.alt ?? data.title ?? ""}
+            className="h-full w-full object-cover"
           />
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
 
-        <div className="relative z-10 px-10 py-8">
-          <h1 className="font-serif text-[2.2rem] text-[#f0ede6] leading-tight mb-1">
+        <div className="absolute bottom-8 left-8 max-w-3xl text-white">
+          <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">
             {data.title}
           </h1>
           {data.bannerSubtitle && (
-            <p className="font-serif italic text-[#b0a99a] text-sm tracking-wide">
+            <p className="font-main-sans mt-3 max-w-3xl text-sm font-light leading-6 md:text-base">
               {data.bannerSubtitle}
             </p>
           )}
@@ -152,17 +152,19 @@ export default async function ResourcesAndTools() {
         {data.sections.map((section: Section) => (
           <section
             key={section.title}
-            className="mb-12 p-6 bg-[#f7f4ef] border-l-[3px] border-[var(--primary,#7c0b0a)]"
+            className="mb-8 border border-gray-200"
           >
-            <p className="font-serif text-[1.6rem] uppercase tracking-[0.25em] text-[var(--primary,#7c0b0a)] mb-2">
-              {section.title}
-            </p>
-
-            {section.description && (
-              <p className="text-sm italic text-[#5a5650] mb-5 leading-relaxed">
-                {section.description}
+            <div className="px-6 py-4 border-b border-gray-200">
+              <p className="font-main-serif text-2xl text-[#7c0b0a] mb-1">
+                {section.title}
               </p>
-            )}
+
+              {section.description && (
+                <p className="font-main-sans text-[0.85rem] text-[#5a5650] leading-relaxed">
+                  {section.description}
+                </p>
+              )}
+            </div>
 
             <LinkList items={section.items} />
           </section>

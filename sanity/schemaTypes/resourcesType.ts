@@ -14,6 +14,27 @@ export const resourcesType = defineType({
     }),
 
     defineField({
+      name: "bannerImage",
+      title: "Banner Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+        }),
+      ],
+    }),
+
+    defineField({
+      name: "bannerSubtitle",
+      title: "Banner Subtitle",
+      type: "string",
+      description: 'e.g. "A curated collection of guides and tools"',
+    }),
+
+    defineField({
       name: "sections",
       title: "Sections",
       type: "array",

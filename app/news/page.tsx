@@ -33,103 +33,50 @@ export default async function NewsPage() {
     <div className="bg-white min-h-screen">
 
       {/* Hero */}
-      <section
-        style={{
-          height: "240px",
-          backgroundColor: "#7c0b0a",
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          padding: "2rem",
-        }}
-      >
-        <h1 style={{ fontFamily: "Georgia, serif", fontSize: "2.25rem", color: "white", marginBottom: "0.25rem" }}>
-          News
-        </h1>
-        <p style={{ fontFamily: "Georgia, serif", fontSize: "0.95rem", color: "#fca5a5" }}>
-          Read about the latest news of our lab.
-        </p>
-      </section>
+      <div className="relative w-full h-[420px] overflow-hidden bg-primary">
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+        <div className="absolute bottom-8 left-8 max-w-3xl text-white">
+          <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">
+            News
+          </h1>
+          <p className="font-main-sans mt-3 text-sm font-light leading-6 md:text-base">
+            Read about the latest news of our lab.
+          </p>
+        </div>
+      </div>
 
       {/* News list */}
-      <main style={{ maxWidth: "900px", margin: "0 auto", padding: "2.5rem 1rem" }}>
+      <main className="max-w-[900px] mx-auto px-4 py-10">
         {news.length === 0 && (
-          <p style={{ color: "#9ca3af", fontFamily: "Georgia, serif" }}>No news yet.</p>
+          <p className="font-main-sans text-gray-400">No news yet.</p>
         )}
         {news.map((item, i) => (
           <div key={item._id}>
-            <div
-              style={{
-                display: "flex",
-                gap: "1.5rem",
-                alignItems: "flex-start",
-                padding: "1.5rem 0",
-              }}
-            >
-              {/* Image */}
+            <div className="flex gap-6 items-start py-6">
               {item.imageUrl ? (
                 <img
                   src={item.imageUrl}
                   alt={item.imageAlt ?? item.title}
-                  style={{
-                    width: "140px",
-                    height: "90px",
-                    objectFit: "cover",
-                    flexShrink: 0,
-                  }}
+                  className="w-[140px] h-[90px] object-cover flex-shrink-0"
                 />
               ) : (
-                <div
-                  style={{
-                    width: "140px",
-                    height: "90px",
-                    backgroundColor: "#f3f4f6",
-                    flexShrink: 0,
-                  }}
-                />
+                <div className="w-[140px] h-[90px] bg-gray-100 flex-shrink-0" />
               )}
 
-              {/* Text */}
-              <div style={{ flex: 1 }}>
-                <h2
-                  style={{
-                    fontFamily: "Georgia, serif",
-                    fontSize: "1rem",
-                    fontWeight: 700,
-                    color: "#111827",
-                    marginBottom: "0.25rem",
-                  }}
-                >
+              <div className="flex-1">
+                <h2 className="font-main-serif text-[1rem] font-bold text-gray-900 mb-1">
                   {item.title}
                 </h2>
-                <p
-                  style={{
-                    fontFamily: "Georgia, serif",
-                    fontSize: "0.85rem",
-                    color: "#6b7280",
-                    marginBottom: "0.5rem",
-                    lineHeight: "1.5",
-                  }}
-                >
+                <p className="font-main-sans text-[0.85rem] text-gray-500 mb-2 leading-relaxed">
                   {item.description}
                 </p>
-                <p
-                  style={{
-                    fontFamily: "Georgia, serif",
-                    fontSize: "0.78rem",
-                    color: "#9ca3af",
-                  }}
-                >
+                <p className="font-main-sans text-[0.78rem] text-gray-400">
                   {formatDate(item.date)}
                 </p>
               </div>
             </div>
 
-            {/* Divider */}
-            {i < news.length - 1 && (
-              <hr style={{ borderColor: "#e5e7eb", margin: 0 }} />
-            )}
+            {i < news.length - 1 && <hr className="border-gray-200" />}
           </div>
         ))}
       </main>

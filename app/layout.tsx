@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Baskervville, Manrope } from "next/font/google";
 import "./globals.css";
 import SiteWrapper from "@/app/components/SiteWrapper";
 
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const mainSerif = Baskervville({
+  variable: "--font-main-serif",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const mainSans = Manrope({
+  variable: "--font-main-sans",
   subsets: ["latin"],
 });
 
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${mainSerif.variable} ${mainSans.variable} antialiased flex flex-col min-h-screen`}
       >
         <SiteWrapper>{children}</SiteWrapper>
       </body>

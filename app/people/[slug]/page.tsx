@@ -36,17 +36,17 @@ export default async function PersonProfile({
     <div className="bg-white">
       <div className="flex bg-gray-100">
         <div className="max-w-1/2">
-          <h1 className="text-7xl text-gray-900 mt-[5rem] ml-[6rem]">
+          <h1 className="text-7xl font-main-serif text-gray-900 mt-[5rem] ml-[6rem]">
             {dataset.fullname}
           </h1>
-          <p className="text-gray-500 mt-[0.6rem] ml-[6rem]">
+          <p className="text-gray-500 font-main-sans mt-[0.6rem] ml-[6rem]">
             {dataset.jobtitles.join(", ")}
           </p>
-          <p className="mt-[0.5rem] text-black mt-[1.5rem] ml-[6rem]">
+          <p className="mt-[0.5rem] font-main-sans text-black mt-[1.5rem] ml-[6rem]">
             {" "}
             Email:{" "}
             <a
-              className="hover:underline text-black"
+              className="hover:underline font-main-sans text-black"
               href={`mailto:${dataset.email}`}
             >
               {dataset.email}
@@ -73,16 +73,16 @@ export default async function PersonProfile({
               marginBottom: "0.5rem",
             }}
           ></hr>
-          <p className="text-lg text-gray-900 mt-[1rem] ml-[6rem]">
+          <p className="text-lg font-main-sans text-gray-900 mt-[1rem] ml-[6rem]">
             {dataset.interests.join(", ")}
           </p>
         </div>
         <div className=" mb-[2rem]">
-          <p className="text-lg text-gray-900 mt-[6rem] mb-[1rem] ml-[6rem] mr-[5rem]">
+          <p className="text-lg font-main-sans text-gray-900 mt-[6rem] mb-[1rem] ml-[6rem] mr-[5rem]">
             {dataset.bio}
           </p>
           <a
-            className="font-bold text-gray-900 text-lg ml-[6rem] hover:underline"
+            className="font-bold font-main-sans text-gray-900 text-lg ml-[6rem] hover:underline"
             href={`${dataset.recentwork}`}
           >
             Their most recent work

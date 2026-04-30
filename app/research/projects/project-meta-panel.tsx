@@ -31,7 +31,7 @@ export function ProjectMetaPanel({
   return (
     <div className="w-full overflow-x-visible">
       {/* Bar row only: backdrop height matches the toggle, not the expanded panel */}
-      <div className="relative w-full overflow-x-visible">
+      <div className="relative font-main-sans w-full overflow-x-visible">
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-0 w-screen bg-black"
           aria-hidden
@@ -73,18 +73,18 @@ export function ProjectMetaPanel({
           className="relative z-10 flex flex-col gap-1 border-b border-zinc-200 bg-white px-6 py-3"
         >
           {formattedPublishedDate ? (
-            <p className="text-xs leading-6 text-zinc-700">
-              <span className="mr-1 font-serif text-base text-[#a51c30]">Published:</span>
+            <p className="text-xs font-main-sans leading-6 text-zinc-700">
+              <span className="mr-1 font-main-serif text-base text-[#a51c30]">Published:</span>
               {formattedPublishedDate}
             </p>
           ) : null}
           {keywords?.length ? (
             <div className="flex flex-row flex-wrap gap-2">
-              <h3 className="font-serif text-m text-[#a51c30]">Keywords:</h3>
+              <h3 className="font-main-serif text-m text-[#a51c30]">Keywords:</h3>
               {keywords.map((keyword) => (
                 <span
                   key={keyword}
-                  className="inline-flex items-center rounded-full border border-[#a51c30]/20 bg-[#a51c30]/5 px-3 py-1 text-xs font-medium tracking-wide text-zinc-700"
+                  className="inline-flex font-main-sans items-center rounded-full border border-[#a51c30]/20 bg-[#a51c30]/5 px-3 py-1 text-xs font-medium tracking-wide text-zinc-700"
                 >
                   {keyword}
                 </span>
@@ -93,13 +93,13 @@ export function ProjectMetaPanel({
           ) : null}
           {projectLeader?.length ? (
             <p className="text-xs leading-6 text-zinc-700">
-              <span className="mr-1 font-serif text-base text-[#a51c30]">Project Leader:</span>
+              <span className="mr-1 font-main-serif text-base text-[#a51c30]">Project Leader:</span>
               {projectLeader.join(", ")}
             </p>
           ) : null}
           {contributors?.length ? (
             <p className="text-xs leading-6 text-zinc-700">
-              <span className="mr-1 font-serif text-base text-[#a51c30]">Contributors:</span>
+              <span className="mr-1 font-main-serif text-base text-[#a51c30]">Contributors:</span>
               {contributors.join(", ")}
             </p>
           ) : null}

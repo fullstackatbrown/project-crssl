@@ -27,17 +27,17 @@ type PtImageValue = { _type?: string; alt?: string; asset?: unknown };
 const portableTextComponents: PortableTextComponents = {
   block: {
     h2: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h2 className="mt-10 mb-4 border-l-4 border-[#a51c30] pl-3 font-serif text-3xl font-semibold text-zinc-900">
+      <h2 className="mt-10 mb-4 border-l-4 border-[#a51c30] pl-3 font-main-serif text-3xl font-semibold text-zinc-900">
         {children}
       </h2>
     ),
     h3: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h3 className="mt-8 mb-3 border-l-2 border-[#a51c30]/50 pl-2.5 font-serif text-2xl font-semibold text-zinc-900">
+      <h3 className="mt-8 mb-3 border-l-2 border-[#a51c30]/50 pl-2.5 font-main-serif text-2xl font-semibold text-zinc-900">
         {children}
       </h3>
     ),
     h4: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h4 className="mt-6 mb-2 font-serif text-xl font-semibold text-zinc-900">{children}</h4>
+      <h4 className="mt-6 mb-2 font-main-serif text-xl font-semibold text-zinc-900">{children}</h4>
     ),
     normal: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
       <p className="my-3 text-base leading-7 text-zinc-700">{children}</p>
@@ -171,7 +171,7 @@ function getContent(project: FetchedProject) {
           const id = sectionDomId(section);
           return (
             <section key={section._key} id={id} className="scroll-mt-20">
-              <h2 className="mb-4 border-l-4 border-[#a51c30] pl-3 font-serif text-3xl font-semibold text-zinc-900">
+              <h2 className="mb-4 border-l-4 border-[#a51c30] pl-3 font-main-serif text-3xl font-semibold text-zinc-900">
                 {section.title}
               </h2>
               {section.body?.length ? (
@@ -255,7 +255,7 @@ export default async function ProjectPage({
     : null;
   return (
     <div className="overflow-x-visible">
-      <div className="relative h-[400px] w-full overflow-hidden">
+      <div className="font-main-sans relative h-[400px] w-full overflow-hidden">
         <img className="w-full h-full object-cover" src={project.coverImage} />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
@@ -263,7 +263,7 @@ export default async function ProjectPage({
         <div className="absolute inset-0 grid grid-cols-[1fr_3fr] text-white">
           <div /> {/* empty column to align */}
           <div className="flex w-250 flex-col justify-end p-6">
-            <h1 className="font-serif text-4xl font-semibold tracking-tight md:text-5xl">{project.title}</h1>
+            <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">{project.title}</h1>
             <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-100">{project.description}</p>
             {project.tags?.length ? (
               <div className="mt-3 flex flex-wrap gap-2">
@@ -288,7 +288,7 @@ export default async function ProjectPage({
 
                   return (
                     <a
-                      className="text-white underline decoration-white/70 underline-offset-2 transition-colors hover:text-[#a51c30] hover:decoration-[#a51c30]"
+                      className="text-white font-main-sans underline decoration-white/70 underline-offset-2 transition-colors hover:text-[#a51c30] hover:decoration-[#a51c30]"
                       key={item._key}
                       href={href}
                       target={isPdfLink ? undefined : '_blank'}
@@ -310,11 +310,11 @@ export default async function ProjectPage({
         <aside className="-mt-24 self-start bg-white p-6 text-zinc-700 sticky top-[10vh]">
           <Link
             href="/research/projects"
-            className="text-sm font-medium text-zinc-500 transition-colors hover:text-[#a51c30]"
+            className="text-sm font-medium font-main-sans text-zinc-500 transition-colors hover:text-[#a51c30]"
           >
             {'< Research'}
           </Link>
-          <p className="pt-12 font-serif text-lg font-semibold text-zinc-900">In this Group</p>
+          <p className="pt-12 font-main-serif text-lg font-semibold text-zinc-900">In this Group</p>
           {hasSectionNav || hasPapers ? (
             <nav aria-label="On this page" className="mt-3 text-sm">
               <ul className="space-y-2 text-zinc-700">
@@ -325,7 +325,7 @@ export default async function ProjectPage({
                     <li key={section._key}>
                       <a
                         href={href}
-                        className="font-medium text-zinc-700 underline-offset-2 transition-colors hover:text-[#a51c30] hover:underline"
+                        className="font-medium font-main-sans text-zinc-700 underline-offset-2 transition-colors hover:text-[#a51c30] hover:underline"
                       >
                         {outlineLabel}
                       </a>
@@ -336,7 +336,7 @@ export default async function ProjectPage({
                   <li>
                     <a
                       href={`#${PAPERS_SECTION_ID}`}
-                      className="font-medium text-zinc-700 underline-offset-2 transition-colors hover:text-[#a51c30] hover:underline"
+                      className="font-medium font-main-sans text-zinc-700 underline-offset-2 transition-colors hover:text-[#a51c30] hover:underline"
                     >
                       Related Papers
                     </a>
@@ -348,7 +348,7 @@ export default async function ProjectPage({
         </aside>
 
         {/* Main content: meta bar flush under hero (no top padding); body padded below */}
-        <div className="w-250 min-w-0 overflow-x-visible flex flex-col text-zinc-700">
+        <div className="w-250 min-w-0 overflow-x-visible flex flex-col font-main-sans text-zinc-700">
           <ProjectMetaPanel
             formattedPublishedDate={formattedPublishedDate}
             keywords={project.keywords}
@@ -359,7 +359,7 @@ export default async function ProjectPage({
           {getContent(project)}
           {hasPapers ? (
             <section id={PAPERS_SECTION_ID} className="mt-12 scroll-mt-28 mb-10">
-              <h2 className="mb-4 border-l-4 border-[#a51c30] pl-3 font-serif text-3xl font-semibold text-zinc-900">
+              <h2 className="mb-4 border-l-4 border-[#a51c30] pl-3 font-main-serif text-3xl font-semibold text-zinc-900">
                 Related Papers
               </h2>
               <ul className="space-y-2">
@@ -375,7 +375,7 @@ export default async function ProjectPage({
                           href={href}
                           target={isExternal ? '_blank' : undefined}
                           rel={isExternal ? 'noopener noreferrer' : undefined}
-                          className="font-medium text-zinc-800 underline decoration-zinc-400 underline-offset-2 transition-colors hover:text-[#a51c30] hover:decoration-[#a51c30]/50"
+                          className="font-medium font-main-sans text-zinc-800 underline decoration-zinc-400 underline-offset-2 transition-colors hover:text-[#a51c30] hover:decoration-[#a51c30]/50"
                         >
                           {paper.title}
                         </a>

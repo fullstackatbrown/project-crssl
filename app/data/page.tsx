@@ -92,26 +92,26 @@ const DataPage = () => {
     return (
         <div className="min-h-screen bg-white font-serif" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
             {/* ── Dark Hero Banner ── */}
-            <section
-                className="relative flex flex-col justify-end px-10 pb-10"
-                style={{
-                    background: "#7c0a0b",
-                    minHeight: '280px',
-                }}
-            >
-                <h2 className="text-4xl font-bold text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>
-                    {dataPageHero?.heading ?? 'Data'}
-                </h2>
-                <p className="text-gray-300 text-sm max-w-md" style={{ fontFamily: 'Georgia, serif' }}>
-                    {dataPageHero?.subtext ?? 'Our lab collects data on some of the most vital problems in the world.'}
-                </p>
-                <img
-                    src={dataPageHero?.image?.asset?.url}
-                    alt={dataPageHero?.image?.alt ?? ''}
-                    className="absolute top-1/2 -translate-y-1/2"
-                    style={{ height: '280px', width: 'auto', opacity: 0.85, right: '-40px' }}
-                />
-            </section>
+            <div className="relative w-full h-[420px] overflow-hidden bg-primary">
+                {dataPageHero?.image?.asset?.url && (
+                    <img
+                    src={dataPageHero.image.asset.url}
+                    alt={dataPageHero.image.alt ?? ""}
+                    className="h-full w-full object-cover"
+                    />
+                )}
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+
+                <div className="absolute bottom-8 left-8 max-w-3xl text-white">
+                    <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">
+                    {dataPageHero?.heading ?? "Data"}
+                    </h1>
+                    <p className="font-main-sans mt-3 max-w-3xl text-sm font-light leading-6 md:text-base">
+                    {dataPageHero?.subtext ?? "Our lab collects data on some of the most vital problems in the world."}
+                    </p>
+                </div>
+            </div>
 
             {/*── Tab Bar ──
             <div className="grid grid-cols-2 border-b border-gray-300 bg-white">
@@ -137,23 +137,23 @@ const DataPage = () => {
                 </button>
             </div>*/}
             {/* ── Main Content ── */}
-            <main className="bg-gray-100 px-10 py-8 min-h-screen">
+            <main className="bg-white px-10 py-8 min-h-screen">
 
                 {/* Results count */}
-                <p className="text-sm text-gray-600 mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+                <p className="text-sm text-gray-600 mb-4 font-main-sans">
                     <span className="font-bold text-gray-900">{datasets.length}</span> results
                 </p>
 
                 {/* Search bar */}
-                <div className="flex items-center gap-2 bg-white border border-gray-300 rounded px-4 py-2 mb-6">
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 px-4 py-2 mb-6">
                     <Search className="w-4 h-4 text-gray-400 shrink-0" />
                     <input
                         type="text"
                         placeholder="Search"
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
-                        className="w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
-                        style={{ fontFamily: 'Georgia, serif' }}
+                        className="font-main-sans w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+                        
                     />
                 </div>
 
@@ -162,7 +162,7 @@ const DataPage = () => {
                     {/* ── Sidebar Filters ── */}
                     <aside className="w-48 shrink-0">
                         <div className="flex items-center gap-2 mb-3">
-                            <span className="text-sm font-semibold text-gray-800" style={{ fontFamily: 'Georgia, serif' }}>Filters</span>
+                            <span className="text-md font-bold text-black font-main-sans">Filters</span>
                         </div>
                         <ul className="space-y-2">
                             {allTags.map(tag => {
@@ -178,8 +178,7 @@ const DataPage = () => {
                                         />
                                         <label
                                             htmlFor={tag}
-                                            className="text-xs text-gray-700 cursor-pointer"
-                                            style={{ fontFamily: 'Georgia, serif' }}
+                                            className="text-sm text-gray-700 cursor-pointer font-main-sans"
                                         >
                                             {displayTag}
                                         </label>
@@ -194,9 +193,9 @@ const DataPage = () => {
                         {datasets.map(ds => (
                             <article
                                 key={ds._id}
-                                className="bg-white border border-gray-200 rounded p-4 flex flex-col gap-2"
+                                className="bg-white border border-gray-200 rounded p-5 flex flex-col gap-2"
                             >
-                                <span className="text-xs text-gray-400">
+                                <span className="text-sm text-black font-main-serif">
                                     {new Date(ds.date).toLocaleDateString('en-US', {
                                         month: 'short',
                                         day: 'numeric',
@@ -204,12 +203,11 @@ const DataPage = () => {
                                     })}
                                 </span>
                                 <h3
-                                    className="text-sm font-semibold text-gray-900 leading-snug"
-                                    style={{ fontFamily: 'Georgia, serif' }}
+                                    className="text-md font-semibold text-gray-900 leading-snug font-main-sans"
                                 >
                                     {ds.name}
                                 </h3>
-                                <p className="text-xs text-gray-500 flex-1" style={{ fontFamily: 'Georgia, serif' }}>
+                                <p className="text-sm text-gray-500 flex-1 font-main-sans">
                                     {ds.description.length > 140 ? ds.description.slice(0, 140).trimEnd() + '...' : ds.description}
                                 </p>
 
@@ -243,8 +241,8 @@ const DataPage = () => {
                                 <button
                                     type="button"
                                     onClick={() => setActiveDataset(ds)}
-                                    className="mt-2 self-start rounded border cursor-pointer border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
-                                    style={{ fontFamily: 'Georgia, serif' }}
+                                    className="font-main-sans mt-2 self-start border cursor-pointer border-primary px-3 py-2 text-xs text-primary hover:bg-gray-100"
+                                    
                                 >
                                     View Details
                                 </button>

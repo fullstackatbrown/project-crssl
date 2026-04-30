@@ -9,10 +9,8 @@ import PeopleResults, { type Person } from "../components/PeopleResults";
 import { buildSearchQuery, buildTagQuery } from "../lib/queries";
 import Image from "next/image";
 
-// Create an image URL builder using the client
 const builder = createImageUrlBuilder(client);
 
-// Export a function that can be used to get image URLs
 export function urlFor(source: typeof SanityImageSource) {
   return builder.image(source);
 }
@@ -90,65 +88,42 @@ export default function People() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white font-main-sans">
       <div>
-        <div
-          style={{
-            height: "25rem",
-            background: "#7c0b0a",
-            display: "flex",
-            flexDirection: "column",
-            position: "relative",
-            // alignItems: "flex-end",
-          }}
-        >
+        <div className="relative w-full h-[420px] overflow-hidden bg-primary">
           <img
-            className="height-[15rem]"
             src="/meeting.jpg"
             alt="Meeting image"
-            style={{
-              height: "inherit",
-              width: "auto",
-            }}
+            className="h-full w-full object-cover"
           />
-          <h1
-            style={{
-              position: "absolute",
-              bottom: "3rem",
-              marginLeft: "2rem",
-            }}
-            className="text-4xl text-white"
-          >
-            Experts
-          </h1>
-          <h2
-            style={{
-              position: "absolute",
-              bottom: "1rem",
-              marginLeft: "2rem",
-            }}
-            className="text-xl text-white"
-          >
-            The Conflict Research and Security Studies Lab brings together
-            experts across the disciplines.
-          </h2>
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+
+          <div className="absolute bottom-8 left-8 max-w-3xl text-white">
+            <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">
+              Experts
+            </h1>
+            <p className="font-main-sans mt-3 max-w-3xl text-sm font-light leading-6 md:text-base">
+              The Conflict Research and Security Studies Lab brings together
+              experts across the disciplines.
+            </p>
+          </div>
         </div>
         <div>
           <p
-            className="text-lg text-gray-900"
+            className="font-main-sans text-md text-gray-900"
             style={{ marginLeft: "3rem", marginTop: "2rem" }}
           >
             <b>{peopleData.length}</b>{" "}
             {peopleData.length === 1 ? "person" : "people"}{" "}
           </p>
         </div>
-        {/* <PeopleCount /> */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "2rem",
+            marginTop: "1.5rem",
           }}
         >
           <div>
@@ -159,7 +134,7 @@ export default function People() {
                 height: "3rem",
                 textIndent: "3rem",
               }}
-              className="border-solid border-2 border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400"
+              className="font-main-sans border-solid border-1 text-sm border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400"
               type="search"
               value={searchQuery}
               placeholder="Search"
@@ -170,7 +145,7 @@ export default function People() {
         </div>
         <div style={{ display: "flex" }}>
           <div style={{ marginLeft: "3rem", marginTop: "2rem" }}>
-            <h1 className="text-lg text-gray-900">
+            <h1 className="font-main-sans text-md text-gray-900">
               <b>Filters</b>
             </h1>
             <hr
@@ -178,7 +153,6 @@ export default function People() {
               style={{
                 width: "15rem",
                 marginTop: "0.1rem",
-                // marginBottom: "0.1rem",
               }}
             ></hr>
 
@@ -186,7 +160,7 @@ export default function People() {
               <fieldset>
                 {allInterests.map((interest) => (
                   <label
-                    className="text-base text-gray-600"
+                    className="font-main-sans text-sm text-base text-gray-600"
                     style={{
                       display: "block",
                       clear: "left",
@@ -225,7 +199,7 @@ export default function People() {
                 <fieldset>
                   {allTitles.map((title) => (
                     <label
-                      className="text-base text-gray-600"
+                      className="font-main-sans text-sm text-base text-gray-600"
                       style={{
                         display: "block",
                         clear: "left",
@@ -257,7 +231,7 @@ export default function People() {
             </div>
 
             <form action="https://google.com">
-              <button className="hover:bg-gray-100 mb-[1rem] mt-[1rem] p-[1rem] border-1 border-gray-400 rounded bg-gray-50 text-gray-600">
+              <button className="font-main-sans hover:bg-gray-100 mb-[1rem] mt-[1rem] p-[1rem] border-1 border-gray-400 bg-gray-50 text-gray-800">
                 Need something different? <br />
                 Find an expert here!
               </button>

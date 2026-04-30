@@ -59,8 +59,8 @@ export default function PeopleResults({ people }: PeopleResultsProps) {
               >
                 <b className="text-lg text-gray-900">{person.fullname}</b>
               </Link>
-              <p className="text-gray-500">{person.jobtitles.join(", ")}</p>
-              <p className="text-gray-900" style={{ marginTop: "1rem" }}>
+              <p className="text-md text-gray-500">{person.jobtitles.join(", ")}</p>
+              <p className="text-md text-gray-900" style={{ marginTop: "1rem" }}>
                 {person.interests.join(", ")}
               </p>
             </div>
