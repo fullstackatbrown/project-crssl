@@ -48,7 +48,7 @@ export const peopleType = defineType({
       name: "slug",
       type: "slug",
       options: {
-        source: "name",
+        source: "fullname",
       },
       validation: (Rule) => Rule.required(),
     }),
