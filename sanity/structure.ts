@@ -1,68 +1,46 @@
 import type { StructureResolver } from "sanity/structure";
 
-const demoTypes = ['exampleDataset', 'examplePerson']
+const demoTypes = ["exampleDataset", "examplePerson"];
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title("Content")
+    .title("Site Contents")
     .items([
-      S.documentTypeListItem("projectType").title("Projects"),
-      S.documentTypeListItem("paperType").title("Papers"),
-      S.documentTypeListItem("explainerSectionType").title("Explainers"),
+      S.documentTypeListItem("projectType").title("Research - Projects"),
+      S.documentTypeListItem("paperType").title("Research - Papers"),
+      S.documentTypeListItem("explainerSectionType").title(
+        "Research - Explainers",
+      ),
       S.documentTypeListItem("peopleType").title("People"),
       S.documentTypeListItem("dataset").title("Datasets"),
+      S.documentTypeListItem("newsType").title("News"),
+      S.documentTypeListItem("funderType").title("Funders"),
       S.divider(),
-      S.listItem()
-        .title('Data Page Hero')
-        .id('dataPage')
-        .child(
-          S.document()
-            .schemaType('dataPage')
-            .documentId('dataPage-singleton')
-        ),
-      S.divider(),
-      ...S.documentTypeListItems().filter(
-        (item) =>
-          item.getId() &&
-          ![
-            "projectType",
-            "paperType",
-            "dataset",
-            "peopleType",
-            "exampleDataset",
-            "examplePerson",
-            "dataPage",
-            "explainerSectionType",
-          ].includes(item.getId()!),
+      S.documentTypeListItem("dataPage").title("Data Page Header (Singleton)"),
+      S.documentTypeListItem("researchPage").title(
+        "Research Page Header (Singleton)",
       ),
-      S.divider(),
-      S.listItem()
-        .title('Example Types for Developers')
-        .child(
-          S.list()
-            .title('Examples')
-            .items([
-              S.documentTypeListItem("exampleDataset").title("Example Dataset"),
-              S.documentTypeListItem("examplePerson").title("Example Person"),
-            ])
-        ),
-    ])
-    .title('Menu')
-    .items([
-      ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !demoTypes.includes(item.getId()!),
+      S.documentTypeListItem("resourcesPage").title(
+        "Resources Page (Singleton)",
       ),
+      S.documentTypeListItem("about").title("About Page (Singleton)"),
       S.divider(),
-      S.listItem()
-        .title('Example Types for Developers')
-        .child(
-          S.list()
-            .title('Examples')
-            .items([
-              ...S.documentTypeListItems().filter(
-                (item) => item.getId() && demoTypes.includes(item.getId()!),
-              ),
-            ]),
-        )
+      // ...S.documentTypeListItems().filter(
+      //   (item) =>
+      //     item.getId() &&
+      //     ![
+      //       "projectType",
+      //       "paperType",
+      //       "dataset",
+      //       "peopleType",
+      //       "exampleDataset",
+      //       "examplePerson",
+      //       "dataPage",
+      //       "researchPage",
+      //       "explainerSectionType",
+      //       "resourcesPage",
+      //     ].includes(item.getId()!),
+      // ),
+      // S.divider(),
     ]);

@@ -21,10 +21,10 @@ const options = { next: { revalidate: 30 } };
 const portableTextComponents = {
   block: {
     h2: ({ children }: any) => (
-      <h2 className="mt-8 mb-4 font-serif text-3xl">{children}</h2>
+      <h2 className="mt-8 mb-4 font-main-serif text-3xl">{children}</h2>
     ),
     h3: ({ children }: any) => (
-      <h3 className="mt-7 mb-3 font-serif text-2xl">{children}</h3>
+      <h3 className="mt-7 mb-3 font-main-serif text-2xl">{children}</h3>
     ),
     h4: ({ children }: any) => (
       <h4 className="mt-6 mb-2 text-xl font-semibold">{children}</h4>
@@ -81,7 +81,7 @@ export default async function ExplainerPage({
   }
 
   return (
-    <div className="bg-white text-black">
+    <div className="bg-white font-main-sans text-black">
       <section
         className="px-6 py-14 text-white md:px-10 md:py-20"
         style={{ backgroundColor: MAROON }}
@@ -92,7 +92,7 @@ export default async function ExplainerPage({
               {result.sectionTitle}
             </p>
           )}
-          <h1 className="font-serif text-4xl md:text-5xl">{explainer.title}</h1>
+          <h1 className="font-main-serif text-4xl md:text-5xl">{explainer.title}</h1>
           {explainer.blurb && (
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/80">
               {explainer.blurb}

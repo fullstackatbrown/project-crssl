@@ -108,7 +108,7 @@ function FunderCard({ item }: { item: CardItem }) {
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      height: "240px",
+      height: "180px",
       flexShrink: 0,
       border: "1px solid #e5e7eb",
       padding: "20px",

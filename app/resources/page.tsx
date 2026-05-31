@@ -120,7 +120,8 @@ function LinkList({ items }: { items: ResourceItem[] }) {
 
 export default async function ResourcesAndTools() {
   const data = await getResourcesPage();
-
+  const youtubeId = "dQw4w9WgXcQ";
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Banner */}
@@ -169,6 +170,48 @@ export default async function ResourcesAndTools() {
             <LinkList items={section.items} />
           </section>
         ))}
+      </div>
+
+      {/* Bottom YouTube Embed */}
+      <div className="max-w-[860px] mx-auto px-8 pb-16">
+        <div className="border border-gray-200 p-6">
+          <h2 className="font-main-serif text-2xl text-[#7c0b0a] mb-3">
+            Featured Video
+          </h2>
+
+          <div className="relative w-full overflow-hidden rounded-sm pt-[56.25%]">
+            <iframe
+              className="absolute inset-0 h-full w-full"
+              src={`https://www.youtube.com/embed/${youtubeId}`}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+          <div className="mt-4">
+            <a
+              href="https://youtube.com/@yourchannel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                inline-flex items-center justify-center
+                bg-[#7c0b0a]
+                text-white
+                px-4 py-2
+                text-sm
+                font-main-sans
+                transition-all duration-300
+                hover:bg-[#5f0808]
+                hover:-translate-y-[1px]
+                hover:shadow-md
+              "
+            >
+              Visit Our Channel
+            </a>
+          </div>
+        </div>
+
       </div>
     </div>
   );

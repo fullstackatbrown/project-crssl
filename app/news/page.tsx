@@ -34,7 +34,7 @@ export default async function NewsPage() {
 
       {/* Hero */}
       <div className="relative w-full h-[420px] overflow-hidden bg-primary">
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+        <div className="absolute inset-0" />
         <div className="absolute bottom-8 left-8 max-w-3xl text-white">
           <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">
             News
@@ -57,14 +57,14 @@ export default async function NewsPage() {
                 <img
                   src={item.imageUrl}
                   alt={item.imageAlt ?? item.title}
-                  className="w-[140px] h-[90px] object-cover flex-shrink-0"
+                  className="w-[140px] h-[100px] object-cover flex-shrink-0"
                 />
               ) : (
-                <div className="w-[140px] h-[90px] bg-gray-100 flex-shrink-0" />
+                <div className="w-[140px] h-[100px] bg-gray-100 flex-shrink-0" />
               )}
 
               <div className="flex-1">
-                <h2 className="font-main-serif text-[1rem] font-bold text-gray-900 mb-1">
+                <h2 className="font-main-serif text-xl font-semibold text-gray-900 mb-1">
                   {item.title}
                 </h2>
                 <p className="font-main-sans text-[0.85rem] text-gray-500 mb-2 leading-relaxed">

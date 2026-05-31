@@ -50,7 +50,7 @@ function ExplainerCard({
 }) {
   return (
     <article
-      className="flex min-h-48 flex-col justify-between p-6"
+      className="flex font-main-sans min-h-48 flex-col justify-between p-6"
       style={
         highlighted
           ? { backgroundColor: MAROON }
@@ -63,7 +63,7 @@ function ExplainerCard({
       }
     >
       <h3
-        className="font-serif text-xl leading-snug"
+        className="font-main-serif text-xl leading-snug"
         style={{ color: highlighted ? "#ffffff" : "#000000" }}
       >
         {card.title}
@@ -86,7 +86,7 @@ export default async function ExplainersPage() {
     <div className="bg-white text-black">
       <ResearchBanner active="explainers" />
 
-      <section className="mx-auto max-w-6xl border-x border-zinc-300 bg-white">
+      <section className="mx-auto font-main-sans max-w-6xl border-x border-zinc-300 bg-white">
         
 
         <div className="px-6 py-14 md:px-10">
@@ -98,7 +98,7 @@ export default async function ExplainersPage() {
             sections.map((section) => (
               <div key={section._id} className="mb-14">
                 <h2
-                  className="font-serif text-3xl md:text-4xl"
+                  className="font-main-serif text-3xl md:text-4xl"
                   style={{ color: MAROON }}
                 >
                   {section.title}
