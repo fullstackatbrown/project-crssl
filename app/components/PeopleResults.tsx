@@ -20,6 +20,7 @@ export type Person = {
   recentwork: string;
   jobtitles: string[];
   interests: string[];
+  testimonial?: string;
   slug: { current: string };
 };
 
@@ -40,30 +41,53 @@ export default function PeopleResults({ people }: PeopleResultsProps) {
       <div className="flex flex-col gap-y-4">
         {people.map((person) => (
           <div
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: "flex", alignItems: "center", gap: "2rem" }}
             className="personlist"
             key={person._id}
           >
-            <div>
-              <Image
-                alt="generic profile image"
-                src={urlFor(person.image).url()}
-                width={150}
-                height={150}
-              />
+            <div style={{ display: "flex", alignItems: "center", flex: "0 0 auto" }}>
+              <div>
+                <Image
+                  alt="generic profile image"
+                  src={urlFor(person.image).url()}
+                  width={150}
+                  height={150}
+                />
+              </div>
+              <div style={{ marginLeft: "1rem" }}>
+                <Link
+                  className="hover:underline"
+                  href={`/people/${person.slug.current}`}
+                >
+                  <b className="text-lg text-gray-900">{person.fullname}</b>
+                </Link>
+                <p className="text-md text-gray-500">{person.jobtitles.join(", ")}</p>
+                <p className="text-md text-gray-900" style={{ marginTop: "1rem" }}>
+                  {person.interests.join(", ")}
+                </p>
+              </div>
             </div>
-            <div style={{ marginLeft: "1rem" }}>
-              <Link
-                className="hover:underline"
-                href={`/people/${person.slug.current}`}
+            {person.testimonial && (
+              <div
+                style={{
+                  flex: "1",
+                  padding: "1.5rem",
+                  marginLeft: "3rem"
+                }}
               >
-                <b className="text-lg text-gray-900">{person.fullname}</b>
-              </Link>
-              <p className="text-md text-gray-500">{person.jobtitles.join(", ")}</p>
-              <p className="text-md text-gray-900" style={{ marginTop: "1rem" }}>
-                {person.interests.join(", ")}
-              </p>
-            </div>
+                <p
+                  className="text-base text-gray-700 italic font-main-sans"
+                  style={{
+                    overflow: "hidden",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: "vertical"
+                  }}
+                >
+                  "{person.testimonial}"
+                </p>
+              </div>
+            )}
           </div>
         ))}
       </div>

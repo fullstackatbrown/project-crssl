@@ -20,7 +20,6 @@ export const peopleType = defineType({
     defineField({
       name: "email",
       type: "string",
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "bio",
@@ -30,7 +29,6 @@ export const peopleType = defineType({
     defineField({
       name: "recentwork",
       type: "url",
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "jobtitles",
@@ -45,10 +43,15 @@ export const peopleType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "testimonial",
+      type: "text",
+      description: "A testimonial or quote from/about this person",
+    }),
+    defineField({
       name: "slug",
       type: "slug",
       options: {
-        source: "name",
+        source: "fullname",
       },
       validation: (Rule) => Rule.required(),
     }),

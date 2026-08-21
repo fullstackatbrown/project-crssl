@@ -14,7 +14,7 @@ export function urlFor(source: typeof SanityImageSource) {
 }
 
 const DATASET_QUERY = `*[_type == "peopleType" && slug.current == $slug][0]
-  {_id, fullname, email, bio, image, recentwork, jobtitles, interests, slug}`;
+  {_id, fullname, email, bio, image, recentwork, jobtitles, interests, testimonial, slug}`;
 
 const options = { next: { revalidate: 30 } };
 
@@ -42,16 +42,25 @@ export default async function PersonProfile({
           <p className="text-gray-500 font-main-sans mt-[0.6rem] ml-[6rem]">
             {dataset.jobtitles.join(", ")}
           </p>
-          <p className="mt-[0.5rem] font-main-sans text-black mt-[1.5rem] ml-[6rem]">
-            {" "}
-            Email:{" "}
-            <a
-              className="hover:underline font-main-sans text-black"
-              href={`mailto:${dataset.email}`}
-            >
-              {dataset.email}
-            </a>
-          </p>
+          {dataset.email && (
+            <p className="mt-[0.5rem] font-main-sans text-black mt-[1.5rem] ml-[6rem]">
+              {" "}
+              Email:{" "}
+              <a
+                className="hover:underline font-main-sans text-black"
+                href={`mailto:${dataset.email}`}
+              >
+                {dataset.email}
+              </a>
+            </p>
+          )}
+          {dataset.testimonial && (
+            <div className="ml-[6rem] mr-[5rem] mt-[2rem] mb-[2rem]">
+              <p className="text-lg font-main-sans text-gray-700 italic">
+                "{dataset.testimonial}"
+              </p>
+            </div>
+          )}
         </div>
         <div className=" mb-[5rem] mt-[5rem] ml-auto mr-[5rem]">
           <Image
@@ -81,12 +90,14 @@ export default async function PersonProfile({
           <p className="text-lg font-main-sans text-gray-900 mt-[6rem] mb-[1rem] ml-[6rem] mr-[5rem]">
             {dataset.bio}
           </p>
-          <a
-            className="font-bold font-main-sans text-gray-900 text-lg ml-[6rem] hover:underline"
-            href={`${dataset.recentwork}`}
-          >
-            Their most recent work
-          </a>
+          {dataset.recentwork && (
+            <a
+              className="font-bold font-main-sans text-gray-900 text-lg ml-[6rem] hover:underline"
+              href={`${dataset.recentwork}`}
+            >
+              Their most recent work
+            </a>
+          )}
         </div>
       </div>
     </div>

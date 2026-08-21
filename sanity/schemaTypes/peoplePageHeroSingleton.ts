@@ -45,6 +45,35 @@ export const peoplePageType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: "excludedTitles",
+      title: "Excluded Job Titles",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "Job titles to exclude from the initial view (e.g., 'Alumni'). If none provided, all people will be shown initially.",
+    }),
+    defineField({
+      name: "expertFinderButton",
+      title: "Expert Finder Button",
+      type: "object",
+      description: "Configure the 'Find an expert' button below the filters",
+      fields: [
+        defineField({
+          name: "text",
+          title: "Button Text",
+          type: "text",
+          initialValue: "Need something different?\nFind an expert here!",
+          description: "Text to display on the button (use line breaks for multiple lines)",
+        }),
+        defineField({
+          name: "url",
+          title: "Button URL",
+          type: "url",
+          initialValue: "https://google.com",
+          description: "Where the button should link to",
+        }),
+      ],
+    }),
   ],
   preview: {
     select: { title: "title" },
