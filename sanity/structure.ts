@@ -1,7 +1,5 @@
 import type { StructureResolver } from "sanity/structure";
 
-const demoTypes = ["exampleDataset", "examplePerson"];
-
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -17,6 +15,27 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("newsType").title("News"),
       S.documentTypeListItem("funderType").title("Funders"),
       S.divider(),
+      S.listItem()
+        .title("Homepage Header (Singleton)")
+        .child(
+          S.document()
+            .schemaType("homeHeader")
+            .documentId("homeHeader"),
+        ),
+      S.listItem()
+        .title("Footer (Singleton)")
+        .child(
+          S.document()
+            .schemaType("footer")
+            .documentId("footer"),
+        ),
+      S.listItem()
+        .title("Experts / People Page Header (Singleton)")
+        .child(
+          S.document()
+            .schemaType("peoplePage")
+            .documentId("peoplePage"),
+        ),
       S.documentTypeListItem("dataPage").title("Data Page Header (Singleton)"),
       S.documentTypeListItem("researchPage").title(
         "Research Page Header (Singleton)",

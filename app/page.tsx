@@ -1,6 +1,7 @@
 import { client } from '../sanity/lib/client'
 import { HOME_QUERY } from './lib/queries'
 import Link from 'next/link'
+import Image from 'next/image'
 import ScrollRow from './components/ScrollRow'
 
 type CardItem = {
@@ -11,7 +12,28 @@ type CardItem = {
   imageUrl?: string
 }
 
+type HomeHeader = {
+  title?: string
+  description?: string
+  bannerMedia?: {
+    mediaType?: 'image' | 'video'
+    image?: {
+      alt?: string
+      asset?: {
+        url?: string
+      }
+    }
+    video?: {
+      asset?: {
+        url?: string
+        mimeType?: string
+      }
+    }
+  }
+}
+
 type Sections = {
+  homeHeader?: HomeHeader | null
   news?: CardItem[]
   recentWork?: CardItem[]
   datasets?: CardItem[]
@@ -47,31 +69,74 @@ function SlashLogo({ size = 1, color = "var(--color-primary)" }: { size?: number
   )
 }
 
+function HomepageBannerMedia({ homeHeader }: { homeHeader?: HomeHeader | null }) {
+  const imageUrl = homeHeader?.bannerMedia?.image?.asset?.url
+  const imageAlt =
+    homeHeader?.bannerMedia?.image?.alt ??
+    homeHeader?.title ??
+    "CRSSL homepage banner"
+  const videoUrl = homeHeader?.bannerMedia?.video?.asset?.url
+  const videoType = homeHeader?.bannerMedia?.video?.asset?.mimeType ?? "video/mp4"
+
+  if (homeHeader?.bannerMedia?.mediaType === "video" && videoUrl) {
+    return (
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-label={homeHeader.title ?? "Homepage banner video"}
+      >
+        <source src={videoUrl} type={videoType} />
+      </video>
+    )
+  }
+
+  if (imageUrl) {
+    return (
+      <Image
+        src={imageUrl}
+        alt={imageAlt}
+        fill
+        sizes="(min-width: 768px) 50vw, 100vw"
+        className="object-cover"
+      />
+    )
+  }
+
+  return null
+}
+
 export default async function Home() {
   const sections: Sections = await client.fetch(HOME_QUERY)
+  const homeHeader = sections.homeHeader
+  const hasHomeBannerMedia = Boolean(
+    homeHeader?.bannerMedia?.image?.asset?.url ||
+      homeHeader?.bannerMedia?.video?.asset?.url,
+  )
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
+      <div className="min-h-screen bg-white text-zinc-900">
 
       {/* Hero */}
-      <section className="bg-primary flex items-stretch px-5 py-6 h-[420px] md:px-20 md:py-7 md:min-h-[260px]">
-        {/* Left: slash logo directly above text */}
-        <div className="flex flex-1 flex-col justify-end gap-2 pb-1">
-          <div className="ml-0.5 mb-1">
-            <SlashLogo size={1.2} color="white" />
-          </div>
-          <p className="text-white font-main-serif text-[0.95rem] leading-relaxed max-w-[420px] m-0 md:text-[1.1rem]">
-            The Conflict Research and Security Studies (CRSS) Lab offers students hands-on experience in data collection, data analysis, and research methods.
-          </p>
-        </div>
+      <section className="relative min-h-[480px] overflow-hidden bg-primary md:min-h-[540px]">
+        {hasHomeBannerMedia ? (
+          <HomepageBannerMedia homeHeader={homeHeader} />
+        ) : null}
 
-        {/* Right: globe — hidden on mobile, visible on desktop */}
-        <div className="hidden md:flex flex-1 justify-end items-center pr-10">
-          <img
-            src="/globe.png"
-            alt="Globe"
-            className="w-[380px] h-auto object-contain"
-          />
+        <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-black/65 via-black/30 to-transparent" />
+
+        <div className="absolute inset-x-0 bottom-0 flex items-end px-5 py-6 md:px-20 md:py-10">
+          <div className="max-w-3xl text-white">
+            <div className="ml-0.5 mb-2">
+              <SlashLogo size={1.2} color="white" />
+            </div>
+            <p className="font-main-serif text-[0.95rem] leading-relaxed m-0 md:text-[1.1rem]">
+              {homeHeader?.description ??
+                "The Conflict Research and Security Studies (CRSS) Lab offers students hands-on experience in data collection, data analysis, and research methods."}
+            </p>
+          </div>
         </div>
       </section>
 

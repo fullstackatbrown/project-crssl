@@ -44,6 +44,37 @@ export const explainerType = defineType({
       description: 'The full body of the explainer page.',
     }),
     defineField({
+      name: 'attachments',
+      title: 'Attachments',
+      type: 'array',
+      description: 'Upload supporting files like codebooks, appendices, or scripts.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Attachment Title',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'file',
+              title: 'File',
+              type: 'file',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'title',
+              subtitle: 'file.asset.originalFilename',
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'publishedAt',
       type: 'datetime',
     }),

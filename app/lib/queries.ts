@@ -1,4 +1,25 @@
 export const HOME_QUERY = `{
+  "homeHeader": *[_type == "homeHeader"][0] {
+    _id,
+    title,
+    description,
+    bannerMedia {
+      mediaType,
+      image {
+        alt,
+        asset->{
+          url
+        }
+      },
+      video {
+        asset->{
+          url,
+          mimeType,
+          originalFilename
+        }
+      }
+    }
+  },
   "datasets": *[_type == "dataset"] | order(date desc)[0..4] {
     _id,
     "title": name,
@@ -25,6 +46,14 @@ export const HOME_QUERY = `{
     "imageUrl": logo.asset->url,
     url,
   },
+}`;
+
+export const FOOTER_QUERY = `*[_type == "footer"][0] {
+  _id,
+  title,
+  linkedinUrl,
+  blueskyUrl,
+  githubUrl,
 }`;
 
 /**

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { client } from "@/sanity/lib/client";
 
 async function getResourcesPage() {
@@ -6,6 +7,8 @@ async function getResourcesPage() {
       title,
       bannerImage { asset-> { url }, alt },
       bannerSubtitle,
+      featuredVideoUrl,
+      featuredChannelUrl,
       sections[] {
         title,
         description,
@@ -37,6 +40,15 @@ type Section = {
   title: string;
   description: string;
   items: ResourceItem[];
+};
+
+type ResourcesPageData = {
+  title?: string;
+  bannerImage?: { asset?: { url?: string }; alt?: string };
+  bannerSubtitle?: string;
+  featuredVideoUrl?: string;
+  featuredChannelUrl?: string;
+  sections?: Section[];
 };
 
 const TYPE_LABEL: Record<string, string> = {
@@ -119,18 +131,48 @@ function LinkList({ items }: { items: ResourceItem[] }) {
 }
 
 export default async function ResourcesAndTools() {
-  const data = await getResourcesPage();
-  const youtubeId = "dQw4w9WgXcQ";
+  const data = (await getResourcesPage()) as ResourcesPageData;
+
+  const extractYoutubeId = (url?: string) => {
+    if (!url) return undefined;
+
+    try {
+      const parsedUrl = new URL(url);
+
+      if (parsedUrl.hostname.includes("youtu.be")) {
+        return parsedUrl.pathname.split("/").filter(Boolean)[0];
+      }
+
+      if (parsedUrl.pathname.includes("/shorts/")) {
+        return parsedUrl.pathname.split("/shorts/")[1]?.split("/")[0];
+      }
+
+      if (parsedUrl.pathname.includes("/embed/")) {
+        return parsedUrl.pathname.split("/embed/")[1]?.split("/")[0];
+      }
+
+      return parsedUrl.searchParams.get("v") ?? undefined;
+    } catch {
+      return undefined;
+    }
+  };
+
+  const featuredVideoId =
+    extractYoutubeId(data.featuredVideoUrl) ?? "dQw4w9WgXcQ";
+  const featuredChannelUrl = data.featuredChannelUrl ?? "https://youtube.com/@yourchannel";
+  const sections = data.sections ?? [];
   
   return (
     <div className="min-h-screen bg-white">
       {/* Banner */}
       <div className="relative w-full h-[420px] overflow-hidden">
         {data.bannerImage?.asset?.url && (
-          <img
+          <Image
             src={data.bannerImage.asset.url}
             alt={data.bannerImage.alt ?? data.title ?? ""}
-            className="h-full w-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
         )}
 
@@ -150,7 +192,7 @@ export default async function ResourcesAndTools() {
 
       {/* Page */}
       <div className="max-w-[860px] mx-auto px-8 py-12 text-[var(--color-foreground)]">
-        {data.sections.map((section: Section) => (
+        {sections.map((section: Section) => (
           <section
             key={section.title}
             className="mb-8 border border-gray-200"
@@ -182,7 +224,7 @@ export default async function ResourcesAndTools() {
           <div className="relative w-full overflow-hidden rounded-sm pt-[56.25%]">
             <iframe
               className="absolute inset-0 h-full w-full"
-              src={`https://www.youtube.com/embed/${youtubeId}`}
+              src={`https://www.youtube.com/embed/${featuredVideoId}`}
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -191,7 +233,7 @@ export default async function ResourcesAndTools() {
 
           <div className="mt-4">
             <a
-              href="https://youtube.com/@yourchannel"
+              href={featuredChannelUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="

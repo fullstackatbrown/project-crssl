@@ -1,21 +1,10 @@
 "use client";
-import { defineQuery } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 import { Search } from "lucide-react";
-import createImageUrlBuilder from "@sanity/image-url";
-import type SanityImageSource from "@sanity/image-url";
 import { useState, useEffect } from "react";
 import PeopleResults, { type Person } from "../components/PeopleResults";
 import { buildSearchQuery, buildTagQuery } from "../lib/queries";
-import Image from "next/image";
-
-const builder = createImageUrlBuilder(client);
-
-export function urlFor(source: typeof SanityImageSource) {
-  return builder.image(source);
-}
-
-const options = { next: { revalidate: 30 } };
+import PeopleBanner from "../components/PeopleBanner";
 
 const DEBOUNCE_MS = 400;
 
@@ -90,25 +79,7 @@ export default function People() {
   return (
     <div className="bg-white font-main-sans">
       <div>
-        <div className="relative w-full h-[420px] overflow-hidden bg-primary">
-          <img
-            src="/meeting.jpg"
-            alt="Meeting image"
-            className="h-full w-full object-cover"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
-
-          <div className="absolute bottom-8 left-8 max-w-3xl text-white">
-            <h1 className="font-main-serif text-4xl font-semibold tracking-tight md:text-5xl">
-              Experts
-            </h1>
-            <p className="font-main-sans mt-3 max-w-3xl text-sm font-light leading-6 md:text-base">
-              The Conflict Research and Security Studies Lab brings together
-              experts across the disciplines.
-            </p>
-          </div>
-        </div>
+        <PeopleBanner />
         <div>
           <p
             className="font-main-sans text-md text-gray-900"

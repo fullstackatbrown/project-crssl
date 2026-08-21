@@ -7,12 +7,13 @@ const MAROON = "#6b0f1a";
 type ExplainerCard = {
   _key: string;
   title: string;
-  slug: { current: string };
+  slug: string;
 };
 
 type ExplainerSection = {
   _id: string;
   title: string;
+  slug: string;
   description: string;
   explainers: ExplainerCard[];
 };
@@ -21,11 +22,12 @@ const EXPLAINERS_QUERY = `
   *[_type == "explainerSectionType"] | order(order asc) {
     _id,
     title,
+    "slug": coalesce(slug.current, array::join(string::split(lower(title), " "), "-")),
     description,
     explainers[] {
       _key,
       title,
-      slug
+      "slug": coalesce(slug.current, array::join(string::split(lower(title), " "), "-"))
     }
   }
 `;
@@ -44,38 +46,45 @@ async function getExplainerSections(): Promise<ExplainerSection[]> {
 function ExplainerCard({
   card,
   highlighted,
+  sectionSlug,
 }: {
   card: ExplainerCard;
   highlighted: boolean;
+  sectionSlug: string;
 }) {
   return (
-    <article
-      className="flex font-main-sans min-h-48 flex-col justify-between p-6"
-      style={
-        highlighted
-          ? { backgroundColor: MAROON }
-          : {
-              backgroundColor: "#ffffff",
-              border: "1px solid #e4e4e7",
-              borderBottomWidth: "3px",
-              borderBottomColor: MAROON,
-            }
-      }
+    <Link
+      href={`/research/explainers/${sectionSlug}/${card.slug}`}
+      aria-label={`Read ${card.title}`}
+      className="block h-full"
     >
-      <h3
-        className="font-main-serif text-xl leading-snug"
-        style={{ color: highlighted ? "#ffffff" : "#000000" }}
+      <article
+        className="flex h-full min-h-48 cursor-pointer flex-col justify-between p-6 font-main-sans transition-transform duration-200 hover:-translate-y-[1px]"
+        style={
+          highlighted
+            ? { backgroundColor: MAROON }
+            : {
+                backgroundColor: "#ffffff",
+                border: "1px solid #e4e4e7",
+                borderBottomWidth: "3px",
+                borderBottomColor: MAROON,
+              }
+        }
       >
-        {card.title}
-      </h3>
-      <Link
-        href={`/research/explainers/${card.slug.current}`}
-        className="mt-4 inline-block text-sm underline underline-offset-2"
-        style={{ color: highlighted ? "#ffffff" : MAROON }}
-      >
-        Learn more
-      </Link>
-    </article>
+        <h3
+          className="font-main-serif text-xl leading-snug"
+          style={{ color: highlighted ? "#ffffff" : "#000000" }}
+        >
+          {card.title}
+        </h3>
+        <span
+          className="mt-4 inline-block text-sm underline underline-offset-2"
+          style={{ color: highlighted ? "#ffffff" : MAROON }}
+        >
+          Learn more
+        </span>
+      </article>
+    </Link>
   );
 }
 
@@ -115,6 +124,7 @@ export default async function ExplainersPage() {
                         key={card._key}
                         card={card}
                         highlighted={i === 0}
+                        sectionSlug={section.slug}
                       />
                     ))}
                   </div>

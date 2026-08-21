@@ -35,6 +35,20 @@ export const resourcesType = defineType({
     }),
 
     defineField({
+      name: "featuredVideoUrl",
+      title: "Featured Video URL",
+      type: "url",
+      description: "Paste the YouTube URL for the featured video embed.",
+    }),
+
+    defineField({
+      name: "featuredChannelUrl",
+      title: "Featured Channel URL",
+      type: "url",
+      description: "Paste the YouTube channel or channel page URL.",
+    }),
+
+    defineField({
       name: "sections",
       title: "Sections",
       type: "array",
