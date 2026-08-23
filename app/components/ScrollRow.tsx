@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import Link from 'next/link'
 
 function SlashLogo({ size = 1 }: { size?: number }) {
   return (
@@ -27,6 +28,7 @@ type CardItem = {
   description?: string
   date?: string
   imageUrl?: string
+  slug?: { current: string }
 }
 
 function formatDate(dateStr?: string) {
@@ -51,33 +53,30 @@ function PlaceholderCard() {
   )
 }
 
-function ContentCard({ item }: { item: CardItem }) {
+function ContentCard({ item, linkPrefix }: { item: CardItem; linkPrefix?: string }) {
   const hasImage = Boolean(item.imageUrl)
+  const href = item.slug?.current && linkPrefix ? `${linkPrefix}/${item.slug.current}` : undefined
 
-  if (hasImage) {
+  const content = hasImage ? (
     // Image layout: fixed height, image on top
-    return (
-      <div className="min-w-[300px] w-[300px] shrink-0 flex flex-col h-[240px] snap-start">
-        <img
-          src={item.imageUrl}
-          alt={item.title}
-          className="w-full aspect-video object-cover mb-4"
-        />
-        <p className="font-main-sans text-[1rem] text-[#111] leading-snug mb-4 line-clamp-2">
-          {item.title}
-        </p>
-        <div className="flex justify-between items-center mt-auto">
-          <span className="font-main-sans text-[0.75rem] text-[#999]">
-            {formatDate(item.date)}
-          </span>
-          <SlashLogo size={0.6} />
-        </div>
+    <div className="min-w-[300px] w-[300px] shrink-0 flex flex-col h-[240px] snap-start">
+      <img
+        src={item.imageUrl}
+        alt={item.title}
+        className="w-full aspect-video object-cover mb-4"
+      />
+      <p className="font-main-sans text-[1rem] text-[#111] leading-snug mb-4 line-clamp-2">
+        {item.title}
+      </p>
+      <div className="flex justify-between items-center mt-auto">
+        <span className="font-main-sans text-[0.75rem] text-[#999]">
+          {formatDate(item.date)}
+        </span>
+        <SlashLogo size={0.6} />
       </div>
-    )
-  }
-
-  // Text-only layout: no image, title is prominent, more room for description
-  return (
+    </div>
+  ) : (
+    // Text-only layout: no image, title is prominent, more room for description
     <div className="min-w-[300px] w-[300px] shrink-0 flex flex-col h-[240px] snap-start">
       {item.title && (
         <p className="font-main-sans text-lg text-[#111] leading-snug mb-3 line-clamp-2">
@@ -97,6 +96,16 @@ function ContentCard({ item }: { item: CardItem }) {
       </div>
     </div>
   )
+
+  if (href) {
+    return (
+      <Link href={href} className="cursor-pointer hover:opacity-80 transition-opacity block">
+        {content}
+      </Link>
+    )
+  }
+
+  return content
 }
 
 function FunderCard({ item }: { item: CardItem }) {
@@ -133,17 +142,17 @@ function FunderCard({ item }: { item: CardItem }) {
   )
 }
 
-function renderCards(items: CardItem[], variant: "default" | "funder") {
+function renderCards(items: CardItem[], variant: "default" | "funder", linkPrefix?: string) {
   if (items.length === 0) {
     return [1, 2, 3, 4, 5].map(i => <PlaceholderCard key={i} />)
   }
   if (variant === "funder") {
     return items.map(item => <FunderCard key={item._id} item={item} />)
   }
-  return items.map(item => <ContentCard key={item._id} item={item} />)
+  return items.map(item => <ContentCard key={item._id} item={item} linkPrefix={linkPrefix} />)
 }
 
-export default function ScrollRow({ items, variant = "default" }: { items: CardItem[], variant?: "default" | "funder" }) {
+export default function ScrollRow({ items, variant = "default", linkPrefix }: { items: CardItem[], variant?: "default" | "funder", linkPrefix?: string }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -168,7 +177,7 @@ export default function ScrollRow({ items, variant = "default" }: { items: CardI
         className="hide-scrollbar flex gap-6 overflow-x-scroll snap-x snap-mandatory pb-4 pr-10"
         style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
       >
-        {renderCards(items, variant)}
+        {renderCards(items, variant, linkPrefix)}
       </div>
 
       {/* Progress bar */}

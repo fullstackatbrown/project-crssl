@@ -1,4 +1,5 @@
 import { client } from "@/sanity/lib/client";
+import Link from "next/link";
 
 type NewsItem = {
   _id: string;
@@ -7,6 +8,7 @@ type NewsItem = {
   date: string;
   imageUrl?: string;
   imageAlt?: string;
+  slug?: { current: string };
 };
 
 const NEWS_QUERY = `*[_type == "newsType"] | order(date desc) {
@@ -16,6 +18,7 @@ const NEWS_QUERY = `*[_type == "newsType"] | order(date desc) {
   date,
   "imageUrl": image.asset->url,
   "imageAlt": image.alt,
+  slug
 }`;
 
 function formatDate(dateStr: string) {
@@ -50,21 +53,21 @@ export default async function NewsPage() {
         {news.length === 0 && (
           <p className="font-main-sans text-gray-400">No news yet.</p>
         )}
-        {news.map((item, i) => (
-          <div key={item._id}>
-            <div className="flex gap-6 items-start py-6">
+        {news.map((item, i) => {
+          const content = (
+            <>
               {item.imageUrl ? (
                 <img
                   src={item.imageUrl}
                   alt={item.imageAlt ?? item.title}
-                  className="w-[140px] h-[100px] object-cover flex-shrink-0"
+                  className="w-[140px] h-[100px] object-cover flex-shrink-0 rounded"
                 />
               ) : (
-                <div className="w-[140px] h-[100px] bg-gray-100 flex-shrink-0" />
+                <div className="w-[140px] h-[100px] bg-gray-100 flex-shrink-0 rounded" />
               )}
 
               <div className="flex-1">
-                <h2 className="font-main-serif text-xl font-semibold text-gray-900 mb-1">
+                <h2 className="font-main-serif text-xl font-semibold text-gray-900 mb-1 hover:text-gray-700 transition-colors">
                   {item.title}
                 </h2>
                 <p className="font-main-sans text-[0.85rem] text-gray-500 mb-2 leading-relaxed">
@@ -74,11 +77,28 @@ export default async function NewsPage() {
                   {formatDate(item.date)}
                 </p>
               </div>
-            </div>
+            </>
+          );
 
-            {i < news.length - 1 && <hr className="border-gray-200" />}
-          </div>
-        ))}
+          return (
+            <div key={item._id}>
+              {item.slug?.current ? (
+                <Link
+                  href={`/news/${item.slug.current}`}
+                  className="flex gap-6 items-start py-6 hover:bg-gray-50 transition-colors -mx-4 px-4 rounded-lg"
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div className="flex gap-6 items-start py-6 -mx-4 px-4">
+                  {content}
+                </div>
+              )}
+
+              {i < news.length - 1 && <hr className="border-gray-200" />}
+            </div>
+          );
+        })}
       </main>
     </div>
   );

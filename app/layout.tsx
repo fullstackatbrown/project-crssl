@@ -17,6 +17,13 @@ const mainSans = Manrope({
 export const metadata: Metadata = {
   title: "CRSSL Lab",
   description: "CRSSL Lab Website",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/rss.xml", title: "CRSSL News RSS Feed" },
+      ],
+    },
+  },
 };
 
 export default function RootLayout({

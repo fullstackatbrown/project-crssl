@@ -39,6 +39,21 @@ export const newsType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: "body",
+      title: "Article Body",
+      type: "blockContent",
+      description: "The full article content in rich text format",
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: {
+        source: "title",
+      },
+      validation: (Rule) => Rule.required(),
+    }),
   ],
   preview: {
     select: { title: "title", subtitle: "date" },

@@ -44,8 +44,9 @@ const SECTION_CONFIG: {
   key: keyof Sections
   label: string
   href: string
+  linkPrefix?: string
 }[] = [
-  { key: 'news',       label: 'News',        href: '/news' },
+  { key: 'news',       label: 'News',        href: '/news', linkPrefix: '/news' },
   { key: 'recentWork', label: 'Recent Work',  href: '/projects' },
   { key: 'datasets',   label: 'Data',         href: '/data' },
 ]
@@ -142,7 +143,7 @@ export default async function Home() {
 
       {/* Content Sections */}
       <main>
-        {SECTION_CONFIG.map(({ key, label, href }) => {
+        {SECTION_CONFIG.map(({ key, label, href, linkPrefix }) => {
           const items = sections[key] ?? []
 
           return (
@@ -159,7 +160,7 @@ export default async function Home() {
               </div>
 
               <div className="min-w-0">
-                <ScrollRow items={items} />
+                <ScrollRow items={items} linkPrefix={linkPrefix} />
               </div>
             </section>
           )

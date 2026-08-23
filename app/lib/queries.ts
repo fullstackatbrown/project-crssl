@@ -39,6 +39,7 @@ export const HOME_QUERY = `{
     description,
     date,
     "imageUrl": image.asset->url,
+    slug,
   },
   "funders": *[_type == "funderType"] | order(order asc) {
     _id,
