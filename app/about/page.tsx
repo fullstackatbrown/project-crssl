@@ -1,6 +1,36 @@
 import { PortableText } from "@portabletext/react";
 import { sanityFetch } from "@/sanity/lib/live";
 
+type AboutData = {
+  title?: string;
+  heroTitle?: string;
+  heroDescription?: string;
+  heroImage?: {
+    asset?: {
+      url?: string;
+    };
+    alt?: string;
+  };
+  missionBody?: any;
+  missionImage?: {
+    asset?: {
+      url?: string;
+    };
+    alt?: string;
+  };
+  historyTitle?: string;
+  historyItems?: Array<{
+    year?: string;
+    body?: any;
+  }>;
+  impactTitle?: string;
+  impactBody?: any;
+  sections?: Array<{
+    title?: string;
+    body?: any;
+  }>;
+};
+
 const ABOUT_QUERY = `*[_type == "about"][0]{
   title,
   heroTitle,
@@ -34,7 +64,7 @@ const ABOUT_QUERY = `*[_type == "about"][0]{
 export default async function AboutPage() {
   const { data } = await sanityFetch({
     query: ABOUT_QUERY,
-  });
+  }) as { data: AboutData };
 
   if (!data) {
     return (

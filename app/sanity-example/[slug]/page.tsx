@@ -44,7 +44,7 @@ export default async function SanityExampleDataset({
                 <div>
                     <h2>Files:</h2>
                     <ul>
-                        {dataset.files.map((file) => (
+                        {dataset.files.map((file: any) => (
                             <li key={file._key}>
                                 <a href={`${file.url}?dl=`} download className="hover:underline">
                                     {file.filename ?? file._key}
@@ -58,7 +58,7 @@ export default async function SanityExampleDataset({
                 <h2>Links:</h2>
                 {dataset.links && dataset.links.length > 0 ? (
                     <ul>
-                        {dataset.links.map((link) => (
+                        {dataset.links.map((link: any) => (
                             <li key={link._key}>
                                 <a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
                                     {link.title || link.url}

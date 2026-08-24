@@ -58,7 +58,7 @@ export const paperType = defineType({
     defineField({ name: "tags", type: "array", of: [{ type: "string" }] }),
   ],
   validation: (Rule) =>
-    Rule.custom((doc: { pdf?: unknown; externalUrl?: string } | undefined) => {
+    Rule.custom((doc: any) => {
       // Require at least one way for users to access the paper.
       if (doc?.pdf || doc?.externalUrl) return true;
       return "Add either a PDF or an external URL";

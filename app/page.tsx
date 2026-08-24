@@ -144,7 +144,7 @@ export default async function Home() {
       {/* Content Sections */}
       <main>
         {SECTION_CONFIG.map(({ key, label, href, linkPrefix }) => {
-          const items = sections[key] ?? []
+          const items = (sections[key] ?? []) as CardItem[]
 
           return (
             <section

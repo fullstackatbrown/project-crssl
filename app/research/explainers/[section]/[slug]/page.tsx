@@ -28,34 +28,24 @@ const EXPLAINER_QUERY = `
 
 const options = { next: { revalidate: 30 } };
 
-type PortableTextBlockProps = {
-  children: ReactNode;
-};
-
-type PortableTextLinkProps = {
-  value?: {
-    href?: string;
-  };
-  children: ReactNode;
-};
 
 const portableTextComponents: PortableTextComponents = {
   block: {
-    h2: ({ children }: PortableTextBlockProps) => (
+    h2: ({ children }: any) => (
       <h2 className="mt-8 mb-4 font-main-serif text-3xl">{children}</h2>
     ),
-    h3: ({ children }: PortableTextBlockProps) => (
+    h3: ({ children }: any) => (
       <h3 className="mt-7 mb-3 font-main-serif text-2xl">{children}</h3>
     ),
-    h4: ({ children }: PortableTextBlockProps) => (
+    h4: ({ children }: any) => (
       <h4 className="mt-6 mb-2 text-xl font-semibold">{children}</h4>
     ),
-    normal: ({ children }: PortableTextBlockProps) => (
+    normal: ({ children }: any) => (
       <p className="my-3 leading-relaxed text-zinc-800">{children}</p>
     ),
   },
   marks: {
-    link: ({ value, children }: PortableTextLinkProps) => (
+    link: ({ value, children }: any) => (
       <a
         href={value?.href}
         className="underline hover:text-[#6b0f1a]"
@@ -67,12 +57,12 @@ const portableTextComponents: PortableTextComponents = {
     ),
   },
   list: {
-    bullet: ({ children }: PortableTextBlockProps) => (
+    bullet: ({ children }: any) => (
       <ul className="my-4 list-disc space-y-2 pl-6">{children}</ul>
     ),
   },
   listItem: {
-    bullet: ({ children }: PortableTextBlockProps) => (
+    bullet: ({ children }: any) => (
       <li className="text-zinc-800">{children}</li>
     ),
   },
@@ -150,14 +140,14 @@ export default async function ExplainerPage({
           ← Back to Explainers
         </Link>
 
-        {explainer.content && (
+        {explainer.content ? (
           <div className="mt-8">
             <PortableText
-              value={explainer.content}
+              value={explainer.content as any}
               components={portableTextComponents}
             />
           </div>
-        )}
+        ) : null}
 
         {explainer.attachments?.length ? (
           <section className="mt-12 border-t border-zinc-200 pt-8">

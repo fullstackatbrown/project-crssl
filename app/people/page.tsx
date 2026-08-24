@@ -3,7 +3,7 @@ import { client } from "@/sanity/lib/client";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import PeopleResults, { type Person } from "../components/PeopleResults";
-import { buildSearchQuery } from "../lib/queries";
+import { buildSearchQuery, buildTagQuery } from "../lib/queries";
 import PeopleBanner from "../components/PeopleBanner";
 
 const DEBOUNCE_MS = 400;

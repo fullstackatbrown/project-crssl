@@ -57,9 +57,9 @@ export const datasetType = {
                 ],
                 preview: { select: { title: 'tag' } }
             }],
-            validation: Rule => Rule.custom(tags => {
+            validation: Rule => Rule.custom((tags: any) => {
                 if (!tags) return true
-                const values = tags.map(t => t.tag)
+                const values = tags.map((t: any) => t.tag)
                 const unique = new Set(values)
                 return unique.size === values.length ? true : 'Duplicate tags found.'
             }).warning()
